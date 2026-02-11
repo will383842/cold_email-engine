@@ -1,0 +1,55 @@
+# Grafana Alert Rules for Email Engine
+# Import via Grafana UI or API
+
+groups:
+  - name: email-engine-alerts
+    rules:
+      # PowerMTA down
+      - alert: PowerMTADown
+        expr: up{job="powermta"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PowerMTA is down"
+          description: "PowerMTA has been down for 2+ minutes"
+
+      # High bounce rate
+      - alert: HighBounceRate
+        expr: (bounced_emails / sent_emails) > 0.03
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Bounce rate > 3%"
+          description: "Bounce rate is {{ $value }}%, consider pausing campaigns"
+
+      # IP blacklisted
+      - alert: IPBlacklisted
+        expr: blacklist_status == 1
+        for: 0s
+        labels:
+          severity: critical
+        annotations:
+          summary: "IP blacklisted"
+          description: "IP {{ $labels.ip }} is blacklisted on {{ $labels.blacklist }}"
+
+      # Disk space
+      - alert: DiskSpaceLow
+        expr: disk_usage_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk usage > 85%"
+          description: "Disk usage is at {{ $value }}%"
+
+      # Queue size
+      - alert: HighQueueSize
+        expr: powermta_queue_size > 10000
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PowerMTA queue > 10K"
+          description: "Queue has {{ $value }} messages, check for delivery issues"

@@ -1,0 +1,189 @@
+# ============================================================
+# PowerMTA Configuration - Email Engine
+# Fichier: /etc/pmta/config
+# ============================================================
+
+postmaster postmaster@sos-expat.com
+
+# SMTP Listeners
+smtp-listener 0/0:25
+smtp-listener 0/0:587
+
+# User SMTP pour MailWizz
+<smtp-user mailwizz>
+    password CHANGE_ME_STRONG_PASSWORD
+    source 127.0.0.1
+    source VPS_MAILWIZZ_IP  # Remplacer par IP reelle
+</smtp-user>
+
+# Logs
+acct-file /var/log/pmta/acct.csv
+error-file /var/log/pmta/error.log
+
+# DKIM Global
+<domain *>
+    dkim-sign yes
+    dkim-identity @*
+</domain>
+
+# ============================================================
+# VIRTUAL MTA - TRANSACTIONNEL (IP1)
+# Confirmations, reset password, emails systeme
+# ============================================================
+
+<virtual-mta mta-trans>
+    smtp-source-host IP1_ADDRESS trans.mail-ulixai.com
+    # Remplacer IP1_ADDRESS par IP reelle
+
+    <domain *>
+        dkim-key /etc/pmta/dkim/trans-mail-ulixai-com.pem
+        dkim-selector default
+
+        max-smtp-out 5
+        max-msg-rate 200/d
+
+        retry-after 15m
+        bounce-after 1d
+
+        use-starttls yes
+    </domain>
+
+    <domain gmail.com>
+        max-msg-rate 50/h
+    </domain>
+
+    <domain outlook.com>
+        max-msg-rate 50/h
+    </domain>
+
+    <domain yahoo.com>
+        max-msg-rate 50/h
+    </domain>
+</virtual-mta>
+
+# ============================================================
+# VIRTUAL MTA - MARKETING (IP2)
+# Newsletter, promos opt-in
+# ============================================================
+
+<virtual-mta mta-marketing>
+    smtp-source-host IP2_ADDRESS news.sos-expat.com
+    # Remplacer IP2_ADDRESS par IP reelle
+
+    <domain *>
+        dkim-key /etc/pmta/dkim/news-sos-expat-com.pem
+        dkim-selector default
+
+        max-smtp-out 10
+        max-msg-rate 500/d
+
+        retry-after 30m
+        bounce-after 2d
+    </domain>
+
+    <domain gmail.com>
+        max-msg-rate 100/h
+    </domain>
+
+    <domain outlook.com>
+        max-msg-rate 100/h
+    </domain>
+</virtual-mta>
+
+# ============================================================
+# VIRTUAL MTA - COLD (IP3) - ACTIF
+# Prospection, outreach
+# ============================================================
+
+<virtual-mta mta-cold-1>
+    smtp-source-host IP3_ADDRESS cold-outreach-1.com
+    # Remplacer IP3_ADDRESS par IP reelle
+
+    <domain *>
+        dkim-key /etc/pmta/dkim/cold-outreach-1-com.pem
+        dkim-selector default
+
+        max-smtp-out 20
+        max-msg-rate 1000/d
+
+        retry-after 1h
+        bounce-after 3d
+    </domain>
+
+    <domain gmail.com>
+        max-msg-rate 100/h
+    </domain>
+
+    <domain outlook.com>
+        max-msg-rate 100/h
+    </domain>
+
+    <domain yahoo.com>
+        max-msg-rate 50/h
+    </domain>
+</virtual-mta>
+
+# ============================================================
+# STANDBY IPs (IP4-5) - Warm-up / Reserve
+# ============================================================
+
+<virtual-mta mta-standby-1>
+    smtp-source-host IP4_ADDRESS cold-outreach-2.com
+
+    <domain *>
+        dkim-key /etc/pmta/dkim/cold-outreach-2-com.pem
+        dkim-selector default
+        max-msg-rate 100/d  # Warm-up rate
+    </domain>
+</virtual-mta>
+
+<virtual-mta mta-standby-2>
+    smtp-source-host IP5_ADDRESS cold-outreach-3.com
+
+    <domain *>
+        dkim-key /etc/pmta/dkim/cold-outreach-3-com.pem
+        dkim-selector default
+        max-msg-rate 100/d  # Warm-up rate
+    </domain>
+</virtual-mta>
+
+# ============================================================
+# POOLS (Routing par type d'email)
+# ============================================================
+
+<virtual-mta-pool pool-trans>
+    virtual-mta mta-trans
+</virtual-mta-pool>
+
+<virtual-mta-pool pool-marketing>
+    virtual-mta mta-marketing
+</virtual-mta-pool>
+
+<virtual-mta-pool pool-cold>
+    domain-selection weighted-round-robin
+
+    virtual-mta mta-cold-1 weight 100    # ACTIF
+    virtual-mta mta-standby-1 weight 10  # WARMING
+    virtual-mta mta-standby-2 weight 0   # RESTING
+</virtual-mta-pool>
+
+# ============================================================
+# BOUNCE CATEGORIES
+# ============================================================
+
+<bounce-category-patterns>
+    <pattern>
+        pattern /(user|account).*(unknown|not found)/i
+        category bad-mailbox
+    </pattern>
+
+    <pattern>
+        pattern /(quota|mailbox full)/i
+        category quota-issues
+    </pattern>
+
+    <pattern>
+        pattern /(spam|blocked|blacklist)/i
+        category policy-related
+    </pattern>
+</bounce-category-patterns>
