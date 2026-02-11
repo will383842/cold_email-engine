@@ -1,75 +1,116 @@
-# Deploiement Email Engine - Guide 10 jours
+# Email Engine — Deployment Guide
 
-## Jour 1-2 : Commander et preparer
+## Prerequisites
 
-### Commander
-- [ ] VDS Contabo S (30EUR/mois, 5 IPs dediees)
-- [ ] VPS Contabo M (10EUR/mois)
+- Ubuntu 22.04+ VDS with root access (Hetzner)
+- PowerMTA installed and licensed
+- MailWizz installed with MySQL
+- Python 3.11+
+- Docker + Docker Compose (for monitoring)
+
+## Phase 1: Infrastructure Setup (Day 1-2)
+
+### Order
+
+- [ ] Hetzner VDS (5 IPs dedicees)
+- [ ] Hetzner VPS (MailWizz)
 - [ ] 3 domaines cold-outreach-X.com (~10EUR/an chacun)
 - [ ] Licence PowerMTA
 
-### Configurer DNS (attendre propagation 24-48h)
+### Configure DNS (wait 24-48h propagation)
+
 - [ ] DNS pour trans.mail-ulixai.com (voir dns/dns-templates.md)
 - [ ] DNS pour news.sos-expat.com
 - [ ] DNS pour cold-outreach-1.com
 - [ ] DNS pour cold-outreach-2.com
 - [ ] DNS pour cold-outreach-3.com
 
-## Jour 3-4 : Installer VDS (PowerMTA)
+## Phase 2: PowerMTA (Day 3-4)
 
 ```bash
 ssh root@VDS_IP
 
-# Systeme
+# System
 apt update && apt upgrade -y
 apt install -y bc host curl wget
 
-# Installer PowerMTA (suivre guide Port25)
-# ...
-
-# Copier config
+# Install PowerMTA (follow Port25 guide)
+# Copy config
 scp powermta/config root@VDS_IP:/etc/pmta/config
 
-# Generer DKIM
+# Generate DKIM
 scp scripts/generate-dkim.sh root@VDS_IP:/root/scripts/
 chmod +x /root/scripts/generate-dkim.sh
 /root/scripts/generate-dkim.sh
-# -> Noter les cles publiques, les ajouter en DNS
+# -> Note public keys, add to DNS
 
-# Configurer PTR chez Contabo (panel admin)
+# Configure PTR at Hetzner (admin panel)
 # IP1 -> trans.mail-ulixai.com
 # IP2 -> news.sos-expat.com
 # IP3 -> cold-outreach-1.com
 # IP4 -> cold-outreach-2.com
 # IP5 -> cold-outreach-3.com
 
-# Demarrer
+# Start
 systemctl start powermta
 systemctl enable powermta
 pmta show status
 ```
 
-## Jour 5-6 : Installer VPS (MailWizz)
+## Phase 3: MailWizz (Day 5-6)
 
-Suivre mailwizz/INSTALL.md
+Follow mailwizz/INSTALL.md
 
-## Jour 7 : Connecter MailWizz -> PowerMTA
+## Phase 4: Connect MailWizz -> PowerMTA (Day 7)
 
-- [ ] Creer 3 Delivery Servers dans MailWizz
-- [ ] Creer les listes (SOS-Expat + Ulixai)
-- [ ] Creer les API keys
-- [ ] Test envoi email
+- [ ] Create 3 Delivery Servers in MailWizz
+- [ ] Create lists (SOS-Expat + Ulixai)
+- [ ] Create API keys
+- [ ] Test email send
 
-## Jour 8 : Scripts operationnels
+## Phase 5: Email Engine API (Automated)
 
 ```bash
-# Copier scripts sur VDS
+# Clone the repo
+git clone <repo> /opt/email-engine
+cd /opt/email-engine
+
+# Run installer (creates user, venv, migrations, systemd service)
+sudo bash deploy/install.sh
+
+# Edit configuration
+sudo nano /opt/email-engine/.env
+
+# Start the service
+sudo systemctl start email-engine
+```
+
+### PowerMTA Bounce Pipe
+
+Add to `/etc/pmta/config` to pipe bounces to email-engine:
+
+```
+<acct-file /dev/null>
+    records b
+    map-header-to-column bounce *
+</acct-file>
+
+<acct-file |/opt/email-engine/scripts/bounce-pipe.sh>
+    records b
+    map-header-to-column bounce *
+</acct-file>
+```
+
+## Phase 6: Operational Scripts (Day 8)
+
+```bash
+# Copy scripts to VDS
 scp scripts/*.sh root@VDS_IP:/root/scripts/
 ssh root@VDS_IP "chmod +x /root/scripts/*.sh"
 
-# Configurer cron
+# Configure cron
 ssh root@VDS_IP "crontab -e"
-# Ajouter:
+# Add:
 # 0 2 * * * /root/scripts/backup-all.sh
 # 0 */4 * * * /root/scripts/check-blacklists.sh
 # 0 0 * * * /root/scripts/warmup-daily-adjust.sh
@@ -77,29 +118,71 @@ ssh root@VDS_IP "crontab -e"
 # 0 3 1 * * /root/scripts/ip-rotation.sh
 ```
 
-## Jour 9 : Monitoring
+## Phase 7: Monitoring Stack
 
-- [ ] Creer compte Grafana Cloud (gratuit)
-- [ ] Installer Grafana Agent sur VDS + VPS
-- [ ] Importer alertes (monitoring/grafana-alerts.yml)
-- [ ] Configurer bot Telegram pour alertes
-- [ ] Test alerte
+```bash
+cd /opt/email-engine/monitoring
+docker compose up -d
+```
 
-## Jour 10 : Tests finaux
+- Prometheus: http://server:9090
+- Grafana: http://server:3000 (admin/admin)
+- Import alerts from `monitoring/grafana-alerts.yml`
+- Configure Telegram bot for alerts
+
+## Updates
+
+```bash
+sudo bash /opt/email-engine/deploy/update.sh
+```
+
+## Service Management
+
+```bash
+sudo systemctl status email-engine
+sudo systemctl restart email-engine
+sudo journalctl -u email-engine -f
+```
+
+## API Usage
+
+All API endpoints require `X-API-Key` header (except `/health` and `/metrics`).
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Create an IP
+curl -X POST http://localhost:8000/api/v1/ips \
+  -H "X-API-Key: your-key" \
+  -H "Content-Type: application/json" \
+  -d '{"address": "1.2.3.4", "hostname": "mail.example.com"}'
+
+# List IPs
+curl http://localhost:8000/api/v1/ips -H "X-API-Key: your-key"
+
+# Check blacklists
+curl -X POST http://localhost:8000/api/v1/blacklists/check/1 -H "X-API-Key: your-key"
+
+# Prometheus metrics
+curl http://localhost:8000/metrics
+```
+
+## Final Tests (Day 9-10)
 
 ```bash
 # Test 1: Mail-Tester (score > 9/10)
 echo "Test" | mail -s "Test" test-xxx@mail-tester.com
 
-# Test 2: DKIM (envoyer vers Gmail, verifier headers)
-# DKIM=pass attendu
+# Test 2: DKIM (send to Gmail, check headers)
+# DKIM=pass expected
 
 # Test 3: Blacklist check
 /root/scripts/check-blacklists.sh
-# 0 blacklists attendu
+# 0 blacklists expected
 
 # Test 4: Monitoring
-# Verifier Grafana affiche metriques
+# Verify Grafana shows metrics
 
 # Test 5: Health check
 /root/scripts/health-check.sh
@@ -107,15 +190,16 @@ echo "Test" | mail -s "Test" test-xxx@mail-tester.com
 
 ## Checklist GO/NO-GO
 
-- [ ] DNS propages (24h+)
+- [ ] DNS propagated (24h+)
 - [ ] PowerMTA running
 - [ ] MailWizz accessible HTTPS
-- [ ] Delivery Servers actifs
+- [ ] Delivery Servers active
 - [ ] Mail-Tester > 9/10
-- [ ] 0 IP blacklistees
-- [ ] Monitoring operationnel
-- [ ] Alertes Telegram OK
-- [ ] Backups configures
-- [ ] Warm-up plan cree
+- [ ] 0 IP blacklisted
+- [ ] Monitoring operational
+- [ ] Telegram alerts OK
+- [ ] Backups configured
+- [ ] Warm-up plan created
+- [ ] Email Engine API responding
 
-**Si TOUS OK -> GO PRODUCTION**
+**If ALL OK -> GO PRODUCTION**

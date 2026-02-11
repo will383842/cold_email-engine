@@ -25,7 +25,7 @@ Type: TXT (DMARC)
 Name: _dmarc.trans.mail-ulixai.com
 Value: v=DMARC1; p=reject; rua=mailto:dmarc@ulixai.com
 
-PTR (chez Contabo): IP1_ADDRESS -> trans.mail-ulixai.com
+PTR (chez Hetzner): IP1_ADDRESS -> trans.mail-ulixai.com
 ```
 
 ## news.sos-expat.com (Marketing)
@@ -51,7 +51,7 @@ Type: TXT (DMARC)
 Name: _dmarc.news.sos-expat.com
 Value: v=DMARC1; p=quarantine; rua=mailto:dmarc@sos-expat.com
 
-PTR (chez Contabo): IP2_ADDRESS -> news.sos-expat.com
+PTR (chez Hetzner): IP2_ADDRESS -> news.sos-expat.com
 ```
 
 ## cold-outreach-1.com (Cold - IP3)
@@ -77,7 +77,7 @@ Type: TXT (DMARC)
 Name: _dmarc
 Value: v=DMARC1; p=none; rua=mailto:dmarc@cold-outreach-1.com
 
-PTR (chez Contabo): IP3_ADDRESS -> cold-outreach-1.com
+PTR (chez Hetzner): IP3_ADDRESS -> cold-outreach-1.com
 ```
 
 ## cold-outreach-2.com (Standby - IP4)

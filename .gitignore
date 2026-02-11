@@ -1,3 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# Environment
 .env
+
+# Database
+*.db
+*.db-journal
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keys
 *.pem
+
+# Backups
 backups/
+
+# Monitoring data
+monitoring/prometheus_data/
+monitoring/grafana_data/
+
+# Pytest
+.pytest_cache/

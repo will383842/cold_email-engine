@@ -1,0 +1,79 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Active IPs",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "targets": [{ "expr": "email_engine_ips_active", "legendFormat": "Active" }],
+      "fieldConfig": { "defaults": { "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 0 }] } } }
+    },
+    {
+      "title": "Warming IPs",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "targets": [{ "expr": "email_engine_ips_warming", "legendFormat": "Warming" }],
+      "fieldConfig": { "defaults": { "thresholds": { "steps": [{ "color": "blue", "value": null }] } } }
+    },
+    {
+      "title": "Blacklisted IPs",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "targets": [{ "expr": "email_engine_ips_blacklisted", "legendFormat": "Blacklisted" }],
+      "fieldConfig": { "defaults": { "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } } }
+    },
+    {
+      "title": "PowerMTA Status",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+      "targets": [{ "expr": "email_engine_pmta_running", "legendFormat": "Running" }],
+      "fieldConfig": { "defaults": { "mappings": [{ "type": "value", "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } } }] } }
+    },
+    {
+      "title": "PowerMTA Queue Size",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "targets": [{ "expr": "email_engine_pmta_queue_size", "legendFormat": "Queue" }],
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } } }
+    },
+    {
+      "title": "System Resources",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "targets": [
+        { "expr": "email_engine_disk_usage_pct", "legendFormat": "Disk %" },
+        { "expr": "email_engine_ram_usage_pct", "legendFormat": "RAM %" }
+      ],
+      "fieldConfig": { "defaults": { "max": 100, "min": 0, "unit": "percent" } }
+    },
+    {
+      "title": "Bounces Received",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "targets": [
+        { "expr": "rate(email_engine_bounces_received_total[5m])", "legendFormat": "Received/s" },
+        { "expr": "rate(email_engine_bounces_forwarded_total[5m])", "legendFormat": "Forwarded/s" }
+      ]
+    },
+    {
+      "title": "Blacklist Checks",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "targets": [{ "expr": "rate(email_engine_blacklist_checks_total[1h])", "legendFormat": "Checks/h" }]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["email-engine"],
+  "templating": { "list": [] },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "Email Engine",
+  "uid": "email-engine",
+  "version": 1
+}
