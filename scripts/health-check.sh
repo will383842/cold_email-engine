@@ -1,12 +1,18 @@
 #!/bin/bash
 # ============================================================
-# System health check
-# Cron: */5 * * * * (every 5 minutes)
+# System health check (standalone fallback)
+# NOTE: APScheduler runs health checks every 5 min automatically.
+#       This script is a FALLBACK only — do NOT add to cron
+#       unless APScheduler is disabled.
 # ============================================================
 
 set -e
 
-source /root/.email-engine.env 2>/dev/null || true
+ENV_FILE="/opt/email-engine/.env"
+if [ -f "$ENV_FILE" ]; then
+    # shellcheck disable=SC1090
+    source "$ENV_FILE"
+fi
 
 TELEGRAM_TOKEN="${TELEGRAM_BOT_TOKEN}"
 TELEGRAM_CHAT="${TELEGRAM_CHAT_ID}"

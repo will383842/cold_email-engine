@@ -9,7 +9,7 @@ Group=email-engine
 WorkingDirectory=/opt/email-engine
 Environment="PATH=/opt/email-engine/venv/bin:/usr/local/bin:/usr/bin"
 EnvironmentFile=/opt/email-engine/.env
-ExecStart=/opt/email-engine/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+ExecStart=/opt/email-engine/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
 Restart=always
 RestartSec=5
 StandardOutput=journal

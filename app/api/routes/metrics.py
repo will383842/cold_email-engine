@@ -33,6 +33,15 @@ bounces_forwarded = Counter(
     "email_engine_bounces_forwarded_total", "Total bounces forwarded to scraper-pro",
     registry=REGISTRY,
 )
+deliveries_reported = Counter(
+    "email_engine_deliveries_reported_total", "Total deliveries reported to scraper-pro",
+    registry=REGISTRY,
+)
+emails_validated = Counter(
+    "email_engine_emails_validated_total", "Total emails validated",
+    ["result"],
+    registry=REGISTRY,
+)
 blacklist_checks = Counter(
     "email_engine_blacklist_checks_total", "Total blacklist check runs", registry=REGISTRY
 )

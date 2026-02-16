@@ -1,0 +1,227 @@
+version: '3.8'
+
+services:
+  # =============================================================================
+  # PostgreSQL Database
+  # =============================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: email_engine_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-email_engine}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-email_engine_password}
+      POSTGRES_DB: ${POSTGRES_DB:-email_engine}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-email_engine}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - email_engine_network
+
+  # =============================================================================
+  # Redis (Celery Broker + Cache)
+  # =============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: email_engine_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - email_engine_network
+    volumes:
+      - redis_data:/data
+
+  # =============================================================================
+  # FastAPI Application
+  # =============================================================================
+  api:
+    build:
+      context: .
+      target: development  # Change to 'production' for production
+    container_name: email_engine_api
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-email_engine}:${POSTGRES_PASSWORD:-email_engine_password}@postgres:5432/${POSTGRES_DB:-email_engine}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app  # Mount for hot reload in development
+      # PowerMTA - Même chemins que Système 1 (MailWizz+PMTA)
+      - ./powermta/license:/etc/pmta/license:ro
+      - ./powermta/config:/etc/pmta/config:ro
+      - ./powermta/dkim:/home/pmta/conf/mail:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - email_engine_network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # =============================================================================
+  # Celery Worker - Validation Queue
+  # =============================================================================
+  celery_validation:
+    build:
+      context: .
+      target: base
+    container_name: email_engine_celery_validation
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-email_engine}:${POSTGRES_PASSWORD:-email_engine_password}@postgres:5432/${POSTGRES_DB:-email_engine}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - email_engine_network
+    command: celery -A src.infrastructure.background.celery_app worker -Q validation -l info -n validation@%h
+
+  # =============================================================================
+  # Celery Worker - MailWizz Queue
+  # =============================================================================
+  celery_mailwizz:
+    build:
+      context: .
+      target: base
+    container_name: email_engine_celery_mailwizz
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-email_engine}:${POSTGRES_PASSWORD:-email_engine_password}@postgres:5432/${POSTGRES_DB:-email_engine}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - email_engine_network
+    command: celery -A src.infrastructure.background.celery_app worker -Q mailwizz -l info -n mailwizz@%h
+
+  # =============================================================================
+  # Celery Worker - Campaigns Queue
+  # =============================================================================
+  celery_campaigns:
+    build:
+      context: .
+      target: base
+    container_name: email_engine_celery_campaigns
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-email_engine}:${POSTGRES_PASSWORD:-email_engine_password}@postgres:5432/${POSTGRES_DB:-email_engine}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - email_engine_network
+    command: celery -A src.infrastructure.background.celery_app worker -Q campaigns -l info -n campaigns@%h
+
+  # =============================================================================
+  # Celery Worker - Warmup Queue
+  # =============================================================================
+  celery_warmup:
+    build:
+      context: .
+      target: base
+    container_name: email_engine_celery_warmup
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-email_engine}:${POSTGRES_PASSWORD:-email_engine_password}@postgres:5432/${POSTGRES_DB:-email_engine}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - email_engine_network
+    command: celery -A src.infrastructure.background.celery_app worker -Q warmup -l info -n warmup@%h
+
+  # =============================================================================
+  # Celery Beat - Periodic Tasks Scheduler
+  # =============================================================================
+  celery_beat:
+    build:
+      context: .
+      target: base
+    container_name: email_engine_celery_beat
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-email_engine}:${POSTGRES_PASSWORD:-email_engine_password}@postgres:5432/${POSTGRES_DB:-email_engine}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - email_engine_network
+    command: celery -A src.infrastructure.background.celery_app beat -l info
+
+  # =============================================================================
+  # Flower - Celery Monitoring (optional)
+  # =============================================================================
+  flower:
+    build:
+      context: .
+      target: base
+    container_name: email_engine_flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+    networks:
+      - email_engine_network
+    command: celery -A src.infrastructure.background.celery_app flower --port=5555
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  email_engine_network:
+    driver: bridge
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

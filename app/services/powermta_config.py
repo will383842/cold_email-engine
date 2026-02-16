@@ -1,5 +1,6 @@
 """Read and write PowerMTA configuration."""
 
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -10,12 +11,29 @@ from app.config import settings
 
 logger = structlog.get_logger(__name__)
 
+# Allowed pmta binary paths (whitelist)
+_ALLOWED_PMTA_PATHS = {"/usr/sbin/pmta", "/usr/local/sbin/pmta", "/opt/pmta/bin/pmta"}
+
+
+def _validate_pmta_path(path: str) -> str:
+    """Validate that PMTA_BIN_PATH points to a real pmta binary."""
+    resolved = str(Path(path).resolve())
+    basename = os.path.basename(resolved)
+    if basename != "pmta":
+        raise ValueError(f"PMTA_BIN_PATH must point to a 'pmta' binary, got: {basename}")
+    if resolved not in _ALLOWED_PMTA_PATHS:
+        raise ValueError(f"PMTA_BIN_PATH '{resolved}' not in allowed paths: {_ALLOWED_PMTA_PATHS}")
+    if not os.path.isfile(resolved):
+        raise ValueError(f"PMTA_BIN_PATH '{resolved}' does not exist")
+    return resolved
+
 
 class PowerMTAConfig:
     """Manage /etc/pmta/config reading and writing."""
 
     def __init__(self, config_path: str | None = None):
         self.config_path = Path(config_path or settings.PMTA_CONFIG_PATH)
+        self._pmta_bin = _validate_pmta_path(settings.PMTA_BIN_PATH)
 
     def read(self) -> str:
         """Return raw config file content."""
@@ -84,7 +102,7 @@ class PowerMTAConfig:
         """Reload PowerMTA configuration."""
         try:
             result = subprocess.run(
-                [settings.PMTA_BIN_PATH, "reload"],
+                [self._pmta_bin, "reload"],
                 capture_output=True,
                 text=True,
                 timeout=10,
@@ -102,7 +120,7 @@ class PowerMTAConfig:
         """Check if PowerMTA process is running."""
         try:
             result = subprocess.run(
-                [settings.PMTA_BIN_PATH, "show", "status"],
+                [self._pmta_bin, "show", "status"],
                 capture_output=True,
                 text=True,
                 timeout=5,
@@ -115,7 +133,7 @@ class PowerMTAConfig:
         """Get current queue size from PowerMTA."""
         try:
             result = subprocess.run(
-                [settings.PMTA_BIN_PATH, "show", "topqueues", "--count=999"],
+                [self._pmta_bin, "show", "topqueues", "--count=999"],
                 capture_output=True,
                 text=True,
                 timeout=10,

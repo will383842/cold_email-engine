@@ -1,0 +1,313 @@
+#!/usr/bin/env python3
+"""Seed script for enterprise multi-tenant data.
+
+Creates:
+- 2 Tenants (SOS-Expat, Ulixai)
+- 100 IPs (50 per tenant)
+- 100 Domains (1 per IP)
+- 2 MailWizz instances (1 per tenant)
+- Sample tags for SOS-Expat
+
+Run: python scripts/seed_enterprise_data.py
+"""
+
+import sys
+from datetime import datetime
+from pathlib import Path
+
+# Add parent directory to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from sqlalchemy.orm import Session
+
+from app.database import SessionLocal
+from app.models import Domain, IP, MailwizzInstance, Tag, Tenant
+
+
+def seed_tenants(db: Session) -> tuple[Tenant, Tenant]:
+    """Create 2 tenants: SOS-Expat and Ulixai."""
+    print("Creating tenants...")
+
+    # SOS-Expat
+    sos_expat = Tenant(
+        slug="sos-expat",
+        name="SOS Expat",
+        brand_domain="sos-expat.com",
+        sending_domain_base="sos-mail.com",
+        is_active=True,
+        created_at=datetime.utcnow(),
+    )
+
+    # Ulixai
+    ulixai = Tenant(
+        slug="ulixai",
+        name="Ulixai",
+        brand_domain="ulixai.com",
+        sending_domain_base="ulixai-mail.com",
+        is_active=True,
+        created_at=datetime.utcnow(),
+    )
+
+    db.add(sos_expat)
+    db.add(ulixai)
+    db.commit()
+    db.refresh(sos_expat)
+    db.refresh(ulixai)
+
+    print(f"✓ Created tenant: {sos_expat.name} (ID: {sos_expat.id})")
+    print(f"✓ Created tenant: {ulixai.name} (ID: {ulixai.id})")
+
+    return sos_expat, ulixai
+
+
+def seed_ips_and_domains(db: Session, sos_expat: Tenant, ulixai: Tenant) -> None:
+    """Create 100 IPs (50 per tenant) and 100 domains (1 per IP)."""
+    print("\nCreating IPs and domains...")
+
+    # SOS-Expat: 50 IPs (45.123.10.1-50)
+    print(f"\nCreating 50 IPs for {sos_expat.name}...")
+    for i in range(1, 51):
+        ip_address = f"45.123.10.{i}"
+        hostname = f"mail{i}.sos-mail.com"
+        domain_name = f"mail{i}.sos-mail.com"
+
+        # Determine status and weight based on pool distribution
+        if i <= 40:
+            # Active pool (40 IPs)
+            status = "active"
+            weight = 100
+        elif i <= 47:
+            # Warming pool (7 IPs)
+            status = "warming"
+            weight = 50
+        else:
+            # Standby pool (3 IPs)
+            status = "standby"
+            weight = 0
+
+        # Create IP
+        ip = IP(
+            address=ip_address,
+            hostname=hostname,
+            purpose="cold",
+            status=status,
+            weight=weight,
+            vmta_name=f"vmta-sos-expat-{i}",
+            pool_name="sos-expat-pool",
+            tenant_id=sos_expat.id,
+            created_at=datetime.utcnow(),
+        )
+        db.add(ip)
+        db.flush()  # Get IP id
+
+        # Create Domain
+        domain = Domain(
+            name=domain_name,
+            purpose="cold",
+            ip_id=ip.id,
+            dkim_selector="default",
+            tenant_id=sos_expat.id,
+            created_at=datetime.utcnow(),
+        )
+        db.add(domain)
+
+        if i % 10 == 0:
+            print(f"  Created {i}/50 IPs for {sos_expat.name}...")
+
+    print(f"✓ Created 50 IPs + 50 domains for {sos_expat.name}")
+
+    # Ulixai: 50 IPs (45.124.20.1-50)
+    print(f"\nCreating 50 IPs for {ulixai.name}...")
+    for i in range(1, 51):
+        ip_address = f"45.124.20.{i}"
+        hostname = f"mail{i}.ulixai-mail.com"
+        domain_name = f"mail{i}.ulixai-mail.com"
+
+        # Same pool distribution
+        if i <= 40:
+            status = "active"
+            weight = 100
+        elif i <= 47:
+            status = "warming"
+            weight = 50
+        else:
+            status = "standby"
+            weight = 0
+
+        # Create IP
+        ip = IP(
+            address=ip_address,
+            hostname=hostname,
+            purpose="cold",
+            status=status,
+            weight=weight,
+            vmta_name=f"vmta-ulixai-{i}",
+            pool_name="ulixai-pool",
+            tenant_id=ulixai.id,
+            created_at=datetime.utcnow(),
+        )
+        db.add(ip)
+        db.flush()
+
+        # Create Domain
+        domain = Domain(
+            name=domain_name,
+            purpose="cold",
+            ip_id=ip.id,
+            dkim_selector="default",
+            tenant_id=ulixai.id,
+            created_at=datetime.utcnow(),
+        )
+        db.add(domain)
+
+        if i % 10 == 0:
+            print(f"  Created {i}/50 IPs for {ulixai.name}...")
+
+    print(f"✓ Created 50 IPs + 50 domains for {ulixai.name}")
+    db.commit()
+
+
+def seed_mailwizz_instances(db: Session, sos_expat: Tenant, ulixai: Tenant) -> None:
+    """Create 2 MailWizz instances (1 per tenant)."""
+    print("\nCreating MailWizz instances...")
+
+    # SOS-Expat MailWizz
+    sos_mailwizz = MailwizzInstance(
+        tenant_id=sos_expat.id,
+        name="MailWizz SOS-Expat",
+        base_url="https://mailwizz-sos-expat.example.com",
+        api_public_key="REPLACE_WITH_REAL_KEY",
+        api_private_key="REPLACE_WITH_REAL_KEY",
+        default_list_id=1,
+        is_active=True,
+        created_at=datetime.utcnow(),
+    )
+
+    # Ulixai MailWizz
+    ulixai_mailwizz = MailwizzInstance(
+        tenant_id=ulixai.id,
+        name="MailWizz Ulixai",
+        base_url="https://mailwizz-ulixai.example.com",
+        api_public_key="REPLACE_WITH_REAL_KEY",
+        api_private_key="REPLACE_WITH_REAL_KEY",
+        default_list_id=1,
+        is_active=True,
+        created_at=datetime.utcnow(),
+    )
+
+    db.add(sos_mailwizz)
+    db.add(ulixai_mailwizz)
+    db.commit()
+
+    print(f"✓ Created MailWizz instance for {sos_expat.name}")
+    print(f"✓ Created MailWizz instance for {ulixai.name}")
+
+
+def seed_tags(db: Session, sos_expat: Tenant) -> None:
+    """Create sample tags for SOS-Expat."""
+    print("\nCreating sample tags for SOS-Expat...")
+
+    tags_data = [
+        # Prestataires
+        {"slug": "prestataire", "label": "Prestataire", "parent": None, "color": "#10B981"},
+        {"slug": "avocat", "label": "Avocat", "parent": "prestataire", "color": "#3B82F6"},
+        {"slug": "expat-aidant", "label": "Expat Aidant", "parent": "prestataire", "color": "#6366F1"},
+        # Marketing Partners
+        {"slug": "marketing-partner", "label": "Marketing Partner", "parent": None, "color": "#8B5CF6"},
+        {"slug": "blogger", "label": "Blogueur", "parent": "marketing-partner", "color": "#A855F7"},
+        {"slug": "influencer", "label": "Influenceur", "parent": "marketing-partner", "color": "#D946EF"},
+        {"slug": "chatter", "label": "Chatter", "parent": "marketing-partner", "color": "#EC4899"},
+        {"slug": "admin-group", "label": "Admin Group", "parent": "marketing-partner", "color": "#F43F5E"},
+        # Clients
+        {"slug": "client", "label": "Client", "parent": None, "color": "#F59E0B"},
+        {"slug": "vacancier", "label": "Vacancier", "parent": "client", "color": "#FBBF24"},
+        {"slug": "expat", "label": "Expat", "parent": "client", "color": "#FCD34D"},
+        {"slug": "digital-nomad", "label": "Digital Nomad", "parent": "client", "color": "#FDE68A"},
+        # Languages
+        {"slug": "lang-fr", "label": "Français", "parent": None, "color": "#3B82F6"},
+        {"slug": "lang-en", "label": "English", "parent": None, "color": "#3B82F6"},
+        {"slug": "lang-es", "label": "Español", "parent": None, "color": "#3B82F6"},
+        {"slug": "lang-de", "label": "Deutsch", "parent": None, "color": "#3B82F6"},
+    ]
+
+    # Create parent tags first
+    tag_map = {}
+    for tag_data in tags_data:
+        if tag_data["parent"] is None:
+            tag = Tag(
+                tenant_id=sos_expat.id,
+                slug=tag_data["slug"],
+                label=tag_data["label"],
+                color=tag_data["color"],
+                created_at=datetime.utcnow(),
+            )
+            db.add(tag)
+            db.flush()
+            tag_map[tag_data["slug"]] = tag.id
+
+    # Create child tags
+    for tag_data in tags_data:
+        if tag_data["parent"] is not None:
+            parent_id = tag_map.get(tag_data["parent"])
+            tag = Tag(
+                tenant_id=sos_expat.id,
+                slug=tag_data["slug"],
+                label=tag_data["label"],
+                parent_id=parent_id,
+                color=tag_data["color"],
+                created_at=datetime.utcnow(),
+            )
+            db.add(tag)
+            db.flush()
+            tag_map[tag_data["slug"]] = tag.id
+
+    db.commit()
+    print(f"✓ Created {len(tags_data)} sample tags")
+
+
+def main():
+    """Main seed function."""
+    print("=" * 80)
+    print("EMAIL ENGINE - ENTERPRISE MULTI-TENANT DATA SEED")
+    print("=" * 80)
+
+    db = SessionLocal()
+
+    try:
+        # 1. Create tenants
+        sos_expat, ulixai = seed_tenants(db)
+
+        # 2. Create IPs and domains (100 IPs, 100 domains)
+        seed_ips_and_domains(db, sos_expat, ulixai)
+
+        # 3. Create MailWizz instances
+        seed_mailwizz_instances(db, sos_expat, ulixai)
+
+        # 4. Create sample tags for SOS-Expat
+        seed_tags(db, sos_expat)
+
+        print("\n" + "=" * 80)
+        print("SEED COMPLETED SUCCESSFULLY!")
+        print("=" * 80)
+        print("\nSummary:")
+        print("  - 2 Tenants (SOS-Expat, Ulixai)")
+        print("  - 100 IPs (50 per tenant)")
+        print("  - 100 Domains (1 per IP)")
+        print("  - 2 MailWizz instances")
+        print("  - 16 sample tags (SOS-Expat only)")
+        print("\nNext steps:")
+        print("  1. Update MailWizz API keys in mailwizz_instances table")
+        print("  2. Configure DNS records (SPF, DKIM, DMARC, PTR) for all 100 domains")
+        print("  3. Configure PowerMTA with 100 VirtualMTAs")
+        print("  4. Start IP warmup for 'warming' IPs")
+
+    except Exception as e:
+        print(f"\n❌ ERROR: {e}")
+        db.rollback()
+        raise
+    finally:
+        db.close()
+
+
+if __name__ == "__main__":
+    main()

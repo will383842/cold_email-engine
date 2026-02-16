@@ -1,156 +1,389 @@
 # ============================================================
-# PowerMTA Configuration - Email Engine
-# Fichier: /etc/pmta/config
+# PowerMTA Configuration — Email Engine (Cold Email)
+# File: /etc/pmta/config
+# ============================================================
+# BEFORE DEPLOYING: Replace ALL placeholders:
+#   IP1_ADDRESS         -> Transactional IP
+#   IP2_ADDRESS         -> Marketing IP
+#   IP3_ADDRESS         -> Cold active IP
+#   IP4_ADDRESS         -> Standby-1 IP
+#   IP5_ADDRESS         -> Standby-2 IP
+#   VPS_MAILWIZZ_IP     -> MailWizz server IP
+#   CHANGE_ME_PASSWORD  -> Strong SMTP password
+#   YOUR_DOMAIN.com     -> Your sending domain(s)
 # ============================================================
 
-postmaster postmaster@sos-expat.com
+postmaster postmaster@YOUR_DOMAIN.com
 
-# SMTP Listeners
-smtp-listener 0/0:25
-smtp-listener 0/0:587
+# ============================================================
+# GLOBAL SETTINGS
+# ============================================================
+sync-msg-create false
+sync-msg-update false
+run-as-root no
+log-file /var/log/pmta/log
+spool /var/spool/pmta
 
-# User SMTP pour MailWizz
+# Management interface (localhost only for security)
+http-mgmt-port 1983
+http-access 127.0.0.1 admin
+
+# External bounce classification file (2785 patterns)
+bounce-classification-file /etc/pmta/bounce-classifications
+
+# Routing domains (ISP MX-to-domain mapping)
+routing-file /etc/pmta/routing-domains
+
+# ============================================================
+# SMTP LISTENERS
+# ============================================================
+smtp-listener IP1_ADDRESS:25
+smtp-listener IP2_ADDRESS:25
+smtp-listener IP3_ADDRESS:25
+smtp-listener IP4_ADDRESS:25
+smtp-listener IP5_ADDRESS:25
+# Relay port for MailWizz (auth required)
+smtp-listener IP1_ADDRESS:2525
+smtp-listener IP2_ADDRESS:2525
+smtp-listener IP3_ADDRESS:2525
+
+# ============================================================
+# ACCOUNTING — Bounce pipe to Email Engine
+# ============================================================
+<acct-file /var/log/pmta/acct.csv>
+    max-size 50M
+</acct-file>
+
+# Diagnostic log (soft bounces / transient errors)
+<acct-file /var/log/pmta/diag.csv>
+    move-interval 1d
+    delete-after never
+    records t
+</acct-file>
+
+# Bounce pipe -> Email Engine API (for scraper-pro forwarding)
+<acct-file |/opt/email-engine/scripts/bounce-pipe.sh>
+    records b
+    map-header-to-column bounce *
+</acct-file>
+
+# Delivery pipe -> Email Engine API (for scraper-pro bounce rate calculation)
+<acct-file |/opt/email-engine/scripts/delivery-pipe.sh>
+    records d
+    map-header-to-column delivery *
+</acct-file>
+
+# ============================================================
+# SMTP AUTHENTICATION (MailWizz -> PowerMTA)
+# ============================================================
 <smtp-user mailwizz>
-    password CHANGE_ME_STRONG_PASSWORD
-    source 127.0.0.1
-    source VPS_MAILWIZZ_IP  # Remplacer par IP reelle
+    password CHANGE_ME_PASSWORD
+    source {pmta-auth}
 </smtp-user>
 
-# Logs
-acct-file /var/log/pmta/acct.csv
-error-file /var/log/pmta/error.log
+<source {pmta-auth}>
+    smtp-service yes
+    always-allow-relaying yes
+    require-auth true
+    require-starttls yes
+    allow-unencrypted-plain-auth no
+    process-x-virtual-mta yes
+    default-virtual-mta pool-cold
+    remove-received-headers true
+    add-received-header false
+    hide-message-source true
+</source>
 
-# DKIM Global
+# ============================================================
+# SOURCE: External connections (locked down)
+# ============================================================
+<source 0/0>
+    log-connections yes
+    log-commands yes
+    allow-unencrypted-plain-auth no
+</source>
+
+# ============================================================
+# SOURCE: Local / API injection (MailWizz on same server)
+# ============================================================
+<source 127.0.0.1>
+    always-allow-api-submission yes
+    add-message-id-header yes
+    retain-x-job yes
+    retain-x-virtual-mta yes
+    verp-default yes
+    process-x-envid yes
+    process-x-job yes
+    jobid-header X-Mailer-RecptId
+    process-x-virtual-mta yes
+</source>
+
+# ============================================================
+# SOURCE: MailWizz VPS (remote relay)
+# ============================================================
+<source VPS_MAILWIZZ_IP>
+    always-allow-api-submission yes
+    smtp-service yes
+    always-allow-relaying yes
+    require-auth true
+    require-starttls yes
+    process-x-virtual-mta yes
+    default-virtual-mta pool-cold
+</source>
+
+# ============================================================
+# GLOBAL DOMAIN DEFAULTS — Conservative for cold email
+# ============================================================
 <domain *>
+    max-smtp-out 2
+    max-msg-per-connection 50
+    max-errors-per-connection 10
+    max-msg-rate 500/h
+    smtp-greeting-timeout 5m
+    bounce-upon-no-mx yes
+    assume-delivery-upon-data-termination-timeout yes
+    retry-after 10m
+    bounce-after 24h
+    smtp-pattern-list blocking-errors
+    backoff-max-msg-rate 1/m
+    backoff-retry-after 20m
+    backoff-notify ""
+    backoff-to-normal-after-delivery yes
+    backoff-to-normal-after 1h
     dkim-sign yes
-    dkim-identity @*
+    ignore-8bitmime true
+    use-starttls yes
+    require-starttls no
 </domain>
 
 # ============================================================
-# VIRTUAL MTA - TRANSACTIONNEL (IP1)
-# Confirmations, reset password, emails systeme
+# ISP THROTTLING — COLD EMAIL (very conservative)
+# ============================================================
+# For cold outreach on purchased lists, rates must be much
+# lower than marketing email. These rates protect IP reputation.
 # ============================================================
 
+# --- GOOGLE (Gmail, Googlemail) ---
+# Gmail is extremely strict on cold email. Low rates essential.
+domain-macro gmail gmail.com,googlemail.com
+<domain $gmail>
+    max-smtp-out 2
+    max-msg-rate 50/h
+    max-msg-per-connection 20
+</domain>
+
+# --- MICROSOFT (Hotmail, Outlook, Live, MSN) ---
+# Hotmail has strict connection limits. 1 connection only.
+domain-macro hotmail hotmail.com,msn.com,hotmail.co.uk,hotmail.fr,live.com,hotmail.it,hotmail.de,email.msn.com,email.hotmail.com,outlook.com,outlook.fr,outlook.de,outlook.co.uk,live.fr,live.co.uk,live.de
+<domain $hotmail>
+    max-smtp-out 1
+    max-msg-rate 50/h
+    max-msg-per-connection 20
+</domain>
+
+# --- YAHOO (Yahoo, Rocketmail, Ymail, AT&T, BellSouth) ---
+# Yahoo limits msgs per connection strictly.
+domain-macro yahoo yahoo.com,yahoo.ca,rocketmail.com,ymail.com,yahoo.com.au,yahoo.com.mx,yahoo.com.br,yahoo.co.uk,yahoo.fr,yahoo.de,yahoo.it,yahoo.es,att.net,bellsouth.net,sbcglobal.net,verizon.com,verizon.net
+<domain $yahoo>
+    max-smtp-out 1
+    max-msg-per-connection 2
+    max-msg-rate 30/h
+</domain>
+
+# --- AOL ---
+domain-macro aol aol.com,aim.com,aim.net,cs.com,netscape.com,netscape.net
+<domain $aol>
+    max-smtp-out 1
+    max-msg-rate 50/h
+</domain>
+
+# --- APPLE (iCloud, me.com, mac.com) ---
+domain-macro apple icloud.com,me.com,mac.com
+<domain $apple>
+    max-msg-rate 50/h
+</domain>
+
+# --- COMCAST / XFINITY ---
+domain-macro comcast comcast.net,comcast.com,comcastwork.com,xfinity.com
+<domain $comcast>
+    max-msg-rate 50/h
+</domain>
+
+# --- COX ---
+domain-macro cox cox.com,cox.net,coxinternet.com,cox-internet.com
+<domain $cox>
+    max-msg-rate 50/h
+</domain>
+
+# --- CHARTER / SPECTRUM ---
+domain-macro charter charterinternet.com,charter.net,spectrum.net
+<domain $charter>
+    max-msg-rate 50/h
+</domain>
+
+# --- TIME WARNER / ROADRUNNER ---
+domain-macro roadrunner rr.com,roadrunner.com,roadrunner.net,adelphia.com,adelphia.net,insightbb.com
+<domain $roadrunner>
+    max-msg-rate 50/h
+</domain>
+
+# --- CENTURYLINK ---
+domain-macro centurylink centurylink.com,centurylink.net,centurytel.com,centurytel.net,embarqmail.com,embarq.com,embarq.net,qwest.net
+<domain $centurylink>
+    max-msg-rate 50/h
+</domain>
+
+# --- EARTHLINK ---
+domain-macro earthlink earthlink.com,earthlink.net,mindspring.com
+<domain $earthlink>
+    max-msg-rate 50/h
+</domain>
+
+# --- GMX / MAIL.COM (United Internet) ---
+domain-macro gmx gmx.net,gmx.com,gmx.de,gmx.fr,mail.com
+<domain $gmx>
+    max-msg-rate 50/h
+</domain>
+
+# --- JUNO / NETZERO (United Online) ---
+domain-macro unitedol juno.com,netzero.com,unitedonline.net
+<domain $unitedol>
+    max-msg-rate 50/h
+</domain>
+
+# --- FRENCH ISPs (very strict on cold email) ---
+<domain orange.fr>
+    max-msg-rate 30/h
+</domain>
+<domain free.fr>
+    max-msg-rate 30/h
+</domain>
+<domain sfr.fr>
+    max-msg-rate 30/h
+</domain>
+<domain laposte.net>
+    max-msg-rate 30/h
+</domain>
+<domain wanadoo.fr>
+    max-msg-rate 30/h
+</domain>
+
+# --- GERMAN ISPs ---
+domain-macro german t-online.de,web.de,freenet.de,arcor.de
+<domain $german>
+    max-msg-rate 30/h
+</domain>
+
+# --- ITALIAN ISPs ---
+domain-macro italian libero.it,virgilio.it,tin.it,alice.it,tiscali.it
+<domain $italian>
+    max-msg-rate 30/h
+</domain>
+
+# --- SPANISH ISPs ---
+domain-macro spanish telefonica.net,terra.es,ya.com
+<domain $spanish>
+    max-msg-rate 30/h
+</domain>
+
+# --- RUSSIAN ---
+domain-macro russian mail.ru,yandex.ru,yandex.com,rambler.ru,bk.ru,list.ru,inbox.ru
+<domain $russian>
+    max-msg-rate 30/h
+</domain>
+
+# --- OTHER US ISPs ---
+<domain suddenlink.net>
+    max-msg-rate 50/h
+</domain>
+<domain windstream.net>
+    max-msg-rate 50/h
+</domain>
+<domain tmomail.net>
+    max-msg-rate 50/h
+</domain>
+<domain sprintpcs.com>
+    max-msg-rate 50/h
+</domain>
+
+# ============================================================
+# VIRTUAL MTA - TRANSACTIONAL (IP1)
+# Confirmations, reset password, system emails
+# ============================================================
 <virtual-mta mta-trans>
     smtp-source-host IP1_ADDRESS trans.mail-ulixai.com
-    # Remplacer IP1_ADDRESS par IP reelle
+    domain-key dkim,*,/etc/pmta/dkim/trans-mail-ulixai-com.pem
 
     <domain *>
-        dkim-key /etc/pmta/dkim/trans-mail-ulixai-com.pem
-        dkim-selector default
-
         max-smtp-out 5
-        max-msg-rate 200/d
-
+        max-msg-rate 200/h
         retry-after 15m
         bounce-after 1d
-
-        use-starttls yes
-    </domain>
-
-    <domain gmail.com>
-        max-msg-rate 50/h
-    </domain>
-
-    <domain outlook.com>
-        max-msg-rate 50/h
-    </domain>
-
-    <domain yahoo.com>
-        max-msg-rate 50/h
     </domain>
 </virtual-mta>
 
 # ============================================================
 # VIRTUAL MTA - MARKETING (IP2)
-# Newsletter, promos opt-in
+# Newsletter, promos (opt-in list)
 # ============================================================
-
 <virtual-mta mta-marketing>
     smtp-source-host IP2_ADDRESS news.sos-expat.com
-    # Remplacer IP2_ADDRESS par IP reelle
+    domain-key dkim,*,/etc/pmta/dkim/news-sos-expat-com.pem
 
     <domain *>
-        dkim-key /etc/pmta/dkim/news-sos-expat-com.pem
-        dkim-selector default
-
         max-smtp-out 10
-        max-msg-rate 500/d
-
+        max-msg-rate 500/h
         retry-after 30m
         bounce-after 2d
     </domain>
-
-    <domain gmail.com>
-        max-msg-rate 100/h
-    </domain>
-
-    <domain outlook.com>
-        max-msg-rate 100/h
-    </domain>
 </virtual-mta>
 
 # ============================================================
-# VIRTUAL MTA - COLD (IP3) - ACTIF
-# Prospection, outreach
+# VIRTUAL MTA - COLD (IP3) — ACTIVE
+# Cold outreach, purchased lists
+# max-cold-virtual-mta-msg limits first-time sends to new domains
 # ============================================================
-
 <virtual-mta mta-cold-1>
     smtp-source-host IP3_ADDRESS cold-outreach-1.com
-    # Remplacer IP3_ADDRESS par IP reelle
+    domain-key dkim,*,/etc/pmta/dkim/cold-outreach-1-com.pem
 
     <domain *>
-        dkim-key /etc/pmta/dkim/cold-outreach-1-com.pem
-        dkim-selector default
-
-        max-smtp-out 20
-        max-msg-rate 1000/d
-
+        max-smtp-out 2
+        max-cold-virtual-mta-msg 200/day
+        max-msg-rate 300/h
         retry-after 1h
-        bounce-after 3d
-    </domain>
-
-    <domain gmail.com>
-        max-msg-rate 100/h
-    </domain>
-
-    <domain outlook.com>
-        max-msg-rate 100/h
-    </domain>
-
-    <domain yahoo.com>
-        max-msg-rate 50/h
+        bounce-after 24h
     </domain>
 </virtual-mta>
 
 # ============================================================
-# STANDBY IPs (IP4-5) - Warm-up / Reserve
+# STANDBY IPs (IP4-5) — Warm-up / Reserve
 # ============================================================
-
 <virtual-mta mta-standby-1>
     smtp-source-host IP4_ADDRESS cold-outreach-2.com
+    domain-key dkim,*,/etc/pmta/dkim/cold-outreach-2-com.pem
 
     <domain *>
-        dkim-key /etc/pmta/dkim/cold-outreach-2-com.pem
-        dkim-selector default
-        max-msg-rate 100/d  # Warm-up rate
+        max-smtp-out 1
+        max-cold-virtual-mta-msg 50/day
+        max-msg-rate 50/h
     </domain>
 </virtual-mta>
 
 <virtual-mta mta-standby-2>
     smtp-source-host IP5_ADDRESS cold-outreach-3.com
+    domain-key dkim,*,/etc/pmta/dkim/cold-outreach-3-com.pem
 
     <domain *>
-        dkim-key /etc/pmta/dkim/cold-outreach-3-com.pem
-        dkim-selector default
-        max-msg-rate 100/d  # Warm-up rate
+        max-smtp-out 1
+        max-cold-virtual-mta-msg 50/day
+        max-msg-rate 50/h
     </domain>
 </virtual-mta>
 
 # ============================================================
-# POOLS (Routing par type d'email)
+# POOLS (Routing by email type)
 # ============================================================
-
 <virtual-mta-pool pool-trans>
     virtual-mta mta-trans
 </virtual-mta-pool>
@@ -161,29 +394,169 @@ error-file /var/log/pmta/error.log
 
 <virtual-mta-pool pool-cold>
     domain-selection weighted-round-robin
-
-    virtual-mta mta-cold-1 weight 100    # ACTIF
-    virtual-mta mta-standby-1 weight 10  # WARMING
-    virtual-mta mta-standby-2 weight 0   # RESTING
+    virtual-mta mta-cold-1    weight 100   # ACTIVE
+    virtual-mta mta-standby-1 weight 10    # WARMING
+    virtual-mta mta-standby-2 weight 0     # RESTING
 </virtual-mta-pool>
 
 # ============================================================
-# BOUNCE CATEGORIES
+# BACKOFF PATTERNS — Auto-detect ISP blocking & throttle
+# ============================================================
+# When a pattern matches an SMTP response, the queue enters
+# backoff mode: sends at backoff-max-msg-rate (1/m) and retries
+# after backoff-retry-after (20m). Auto-recovers after 1h.
 # ============================================================
 
+<smtp-pattern-list blocking-errors>
+    # --- AOL ---
+    reply /421 .* SERVICE NOT AVAILABLE/ mode=backoff
+    reply /generating high volumes of.* complaints from AOL/ mode=backoff
+    reply /554 .*aol.com/ mode=backoff
+    reply /421dynt1/ mode=backoff
+    reply /HVU:B1/ mode=backoff
+    reply /DNS:NR/ mode=backoff
+    reply /RLY:NW/ mode=backoff
+    reply /DYN:T1/ mode=backoff
+    reply /RLY:BD/ mode=backoff
+    reply /RLY:CH2/ mode=backoff
+    reply /421rlynw/ mode=backoff
+
+    # --- Yahoo ---
+    reply /421 .* Please try again later/ mode=backoff
+    reply /421 Message temporarily deferred/ mode=backoff
+    reply /VS3-IP5 Excessive unknown recipients/ mode=backoff
+    reply /VSS-IP Excessive unknown recipients/ mode=backoff
+    reply /\[GL01\] Message from/ mode=backoff
+    reply /\[TS01\] Messages from/ mode=backoff
+    reply /\[TS02\] Messages from/ mode=backoff
+    reply /\[TS03\] All messages from/ mode=backoff
+    reply /permanently deferred/ mode=backoff
+
+    # --- Hotmail / Outlook / Microsoft ---
+    reply /exceeded the rate limit/ mode=backoff
+    reply /exceeded the connection limit/ mode=backoff
+    reply /Mail rejected by Windows Live Hotmail for policy reasons/ mode=backoff
+    reply /mail.live.com\/mail\/troubleshooting.aspx/ mode=backoff
+
+    # --- Adelphia ---
+    reply /421 Message Rejected/ mode=backoff
+    reply /Client host rejected/ mode=backoff
+    reply /blocked using UCEProtect/ mode=backoff
+
+    # --- Road Runner ---
+    reply /Mail Refused/ mode=backoff
+    reply /421 Exceeded allowable connection time/ mode=backoff
+    reply /amIBlockedByRR/ mode=backoff
+    reply /block-lookup/ mode=backoff
+    reply /Too many concurrent connections from source IP/ mode=backoff
+
+    # --- General blocking patterns ---
+    reply /too many/ mode=backoff
+    reply /Exceeded allowable connection time/ mode=backoff
+    reply /Connection rate limit exceeded/ mode=backoff
+    reply /refused your connection/ mode=backoff
+    reply /try again later/ mode=backoff
+    reply /try later/ mode=backoff
+    reply /550 RBL/ mode=backoff
+    reply /TDC internal RBL/ mode=backoff
+    reply /connection refused/ mode=backoff
+    reply /please see www.spamhaus.org/ mode=backoff
+    reply /Message Rejected/ mode=backoff
+    reply /refused by antispam/ mode=backoff
+    reply /Service not available/ mode=backoff
+    reply /currently blocked/ mode=backoff
+    reply /locally blacklisted/ mode=backoff
+    reply /not currently accepting mail from your ip/ mode=backoff
+    reply /421.*closing connection/ mode=backoff
+    reply /421.*Lost connection/ mode=backoff
+    reply /476 connections from your host are denied/ mode=backoff
+    reply /421 Connection cannot be established/ mode=backoff
+    reply /421 temporary envelope failure/ mode=backoff
+    reply /421 4.4.2 Timeout while waiting for command/ mode=backoff
+    reply /450 Requested action aborted/ mode=backoff
+    reply /550 Access denied/ mode=backoff
+    reply /\d+\.\d+\.\d+\.\d+ blocked/ mode=backoff
+    reply /Excessive unknown recipients - possible Open Relay/ mode=backoff
+    reply /^421 .* too many errors/ mode=backoff
+    reply /blocked.*spamhaus/ mode=backoff
+    reply /451 Rejected/ mode=backoff
+</smtp-pattern-list>
+
+# ============================================================
+# BOUNCE CATEGORY PATTERNS (in-config regex fallback)
+# The external bounce-classifications file (2785 patterns)
+# handles most cases. These are fallback regex patterns.
+# ============================================================
 <bounce-category-patterns>
-    <pattern>
-        pattern /(user|account).*(unknown|not found)/i
-        category bad-mailbox
-    </pattern>
-
-    <pattern>
-        pattern /(quota|mailbox full)/i
-        category quota-issues
-    </pattern>
-
-    <pattern>
-        pattern /(spam|blocked|blacklist)/i
-        category policy-related
-    </pattern>
+    /spam/ spam-related
+    /junk mail/ spam-related
+    /blacklist/ spam-related
+    /blocked/ spam-related
+    /\bU\.?C\.?E\.?\b/ spam-related
+    /\bAdv(ertisements?)?\b/ spam-related
+    /unsolicited/ spam-related
+    /\b(open)?RBL\b/ spam-related
+    /realtime blackhole/ spam-related
+    /\bvirus\b/ virus-related
+    /message +content/ content-related
+    /content +rejected/ content-related
+    /quota/ quota-issues
+    /limit exceeded/ quota-issues
+    /mailbox +(is +)?full/ quota-issues
+    /sender ((verify|verification) failed|could not be verified|address rejected|domain must exist)/ invalid-sender
+    /unable to verify sender/ invalid-sender
+    /requires valid sender domain/ invalid-sender
+    /bad sender's system address/ invalid-sender
+    /No MX for envelope sender domain/ invalid-sender
+    /^[45]\.4\.4/ routing-errors
+    /no mail hosts for domain/ invalid-sender
+    /\bstorage\b/ quota-issues
+    /(user|mailbox|recipient|rcpt|local part|address|account|mail drop|ad(d?)ressee) (has|has been|is)? *(currently|temporarily+)?(disabled|expired|inactive|not activated)/ inactive-mailbox
+    /Too many (bad|invalid|unknown|illegal|unavailable) (user|mailbox|recipient|rcpt|local part|address|account|mail drop|ad(d?)ressee)/ other
+    /(No such|bad|invalid|unknown|illegal|unavailable) (local +)?(user|mailbox|recipient|rcpt|local part|address|account|mail drop|ad(d?)ressee)/ bad-mailbox
+    /(user|mailbox|recipient|rcpt|local part|address|account|mail drop|ad(d?)ressee) +(\S+@\S+ +)?(not (a +)?valid|not known|not here|not found|does not exist|bad|invalid|unknown|illegal|unavailable)/ bad-mailbox
+    /\S+@\S+ +(is +)?(not (a +)?valid|not known|not here|not found|does not exist|bad|invalid|unknown|illegal|unavailable)/ bad-mailbox
+    /no mailbox here by that name/ bad-mailbox
+    /not our customer/ bad-mailbox
+    /no longer (valid|available)/ bad-mailbox
+    /\brelay(ing)?/ relaying-issues
+    /domain (retired|bad|invalid|unknown|illegal|unavailable)/ bad-domain
+    /domain no longer in use/ bad-domain
+    /domain (\S+ +)?(is +)?obsolete/ bad-domain
+    /denied/ policy-related
+    /prohibit/ policy-related
+    /refused/ policy-related
+    /banned/ policy-related
+    /policy/ policy-related
+    /suspicious activity/ policy-related
+    /bad sequence/ protocol-errors
+    /syntax error/ protocol-errors
+    /\broute\b/ routing-errors
+    /\bunroutable\b/ routing-errors
+    /Recipient address rejected/ invalid-mailbox
+    /DNSBL/ spam-related
+    /Account Inactive/ invalid-mailbox
+    /Invalid 7bit DATA/ content-related
+    /^2.\d+.\d+;/ success
+    /^[45]\.1\.[1346];/ bad-mailbox
+    /^[45]\.1\.2/ bad-domain
+    /^[45]\.1\.[78];/ invalid-sender
+    /^[45]\.2\.0;/ bad-mailbox
+    /^[45]\.2\.1;/ inactive-mailbox
+    /^[45]\.2\.2;/ quota-issues
+    /^[45]\.3\.3;/ content-related
+    /^[45]\.3\.5;/ bad-configuration
+    /^[45]\.4\.1;/ no-answer-from-host
+    /^[45]\.4\.2;/ bad-connection
+    /^[45]\.4\.[36];/ routing-errors
+    /^[45]\.4\.7;/ message-expired
+    /^[45]\.5\.3;/ policy-related
+    /^[45]\.5\.\d+;/ protocol-errors
+    /^[45]\.6\.\d+;/ content-related
+    /^[45]\.7\.[012];/ policy-related
+    /^[45]\.7\.7;/ content-related
+    // other
 </bounce-category-patterns>
+# ============================================================
+# END OF CONFIGURATION
+# ============================================================

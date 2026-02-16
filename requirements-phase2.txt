@@ -1,0 +1,26 @@
+# Email Engine - Phase 2 Dependencies
+
+# Core dependencies (already installed)
+fastapi>=0.104.0
+sqlalchemy>=2.0.0
+alembic>=1.12.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0  # For app.config
+uvicorn>=0.24.0
+
+# Phase 2 - New dependencies
+celery>=5.3.0             # Background jobs
+redis>=5.0.0              # Celery broker + backend + cache
+requests>=2.31.0          # MailWizz API client
+
+# Optional - for production
+python-dotenv>=1.0.0      # Environment variables
+prometheus-client>=0.19.0 # Metrics
+sentry-sdk>=1.40.0        # Error tracking
+
+# Development
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+black>=23.0.0
+ruff>=0.1.0

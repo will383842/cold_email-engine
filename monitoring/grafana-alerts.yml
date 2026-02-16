@@ -6,7 +6,7 @@ groups:
     rules:
       # PowerMTA down
       - alert: PowerMTADown
-        expr: up{job="powermta"} == 0
+        expr: email_engine_pmta_running == 0
         for: 2m
         labels:
           severity: critical
@@ -14,29 +14,29 @@ groups:
           summary: "PowerMTA is down"
           description: "PowerMTA has been down for 2+ minutes"
 
-      # High bounce rate
+      # High bounce rate (bounces received vs forwarded as proxy)
       - alert: HighBounceRate
-        expr: (bounced_emails / sent_emails) > 0.03
+        expr: rate(email_engine_bounces_received_total[1h]) > 50
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "Bounce rate > 3%"
-          description: "Bounce rate is {{ $value }}%, consider pausing campaigns"
+          summary: "High bounce volume"
+          description: "Receiving {{ $value }} bounces/hour, investigate delivery issues"
 
       # IP blacklisted
       - alert: IPBlacklisted
-        expr: blacklist_status == 1
+        expr: email_engine_ips_blacklisted > 0
         for: 0s
         labels:
           severity: critical
         annotations:
           summary: "IP blacklisted"
-          description: "IP {{ $labels.ip }} is blacklisted on {{ $labels.blacklist }}"
+          description: "{{ $value }} IP(s) currently blacklisted, check blacklist events"
 
       # Disk space
       - alert: DiskSpaceLow
-        expr: disk_usage_percent > 85
+        expr: email_engine_disk_usage_pct > 85
         for: 5m
         labels:
           severity: warning
@@ -46,10 +46,20 @@ groups:
 
       # Queue size
       - alert: HighQueueSize
-        expr: powermta_queue_size > 10000
+        expr: email_engine_pmta_queue_size > 10000
         for: 10m
         labels:
           severity: warning
         annotations:
           summary: "PowerMTA queue > 10K"
           description: "Queue has {{ $value }} messages, check for delivery issues"
+
+      # Service down (scrape target unreachable)
+      - alert: EmailEngineDown
+        expr: up{job="email-engine"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Email Engine API is unreachable"
+          description: "Prometheus cannot scrape Email Engine metrics for 2+ minutes"

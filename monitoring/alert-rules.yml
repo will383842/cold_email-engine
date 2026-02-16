@@ -1,0 +1,68 @@
+# Prometheus Alert Rules for Email Engine
+# Loaded by Prometheus, routed to Alertmanager -> Telegram
+
+groups:
+  - name: email-engine-alerts
+    rules:
+      - alert: PowerMTADown
+        expr: email_engine_pmta_running == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PowerMTA is down"
+          description: "PowerMTA has been down for 2+ minutes. Check: systemctl status pmta"
+
+      - alert: HighBounceRate
+        expr: increase(email_engine_bounces_received_total[1h]) > 50
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High bounce volume"
+          description: "Received {{ $value | humanize }} bounces in the last hour — investigate delivery issues"
+
+      - alert: IPBlacklisted
+        expr: email_engine_ips_blacklisted > 0
+        for: 0s
+        labels:
+          severity: critical
+        annotations:
+          summary: "IP blacklisted"
+          description: "{{ $value }} IP(s) currently blacklisted — check blacklist events"
+
+      - alert: DiskSpaceLow
+        expr: email_engine_disk_usage_pct > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk usage > 85%"
+          description: "Disk usage is at {{ $value | humanize }}%"
+
+      - alert: HighQueueSize
+        expr: email_engine_pmta_queue_size > 10000
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PowerMTA queue > 10K"
+          description: "Queue has {{ $value | humanize }} messages — check for delivery issues"
+
+      - alert: EmailEngineDown
+        expr: up{job="email-engine"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Email Engine API is unreachable"
+          description: "Prometheus cannot scrape metrics for 2+ minutes"
+
+      - alert: HighRAMUsage
+        expr: email_engine_ram_usage_pct > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "RAM usage > 90%"
+          description: "RAM usage is at {{ $value | humanize }}%"

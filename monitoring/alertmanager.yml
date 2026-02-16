@@ -1,0 +1,37 @@
+# Alertmanager configuration — Email Engine
+# Routes Prometheus alerts to Telegram bot
+#
+# BEFORE DEPLOYING: Set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in .env
+
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "telegram"
+  group_by: ["alertname", "severity"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+  routes:
+    - match:
+        severity: critical
+      receiver: "telegram"
+      repeat_interval: 1h
+    - match:
+        severity: warning
+      receiver: "telegram"
+      repeat_interval: 4h
+
+receivers:
+  - name: "telegram"
+    telegram_configs:
+      - bot_token_file: /etc/alertmanager/telegram_bot_token
+        chat_id: TELEGRAM_CHAT_ID_PLACEHOLDER
+        parse_mode: HTML
+        message: |
+          <b>{{ .GroupLabels.alertname }}</b> [{{ .GroupLabels.severity | toUpper }}]
+          {{ range .Alerts }}
+          {{ .Annotations.summary }}
+          {{ .Annotations.description }}
+          {{ end }}

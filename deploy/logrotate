@@ -1,0 +1,12 @@
+# /etc/logrotate.d/email-engine
+# Rotate Email Engine logs (bounce-pipe, delivery-pipe, backup)
+
+/var/log/email-engine/*.log {
+    daily
+    rotate 30
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 email-engine email-engine
+}

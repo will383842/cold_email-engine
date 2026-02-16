@@ -146,6 +146,29 @@ class PMTABouncePayload(BaseModel):
     vmta: str = ""
 
 
+class PMTADeliveryPayload(BaseModel):
+    domain: str
+    count: int = Field(default=1, ge=1)
+
+
+# --- Validation ---
+class EmailValidationRequest(BaseModel):
+    emails: list[str] = Field(..., min_length=1, max_length=10000)
+
+
+class EmailValidationResult(BaseModel):
+    email: str
+    valid: bool
+    reason: str | None = None
+
+
+class EmailValidationResponse(BaseModel):
+    total: int
+    valid: int
+    invalid: int
+    results: list[EmailValidationResult]
+
+
 # --- Alert ---
 class AlertLogResponse(BaseModel):
     id: int

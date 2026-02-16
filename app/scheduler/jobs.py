@@ -109,3 +109,62 @@ async def job_metrics_update() -> None:
         logger.error("job_metrics_update_failed", error=str(exc))
     finally:
         db.close()
+
+
+async def job_retry_queue() -> None:
+    """Retry failed scraper-pro API calls (every 2 min)."""
+    try:
+        from app.services.retry_queue import process_queue
+
+        await process_queue()
+    except Exception as exc:
+        logger.error("job_retry_queue_failed", error=str(exc))
+
+
+async def job_sync_warmup_quotas() -> None:
+    """Sync warmup quotas to MailWizz via API (every hour)."""
+    db = SessionLocal()
+    try:
+        from app.enums import WarmupPhase
+        from app.models import IP, WarmupPlan
+        from app.services.mailwizz_api_client import MailWizzAPIClient
+        from app.services.mailwizz_db import mailwizz_db
+
+        client = MailWizzAPIClient()
+
+        # Get all active warmup plans
+        plans = (
+            db.query(WarmupPlan)
+            .filter(WarmupPlan.phase != WarmupPhase.COMPLETED.value)
+            .all()
+        )
+
+        synced = 0
+        for plan in plans:
+            ip = db.query(IP).filter(IP.id == plan.ip_id).first()
+            if not ip or not ip.mailwizz_server_id:
+                continue
+
+            # Try API first, fallback to MySQL
+            if client._is_configured():
+                success = await client.update_delivery_server_quota(
+                    server_id=ip.mailwizz_server_id,
+                    daily_quota=plan.current_daily_quota,
+                )
+                if success:
+                    synced += 1
+            else:
+                # Fallback to MySQL
+                success = await mailwizz_db.update_quota(
+                    server_id=ip.mailwizz_server_id,
+                    hourly_quota=None,
+                    daily_quota=plan.current_daily_quota,
+                )
+                if success:
+                    synced += 1
+
+        logger.info("job_sync_warmup_quotas_complete", synced=synced, total=len(plans))
+    except Exception as exc:
+        logger.error("job_sync_warmup_quotas_failed", error=str(exc))
+    finally:
+        db.close()

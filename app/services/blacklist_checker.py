@@ -2,6 +2,7 @@
 
 import asyncio
 from datetime import datetime
+from functools import partial
 
 import dns.resolver
 import structlog
@@ -62,8 +63,26 @@ class BlacklistChecker:
                 logger.warning("ip_blacklisted", ip=ip_address, blacklist=bl)
         return listed_on
 
+    async def _check_single_async(self, ip_address: str, blacklist: str) -> bool:
+        """Async wrapper for check_single — runs DNS in thread pool."""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(
+            None, partial(self.check_single, ip_address, blacklist)
+        )
+
+    async def _check_ip_async(self, ip_address: str) -> list[str]:
+        """Check an IP against all 9 blacklists concurrently."""
+        tasks = [self._check_single_async(ip_address, bl) for bl in BLACKLISTS]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        listed_on = []
+        for bl, result in zip(BLACKLISTS, results):
+            if isinstance(result, bool) and result:
+                listed_on.append(bl)
+                logger.warning("ip_blacklisted", ip=ip_address, blacklist=bl)
+        return listed_on
+
     async def check_all_ips(self) -> dict[str, list[str]]:
-        """Check all active/warming IPs against blacklists."""
+        """Check all active/warming IPs against blacklists (non-blocking)."""
         ips = (
             self.db.query(IP)
             .filter(IP.status.in_([IPStatus.ACTIVE.value, IPStatus.WARMING.value]))
@@ -72,7 +91,7 @@ class BlacklistChecker:
 
         results: dict[str, list[str]] = {}
         for ip in ips:
-            listed_on = self.check_ip(ip.address)
+            listed_on = await self._check_ip_async(ip.address)
             if listed_on:
                 results[ip.address] = listed_on
                 self._record_listing(ip, listed_on)
@@ -115,7 +134,7 @@ class BlacklistChecker:
             ip = self.db.query(IP).filter(IP.id == event.ip_id).first()
             if not ip:
                 continue
-            if not self.check_single(ip.address, event.blacklist_name):
+            if not await self._check_single_async(ip.address, event.blacklist_name):
                 event.delisted_at = datetime.utcnow()
                 event.auto_recovered = True
                 logger.info(

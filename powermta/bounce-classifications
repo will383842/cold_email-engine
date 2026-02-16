@@ -1,0 +1,2809 @@
+# ============================================================
+# PowerMTA Bounce Classifications - 2785 patterns
+# File: /etc/pmta/bounce-classifications
+# ============================================================
+# Category codes:
+#   10 = bad-mailbox (hard bounce)
+#   20 = rate-limit / temporary
+#   21 = DNS / sender domain issues
+#   22 = quota-issues (mailbox full)
+#   23 = message-size exceeded
+#   24 = timeout / connection lost
+#   25 = internal suppression
+#   26 = smart-send suppression
+#   30 = protocol error
+#   40 = other / unclassified
+#   50 = policy / blocked
+#   51 = spam / blacklist / RBL
+#   52 = content / spam filter
+#   53 = attachment blocked
+#   54 = relay denied
+#   60 = auto-reply
+#   70 = temporary / greylisting
+#  100 = challenge-response verification
+# ============================================================
+,10,400 UnKnown User
+,10,401 4.1.3 Bad recipient address
+,10,421 4.3.2 unknown forward address
+,10,421 4.4.0 honeypot rejected
+,10,450 4.1.1 |User unknown
+,10,451 4.1.0 Recipient unknown
+,10,451 Account disabled
+,10,451 Address is invalid
+,10,451 NOT VALID RECIPIENT
+,10,451 Provider does not confirm sender account
+,10,451 unable to verify recipient
+,10,451|This email no longer active
+,10,472 4.0.0 User does not exist at this site
+,10,472 No such user
+,10,5.1.1 |Recipient address rejected
+,10,5.1.1|Bad destination email address
+,10,500 5.3.7|customer
+,10,500 No such user
+,10,500 |user is disabled
+,10,501 #5.1.1 bad address
+,10,501 5.1.1 bad address|RCPT_DOMAIN
+,10,501 5.1.3 Bad recipient address
+,10,501 5.1.3 Invalid address
+,10,501 5.1.3 Invalid character
+,10,501 5.5.2 RCPT TO |error
+,10,501 5.5.4 Invalid Address
+,10,501 5.5.4 Invalid Address.
+,10,501 Bad address
+,10,501 Bad Recipient
+,10,501 Invalid Address
+,10,501 Invalid character |username
+,10,501 |5.1.3 Invalid character |username
+,10,503 |Invalid recipient
+,10,503|recipients are invalid
+,10,504 |disabled
+,10,508 No such address
+,10,510 5.1.1 User |unknown
+,10,511 5.1.1 Bad destination mailbox
+,10,511 5.1.1 Invalid Recipient
+,10,511 5.1.1 Recipient address
+,10,511 5.1.1 |Recipient
+,10,511 Bad destination mailbox
+,10,511 Sorry, invalid recipient (#5.1.1)
+,10,516 5.1.6 mailbox has moved
+,10,521 5.0.0 Nonexistent User
+,10,521 5.2.1 Email fails
+,10,521 5.2.1 Mailbox
+,10,521 No Redirect Entry for this address
+,10,540 5.7.1 |Account deleted by user
+,10,540 5.7.1|recipient address rejected: Blocked
+,10,542 5.7.1|Recipient address rejected: Mailbox is suspended
+,10,550  No such user
+,10,550 #5.1.0 Address rejected
+,10,550 - Rejected Inactive Account
+,10,550 4.2.1 mailbox |disabled
+,10,550 5.1.0 Recipient rejected
+,10,550 5.1.10 RESOLVER.ADR.RecipientNotFound
+,10,550 5.1.0|RCPT_DOMAIN|inactive user
+,10,550 5.1.1 Address Unknown
+,10,550 5.1.1 Destinatario no valido
+,10,550 5.1.1 No Valid or Blank Recipient
+,10,550 5.1.1 The e-mail address you entered couldn't be found
+,10,550 5.1.1 unknown or illegal user
+,10,550 5.1.1 unknown |alias
+,10,550 5.1.1 User is disabled
+,10,550 5.1.1 user |not known
+,10,550 5.1.1 user:|unknown, see http://tele.dk/
+,10,550 5.1.1 Yildiz Holding e-mail sistemlerinde belirtilen e-mail adresi bulunmamaktadir
+,10,550 5.1.1 |Account not available
+,10,550 5.1.1 |Account not found
+,10,550 5.1.1 |Bad destination mailbox address
+,10,550 5.1.1 |code=28
+,10,550 5.1.1 |Destinatario Sconosciuto
+,10,550 5.1.1 |does not exist
+,10,550 5.1.1 |email
+,10,550 5.1.1 |endereco de e-mail do destinatario nao foi encontrado
+,10,550 5.1.1 |illegal user
+,10,550 5.1.1 |Invalid mailbox
+,10,550 5.1.1 |invalid recipient
+,10,550 5.1.1 |is not a valid mailbox
+,10,550 5.1.1 |mailbox
+,10,550 5.1.1 |No longer here
+,10,550 5.1.1 |no mailbox here
+,10,550 5.1.1 |Recipient rejected
+,10,550 5.1.1 |Recipient Suspended
+,10,550 5.1.1 |Recipient Unknown
+,10,550 5.1.1 |user disabled
+,10,550 5.1.1 |User inactive
+,10,550 5.1.1 |User is unknown
+,10,550 5.1.1 |User unknown
+,10,550 5.1.1 |usuario nao faz mais parte do quadro de colaboradores
+,10,550 5.1.1 |utilisateur inconnu
+,10,550 5.1.1|RCPT_DOMAIN|recipient|rejected
+,10,550 5.1.1|Recipient address rejected
+,10,550 5.1.1|recipient disabled
+,10,550 5.1.1|Recipient Invalid
+,10,550 5.1.1|Recipient Undeliverable
+,10,550 5.1.1|RecipNotFound
+,10,550 5.1.1|TT506
+,10,550 5.1.1|unknown or illegal alias
+,10,550 5.1.1|User unknown
+,10,550 5.1.6
+,10,550 5.2.0 mailbox unavailable
+,10,550 5.2.1 mailbox is disabled
+,10,550 5.2.1 Not sending to previously bounced email|ImprovMX
+,10,550 5.2.1 This mailbox|inactivity
+,10,550 5.2.1 user disabled
+,10,550 5.2.1 User not Active
+,10,550 5.2.1 user|is inactive or suspended
+,10,550 5.2.1 |Suspended Inactive mailbox
+,10,550 5.2.1 |This server does not accept mails for this recipient
+,10,550 5.2.1 |unknown
+,10,550 5.2.1|user's mailbox is disabled
+,10,550 5.2.2 Invalid Recipient
+,10,550 5.4.1|Recipient address rejected: Access denied|outlook.com
+,10,550 5.4.4|MX domain does not accept mail
+,10,550 5.5.0 Adresse destinataire invalide
+,10,550 5.5.0 Boite du destinataire archivee
+,10,550 5.5.0 Requested action not taken: mailbox unavailable
+,10,550 5.5.0 Requested actions not taken|mailbox is unavailable
+,10,550 5.5.0 |domain |no more exists
+,10,550 5.7.0 |No one here by that name
+,10,550 5.7.0 this email was sent to an inactive account
+,10,550 5.7.1 Email nao solicitado|unsubscribe
+,10,550 5.7.1 Email|unsubscribe
+,10,550 5.7.1 Invalid|recipient
+,10,550 5.7.1 Recipient address|is not routable
+,10,550 5.7.1 Recipient rejected
+,10,550-5.7.1 The recipient was not found in our domain|gcdp|gsmtp
+,10,550 5.7.1 |nable to deliver to
+,10,550 5.7.1 |o such user
+,10,550 5.7.1 |Recipient not found
+,10,550 5.7.1 |Recipient privacy settings disallowed delivery of this message
+,10,550 5.7.1 |undeliverable address
+,10,550 5.7.1|Blocked, email address unknown
+,10,550 5.7.1|Mailbox Invalid
+,10,550 5.7.1|Recipient address rejected: Invalid recipient
+,10,550 5.7.1|Recipient address rejected:|doesn't accept mail
+,10,550 5.7.1|Recipient address rejected|after decryption
+,10,550 5.7.1|unknown user
+,10,550 5.7.5 Invalid Recipient
+,10,550 540 5.7.1|RECIPIENT ??? ADDRESS REJECTED|YOUR EMAILS HAS BEEN RETURNED BECAUSE THE INTENTED RECIPIENT
+,10,550|account disabled
+,10,550|domain is not in use
+,10,550|not a known user
+,10,550|not found in cs.bham.ac.uk domain
+,10,550 <|> not accepted
+,10,550 <|> recipient rejected
+,10,550 A message that you sent could not be delivered|Mailbox is inactive.
+,10,550 Account discontinued
+,10,550 account does not appear to be valid
+,10,550 Account is not active
+,10,550 account |disable
+,10,550 account |valid
+,10,550 address deleted
+,10,550 ADDRESS DOES NOT EXIST
+,10,550 Address invalid
+,10,550 Address not found
+,10,550 Address not known
+,10,550 Address not present in directory
+,10,550 address rejected
+,10,550 Address unknown
+,10,550 Address|does not exist
+,10,550 Address|not known here
+,10,550 adresse non valide
+,10,550 Alias is not active
+,10,550 Bad email address
+,10,550 cannot process address
+,10,550 Can't verify recipient
+,10,550 Couldn't verify the recipient
+,10,550 cuda_nsu
+,10,550 Diese Adresse wird nicht verwendet
+,10,550 Direccion invalida
+,10,550 E-mail delivery to|refused|does not exist
+,10,550 e-mail nao encontrado verifique o destinatario
+,10,550 E-mail|not handled by this system
+,10,550 Email Desconhecido
+,10,550 Endereço de e-mail inválido
+,10,550 Former address owner has left
+,10,550 Illegal e-mail address
+,10,550 Indirizzo e-mail inesistente
+,10,550 invalid mailbox
+,10,550 Invalid recipient
+,10,550 invalid user
+,10,550 Mail to|has been suspended
+,10,550 Mailbox denied|No access
+,10,550|mailbox has been cancelled
+,10,550 mailbox not found
+,10,550 mailbox|not found or inactivated
+,10,550 mailbox|unavailable
+,10,550 Mailbox|is unattended
+,10,550 MailCode 049.MC03 AntiFake|Unknown mail address
+,10,550 mailserver not stored this user
+,10,550 Message was not accepted|user is terminated
+,10,550 Message was not accepted|user not found
+,10,550 Nada encontrado neste
+,10,550 Nenhum
+,10,550 Nie ma takiego adresu
+,10,550 no accounts on domain
+,10,550 No email user exists
+,10,550 No hay nadie con esta direcciÃ³n
+,10,550 No one here by that name
+,10,550 Non-existant Recipient
+,10,550 not accept email |user
+,10,550 NOT RECIPIENT
+,10,550 permanent failure for one or more recipients|All recipient addresses rejected
+,10,550 permanent failure for one or more recipients|email account|disabled
+,10,550 permanent failure for one or more recipients|No such user
+,10,550 Questo indirizzo non esiste
+,10,550 RCPT Is Unknown
+,10,550 RCPT TO|SMTP delivery not allowed
+,10,550 receipient unknown
+,10,550 Recipient address not accepted
+,10,550 Recipient address|does not exist
+,10,550 Recipient Address|known
+,10,550 Recipient Address|verified
+,10,550 Recipient does not exist
+,10,550 Recipient email address rejected
+,10,550 recipient email address |verified
+,10,550 Recipient not found
+,10,550 Recipient not found in the Email Firewall
+,10,550 Recipient not here
+,10,550 Recipient not in route list
+,10,550 Recipient Rejected: Domain not hosted here
+,10,550 Recipient rejected:|User|not found
+,10,550 Reject: Invalid recipient
+,10,550 Requested action not taken|mailbox unavailable
+,10,550 Rule imposed|does not exist
+,10,550 sorry account does not appear to be valid
+,10,550 sorry account |valid
+,10,550 Sorry this is no longer a valid email address. Please contact our office at
+,10,550 sorry, this mailbox is currently disabled
+,10,550 Team Disabled - contact support
+,10,550 Terminated account
+,10,550 the account is disable
+,10,550 the account is disable/
+,10,550 The account|cancelled
+,10,550 The recipient cannot be verified
+,10,550 The recipient|recognized
+,10,550 the user|does not exist
+,10,550 The user|does not exist on our system.
+,10,550 this address|closed
+,10,550 This email account has been closed
+,10,550 this email address|exist
+,10,550|this is not a valid email address
+,10,550 unknown email address
+,10,550 unknown receipient
+,10,550|unknown user
+,10,550 Unkown address
+,10,550 Unkown user
+,10,550 Unroutable sender address
+,10,550 User banned
+,10,550 user disabled
+,10,550 user has deleted mailbox
+,10,550 user is unknown|domain
+,10,550 User mailbox|not found.
+,10,550 User |recognized
+,10,550 User|does not exist
+,10,550 User|unknown
+,10,550 Usuario desconhecido
+,10,550 Usuario Desconocido
+,10,550 Utilisateur inconnu
+,10,550 We cannot verify the recipient
+,10,550 We do not accept email|user
+,10,550 we do not accept mail to this address
+,10,550 we do not handle mail for
+,10,550 We don't handle mail for
+,10,550 Your domain has been blocked by local user
+,10,550 Your message was unable to be delivered|invalid
+,10,550 |5.7.1 Message rejected |no valid rec
+,10,550 |account does not appear to be valid
+,10,550 |address does not exist
+,10,550 |Conta de email foi desativada
+,10,550 |e-mail service discontinued
+,10,550 |email account |does no exists.
+,10,550 |Fake sender
+,10,550 |inactividad
+,10,550 |inexistenta
+,10,550 |inexistente
+,10,550 |Invalid User
+,10,550 |mailserver not stored this user
+,10,550 |niet in gebruik
+,10,550 |nknow |ecipient
+,10,550 |No account by that name here
+,10,550 |no longer
+,10,550 |No mailbox
+,10,550 |No user
+,10,550 |not valid
+,10,550 |nrecognized
+,10,550 |nvalid |ddress
+,10,550 |o such recipient
+,10,550 |recipient rejected. IB603
+,10,550|rejected: user disabled
+,10,550 |service discontinued
+,10,550 |such user
+,10,550 |The recipient email address cannot be verified
+,10,550 |This account is disabled or not yet active (#5.1.1)
+,10,550 |UNKNOWN E-MAIL ADDRESS
+,10,550 |User account is unavailable
+,10,550 |User account suspended by USA.NET
+,10,550 |user not exist
+,10,550-5.1.1 The email account |does not exist
+,10,550-5.1.1 The email account|not exist
+,10,550-5.1.1 |does not exist
+,10,550|5.2.1 The email account that you tried to reach is disabled
+,10,550-E-mail desconhecido ou conta desativada
+,10,550-Invalid recipient |(#5.1.1)
+,10,550-This user|reachable
+,10,550|5.7.1|email account|is disabled|gcdp|gsmtp
+,10,550|5.7.1 inactive|gcdp|gsmtp
+,10,550|5.7.1 Message rejected (no valid reci
+,10,550|A mensagem|foi entregue verifique se o|foi digitado
+,10,550|account does not appear to be valid
+,10,550|Account Inactive
+,10,550|account is not active
+,10,550|address doesnt exist
+,10,550|Boite email inconnue
+,10,550|E-mail desconhecido ou conta desativada
+,10,550|email account|not exist
+,10,550|email address does not exist
+,10,550|email address is no longer in use
+,10,550|ESTE ENDERECO DE EMAIL NAO EXISTE
+,10,550|Gone away, no forwarding address known
+,10,550|http://p.imaginet.co.za/UNR01
+,10,550|I cannot deliver mail for
+,10,550|juno.com Account Inactive
+,10,550|mail boxes in domain|have been migrated
+,10,550|Mailbox unavailable|550|Such mail box does not exist in our organisation
+,10,550|malformed addres
+,10,550|Neue Adresse
+,10,550|Ninguna de estas direcciones tenemos en el servidor
+,10,550|No account by that name here
+,10,550|No active conversation at this address
+,10,550|no recipient by that name
+,10,550|no recipient matching the email address specified
+,10,550|No such recipient here
+,10,550|not a registered mail name
+,10,550|not accepted|Account does not exist
+,10,550|not found on our mail servers
+,10,550|Not Known to us
+,10,550|person
+,10,550|Recipient does not exist
+,10,550|Recipient unknown
+,10,550|recipient you wrote to no longer exists
+,10,550|retired
+,10,550|Sorry the user|is not known on our system
+,10,550|The recipient cannot be verified
+,10,550|user disabled|cannot receive new mail
+,10,550|Utilisateur inconnu
+,10,550|XM-RJCT01: Account|does not exist
+,10,551 5.1.1 recipient
+,10,551 5.1.1 recipient |exist
+,10,551 5.1.1 user does not exist
+,10,551 5.1.6 User |moved
+,10,551|email address|deleted
+,10,551 Forwarding|hosts disabled
+,10,551 RC:NE The email account does not exist
+,10,551 Unrecognized mailbox
+,10,551 |address not recognised by our system
+,10,551 |address not recognised by our system. The email has been refused.
+,10,551|user not local
+,10,552 5.2.1|Recipient address rejected: Mailbox suspended
+,10,553 5.1.1 Recipient address not recognised
+,10,553 5.1.3|Invalid Email Account
+,10,553 5.3.0|domain no longer accepts emails
+,10,553 5.3.0 |User unknown
+,10,553 5.3.0 |usuario no existe en nuestros servidores
+,10,553 5.3.0 |Utilisateur Inconnu
+,10,553 5.3.0 <|@|>|unknown
+,10,553 Invalid|user
+,10,553 RP:RDN
+,10,553 sorry, no mail-box here by that name
+,10,553 user no longer exists
+,10,553|The recipient address|is not a valid|address
+,10,553|unknown email address
+,10,554 30 Sorry, your message to|cannot be delivered. This mailbox is disabled (554.30)
+,10,554 5.1.8|Invalid email
+,10,554 5.7.1 Invalid Recipient
+,10,554 5.7.1 No mail routing address
+,10,554 5.7.1 NO-DOMAIN
+,10,554 5.7.1 Recipient address rejected: Destination server do not accept recipient address
+,10,554 5.7.1 Recipient invalid
+,10,554 5.7.1 recipient|not known
+,10,554 5.7.1 User unknown
+,10,554 5.7.1 |address is changed
+,10,554 5.7.1 |endereco de destinatario nao existe ou nao esta autorizado a receber mensagens
+,10,554 5.7.1 |not a valid |account
+,10,554 5.7.1 |Recipient Account Invalid
+,10,554 5.7.1 |unexistent address
+,10,554 5.7.1 |Usuario desabilitado por inatividade
+,10,554 5.7.1|does not exist
+,10,554 5.7.1|Recipient address rejected: Invalid-Recipient
+,10,554 5.7.1|Recipient address rejected: Invalid-Recipient.
+,10,554 5.7.1|Recipient address rejected: The Account|has expired
+,10,554 5.7.1|Recipient address rejected:|cannot receive mail
+,10,554 5.7.1|Recipient address rejected|Email hosting and forwarding for|has been decommissioned
+,10,554 5.7.1|Recipient address rejected|Invalid|sender email address
+,10,554 5.7.1|Recipient address rejected|NO-DOMAIN
+,10,554 5.7.1|Recipient address rejected|The email address is not valid anymore
+,10,554 Account Not found
+,10,554 bogus and forged e-mail address
+,10,554 delivery error |account
+,10,554 delivery error |user
+,10,554 delivery error: dd Not a valid recipient
+,10,554 delivery error: dd Requested mail action aborted - mta
+,10,554 delivery error: dd This user doesn't have a yahoo.co.uk account
+,10,554 delivery error: dd This user doesn't have a|account
+,10,554 delivery error|This account has been disabled or discontinued
+,10,554 delivery error|This mailbox is disabled
+,10,554 forged e-mail address
+,10,554 Invalid recipient
+,10,554 no valid recipient
+,10,554 Not our user
+,10,554 Rcpt|does not exist
+,10,554 rcpt|dosn't exist
+,10,554 User no found
+,10,554 |ail box
+,10,554 |bogus and forged e-mail address
+,10,554 |forged e-mail address
+,10,554 |should log in to enable receiving the mail
+,10,554|5.7.1|Recipient address rejected: Access denied|For assistance call Helpdesk
+,10,554 5.7.1|recipient address rejected: "unknown user"
+,10,554|User not found
+,10,557 Email address|is not available here
+,10,571 sorry sender address|invalid
+,10,571 sorry|invalid format
+,10,571 |passCode
+,10,572 5.0.0
+,10,572|5.7.2|user|discontinued
+,10,574 |Invalid recipient
+,10,577 5.1.1 |undeliverable address
+,10,<|> doesn't accept mail here
+,10,Account expired
+,10,account is not allowed
+,10,account is not existing
+,10,account isn't a local account
+,10,Account locked by abuse team
+,10,account not available
+,10,Address invalid
+,10,address is invalid
+,10,address not found in table
+,10,address was not found
+,10,Addressee unknown
+,10,bad recipient address
+,10,BAD_RECIPIENT
+,10,bestaat niet
+,10,bestaat niet|does not exist
+,10,cannot find address on system
+,10,Command RCPT User <|> not OK
+,10,Conta Desabilitada
+,10,deactivated
+,10,Destinatario desconocido
+,10,Destination address does not appear to exist
+,10,disabled mailbox
+,10,does not live here
+,10,doesn't exist
+,10,Domain has been disabled
+,10,domain is no longer used
+,10,domain is not valid
+,10,domain |is not used anymore
+,10,domain|no more exists
+,10,ecipient address rejected: MX Lookup error
+,10,ecipient address rejected: User has moved
+,10,ecipient denied
+,10,ecipient does not accept mail
+,10,ecipient has left the
+,10,ecipient never logged onto their free AIM Mail account
+,10,ecipient not accepted
+,10,ecipient rejected: account reserved
+,10,ecipient |does not exist here
+,10,ejected: Domain not active
+,10,ejected: Mailbox closed.
+,10,email|does no exists
+,10,Endereco de e-mail invalido
+,10,ese destinatario no existe
+,10,Este usuario nao faz mais parte do quadro de colaboradores |esta incorreto
+,10,expired account
+,10,his account does not receive e-mail
+,10,his account is not
+,10,his server doesn't handle mail
+,10,Illegal user
+,10,Indirizzo destinatario sconosciuto
+,10,INVALID USER
+,10,is not a valid user
+,10,list is offline
+,10,mail account closed
+,10,mail is not being accepted at this address
+,10,mail no longer in service
+,10,mail not Found
+,10,mail receiving disabled |rejecting
+,10,mail to that recipient is not accepted
+,10,mail to |not accepted here
+,10,Mailaddress is | disabled
+,10,mailbox disabled
+,10,Mailbox does not exist
+,10,Mailbox not found
+,10,mailbox |is restricted
+,10,mailbox |unknown
+,10,multiple name matches
+,10,nknown address
+,10,no "|" in name directory
+,10,no email address in directory
+,10,no mail box available for this user
+,10,No one here by that name
+,10,No recibimos mensajes para este usuario
+,10,no recipients found
+,10,NO SUCH ADDRESS
+,10,no such email here
+,10,no such person
+,10,no such student
+,10,no such user
+,10,no such |address
+,10,no such |ccount
+,10,no such |ddress
+,10,no user with that name
+,10,no valid recipients
+,10,no |ailbox
+,10,nonexistent user
+,10,nosuchuser;
+,10,not a valid local user
+,10,not a valid mailbox
+,10,not found in the recipient's
+,10,not listed in the |irectory
+,10,not our customer
+,10,not used
+,10,nresolvable |ddress
+,10,nroutable address
+,10,nurouteable address
+,10,nvalid e-mail address
+,10,nvalid Email ID
+,10,NVALID REALM TYPE
+,10,nvalidrcptto
+,10,Recipient Account Invalid
+,10,recipient address is invalid
+,10,recipient address is not in my local list
+,10,Recipient address not recognised
+,10,recipient address rejected |been discontinued
+,10,Recipient address rejected: aim.com
+,10,Recipient address rejected: aol.com
+,10,Recipient address rejected|Account expired
+,10,Recipient address rejected|aol.co.uk
+,10,Recipient address rejected|aol.in
+,10,Recipient address rejected|closed
+,10,Recipient address rejected|Domain does not exist or has expired.
+,10,Recipient address rejected|Domain not found
+,10,Recipient address rejected|Illegal user
+,10,Recipient address rejected|inactive
+,10,Recipient address rejected|Mail is closed
+,10,Recipient address rejected|netscape.net
+,10,Recipient address rejected|not Active
+,10,Recipient address rejected|wrong address
+,10,Recipient mailbox was disabled
+,10,Recipient not found
+,10,Recipient not known
+,10,Recipiente invalido
+,10,refused: Invalid User
+,10,refused|Invalid User
+,10,Rejected by user
+,10,spam |appreciated
+,10,spam|appreciated
+,10,Takie adres nie istnieje
+,10,the email account that you tried to reach does not exist
+,10,This account |locked
+,10,This domain is not hosted here
+,10,This is an opt-out request
+,10,to a valid address
+,10,to accepting mail for this email address
+,10,undeliverable address
+,10,unknown mailbox
+,10,Unknown recipient
+,10,User account cancelled
+,10,user address
+,10,User does not exist
+,10,user does not exist on this system
+,10,user does not have |account
+,10,User email address|invalid
+,10,User has cancelled account
+,10,user has no forwarding address
+,10,user invalid
+,10,user not found
+,10,User not known
+,10,User not recognized
+,10,User unknown
+,10,User unknown in local recipient table
+,10,validrcptto list
+,10,was not found in the recipient's
+,10,wrong address
+,10,you are mistaken
+,20,421 Seu IP esta temporariamente bloqueado
+,20,421|Nice to meet you|please try again in 3 minutes
+,20,451|enviarlo de nuevo mas tarde
+,20,451 ratelimit exceeded
+,20,451 stray newline detected
+,20,451 too many errors detected from your IP|please visit http://postmaster.free.fr
+,20,451-excessive mail rate for|unknown mailhub|throttling
+,20,451-Ratelimit exceeded, consider lowering the sendrate
+,20,452 4.3.1 System busy please try later
+,20,452 4.4.3 Please try again later
+,20,452 4.4.5 RESOURCES RESTRICTED|TOO MANY MSGS THIS SESSION
+,20,452 4.5.3 Too many commands
+,20,452 Backend Replied
+,20,452 Out of memory
+,20,452 Too many incoming emails for this account
+,20,453|Recipient Lookup Failed
+,20,453|Too Many Recipients
+,20,459 Too many recipients (RL)
+,20,550|This IP has sent too many messages this hour. IB504
+,20,554 5.2.122 The recipient has exceeded their limit for the number of messages they can receive per hour
+,20,A single RCPT command is required
+,20,Mailbox alias limit exceeded
+,20,maximum allowed length
+,20,verification failure
+,21,401 Failure Bad |MX record
+,21,401 |ailed
+,21,417 |SPF
+,21,421 4.2.1 Connection refused - OXSUS0001_303
+,21,421 4.3.0
+,21,421 4.4.3 |PTR
+,21,421 4.4.4 |Domain Does Not Resolve
+,21,421 4.5.1 |mx
+,21,421 Rejected due to missing rDNS|PTR
+,21,421 |DNS
+,21,421 |domain
+,21,421 |lookup
+,21,421 |nvalid sender domain
+,21,450 4.2.0
+,21,450 |DNS
+,21,450 |ookup
+,21,450 |PTR
+,21,450 |resolve
+,21,450 |SPF
+,21,451 4.1.3
+,21,451 4.1.8
+,21,451 4.3.5 Bücher configuration problem
+,21,451 4.4.3
+,21,451 4.4.4
+,21,451 4.4.62|wrong Office 365 region. ATTR35
+,21,451 4.4.7 Unroutable email address
+,21,451 4.4.8 Unroutable email address
+,21,451 4.7.0
+,21,451|4.7.1 Unable to perform DMARC verification
+,21,451 4.7.5
+,21,451 4.7.7
+,21,451 4.9.9
+,21,451 |DNS
+,21,451 |Domain of sender address | resolve
+,21,451 |lookup
+,21,451 |mx
+,21,451 |omain
+,21,451 |PTR
+,21,451 |SPF
+,21,451|DNS
+,21,452 4.5.2 Could not resolve sender domain
+,21,452 |DNS
+,21,453 Your E-Mail Address does not designate Permitted Sender Hosts(SPF)
+,21,454|host name doesn't match with your IP address
+,21,472 |DNS
+,21,472 |DNS server failure
+,21,474 |DNS
+,21,478 |DNS
+,21,500 Domain not in ovh system
+,21,501 RDNS failure
+,21,501 |RDNS
+,21,501|Emetteur invalide. Invalid Sender. LPN007_405
+,21,510|Bad email domain
+,21,517 |SPF
+,21,521 mx record is empty or invalid
+,21,542 Domain has no MX
+,21,550 5.0.0 Unrouteable address
+,21,550 5.1.0|Sending Domain Name Invalid
+,21,550 5.1.1 MailProtect|rejected|Domain not known
+,21,550 5.2.0|dominio non valido / invalid domain
+,21,550 5.7.1 Connection refused - OXSUS0001_105
+,21,550 5.7.1 Connection refused - OXSUS0001_304
+,21,550 5.7.1 MX |mismatch
+,21,550 5.7.1 No RDNS for
+,21,550 5.7.1 SPF permanent error
+,21,550 5.7.1|unrouteable address
+,21,550-5.7.26 Unauthenticated email|is not accepted due to domain's 550-5.7.26 DMARC policy
+,21,550 Could not resolve
+,21,550 DMARC check failed
+,21,550 L3 Technologies|has discontinued the use of @L-3com.com email addresses
+,21,550 MI:DMA 
+,21,550 No such domain
+,21,550 Sender IP reverse lookup rejected
+,21,550 The @lio.se domain has been replaced with @regionostergotland.se
+,21,550 Unknown host
+,21,550 Unrouteable address
+,21,550 Unrouteable sender address
+,21,550-5.7.1 Unauthenticated email|DMARC
+,21,550|DKIM: encountered the following problem validating
+,21,550|DMARC|mail is prohibited
+,21,550|Domain of sender address|does not exist
+,21,550|http://www.openspf.org/Why
+,21,550|Invalid Domain|smtp|LIB_420
+,21,550|Invalid sender domain
+,21,550|Recipient Domain Invalid
+,21,550|Requested action not taken: mailbox unavailable|550 invalid DNS MX
+,21,550|Sender Domain Invalid
+,21,550|Sorry, this address is malformed
+,21,550|Unknown domain. Did you mean
+,21,552|message fails dmarc verification
+,21,553 5.3.0 Bad Domain
+,21,553|Domain of sender address|does not exist
+,21,553|Sender verified failure|550 Too many unexpected actions
+,21,554 5.1.0|no MX or A record
+,21,554 5.4.4 |Domain Does Not Exist
+,21,554 5.4.4 |Domain Lookup Failed
+,21,554 5.7.1 Bad senders system address
+,21,554 5.7.1|failed spf
+,21,554 5.7.1|Recipient address rejected|E-mail addresses with jll.se is no longer in use
+,21,554 5.7.7
+,21,554 domainkeys verify status: bad format
+,21,554 IP name lookup |PTR
+,21,554|http://www.openspf.org/Why
+,21,554|no fcrdns
+,21,554|No PTR Record
+,21,554|PTR mismatch
+,21,554|Recipient address rejected: Invalid HELO/EHLO|Cannot resolve|no such domain
+,21,571 |SPF
+,21,5|reverse DNS
+,21,bogus MX
+,21,cannot find your reverse hostname
+,21,dns reverse
+,21,dnsb1
+,21,dnsb2
+,21,dnsnr
+,21,does not have MX
+,21,Domain Lookup Failed
+,21,Domain size limit exceeded
+,21,everse dns
+,21,invalid MX
+,21,MX DNS record
+,21,MX |domain
+,21,MX |lookup
+,21,MX |tempfailed
+,21,MXs |lookup
+,21,MXs |tempfailed
+,21,no real MX record
+,21,postmaster.aol.com/error-codes#421dnsnr
+,21,postmaster.aol.com/error-codes#554rlyir
+,21,rejected|MX or A record not found
+,22,421 |MAILBOX full
+,22,422 4.2.2 |full
+,22,450 4.2.2 |Full
+,22,450 4.2.2|user is overquota
+,22,450 4.7.3 Organization queue quota exceeded
+,22,451 4.2.2|over quota
+,22,452 4.1.1|<RCPT_DOMAIN> ACCOUNT IS FULL|REJECTING
+,22,452 4.1.1|account is full|rejecting
+,22,452 4.2.2 |mailbox full
+,22,452 4.3.1 |out of disk space
+,22,452|4.2.2 |Quota
+,22,452|over quota
+,22,501 5.0.0 |Quota overflow
+,22,522 5.2.2 |Overqouta
+,22,550 5.2.1 Frozen Mailbox
+,22,550 5.2.2|over disk quota
+,22,550 5.2.2|Recipient address rejected: User over quota
+,22,550 5.2.2|Subscriber is over disk quota
+,22,550 5.2.2|User over quota
+,22,550 Mailbox is over quota
+,22,550 Over quota
+,22,550 permanent failure for one or more recipients|over quota
+,22,550 sorry this mailbox is over quota
+,22,550 Usuario con la quota excedida
+,22,550 |overquota
+,22,550 |quota exceeded
+,22,550|Delivery service is inactive
+,22,550|mailbox over quota
+,22,550|MailBox quota excedeed
+,22,550|User is over quota
+,22,552 5.0.0 User Inbox Over Mail
+,22,552 5.1.1 Boite du destinataire pleine
+,22,552 5.1.1|extended quota violation
+,22,552 5.2.1 Quota exceeded or service disabled
+,22,552 5.2.2 Message would exceed quota
+,22,552 5.2.2|overquota
+,22,552 5.2.2 Over quota
+,22,552 5.2.2|User exceeded inbox message limit
+,22,552 5.2.2|would exceed|RCPT_DOMAIN
+,22,552 5.3.0 Message would exceed remaining quota
+,22,552 5.7.1 Caixa postal cheia
+,22,552 cuda_nsu 5.2.2 Message would exceed quota for
+,22,552 Mailbox limit exeeded for this email address
+,22,552 Mailbox quota exceeded
+,22,552 Mailbox Space Quota Exceeded
+,22,552 Message for|would exceed mailbox quota
+,22,552|Over quota
+,22,552|quota exceeded
+,22,552|Requested mailbox exceeds quota
+,22,552|This message would make one of the rcpt accounts to overquota
+,22,554 5.2.2 Mailbox size exceeded
+,22,554 5.2.2|Mailbox is currently over quota
+,22,554 5.2.2|Recipient address rejected: Mailbox is currently over quota
+,22,554 5.7.1 |no space left
+,22,554 5.7.1|Recipient address rejected: 552 Quota time limit for user has expired
+,22,554 5.7.1|Recipient address rejected: Mailbox Quota Exceeded
+,22,554 5.7.1|Recipient address rejected|exceeded their quota
+,22,554 5.7.1|Recipient address rejected|postfwd2 score exceeded
+,22,554 5.7.1|Recipient address rejected|ver quota
+,22,554 5.7.1|User Over Quota
+,22,554|this account is over quota
+,22,554 Mailbox limit exceeded - psmtp
+,22,554 User|is over quota
+,22,554 User|is over quota.
+,22,account is full|quota exceeded
+,22,ail storage limit
+,22,ailbox size limit exceeded
+,22,ailbox |full
+,22,annot write
+,22,buzon ha superado el espacio maximo asignado
+,22,disk full
+,22,exceed size limits
+,22,exceeded the limit
+,22,full mailbox
+,22,Inbox Full
+,22,La boite aux lettres est pleine
+,22,mailbox storage exceeded
+,22,mailbox |is full
+,22,mailbox|full
+,22,not enough space
+,22,puede exceder la cuota del buzón
+,22,recipient address rejected |Full
+,22,recipient has exceeded their mailbox limit
+,22,storage
+,22,User has been over quota
+,22,User has exceeded |disk space limit
+,22,would exceed size limits
+,23,421 |limit |exceeded
+,23,451 |essage store failed
+,23,5.2.2 |ot enough space
+,23,550 RCPT TO|max message size exceeded
+,23,552 5.2.3
+,23,552 5.2.4
+,23,552 5.3.4
+,23,552 5.3.4 Message size limit exceeded - OXSUS0001_510
+,23,552 Message size exceeds
+,23,552 To big
+,23,552 |message too large
+,23,exceeded available user storage
+,23,message size exceeds|limit
+,23,Session size exceeds
+,23,too long
+,24,400 |timeout
+,24,401 |timeout
+,24,421 4.4.1 |timeout
+,24,421 |imeout exceeded
+,24,421 |Lost connection
+,24,421 |timeout exceeded
+,24,421|Tempo de limite excedido
+,24,450 |imeout
+,24,450-timeout
+,24,451 4.4.2 |imeout
+,24,451 The server|limit|host
+,24,451 Time Out
+,24,451 |timeout
+,24,554 5.4.7 [internal] exceeded max time without delivery
+,24,554 5.4.7 [internal] message timeout
+,24,Connection Timed Out
+,24,emote connection lost
+,24,exceeded max retries without delivery
+,24,no BODY response
+,24,no RSET response
+,24,o valid hosts
+,24,onnection timed out
+,24,revise timed out
+,24,timed out
+,25,551 5.7.0 [internal] recipient blackholed
+,25,554 5.7.0 [internal] Message manually purged
+,25,554 5.7.0 [internal] sending account is terminated
+,25,554 5.7.1 [internal] Campaign cancelled
+,25,554 5.7.1 [internal] recipient address was suppressed
+,26,554 5.7.1|Smart Send suppressed
+,30,503|need rcpt command
+,40,400 Backend Replied
+,40,400 Local system is out of memory
+,40,400 Local system|memory
+,40,400 No policy available for message
+,40,400 Syntax error
+,40,403 4.7.0 encryption too weak
+,40,403 4.7.0 encryption|weak
+,40,410 System error
+,40,420 Error|blank|TXT record or has zero aliases configured|forwardemail.net
+,40,420 Error|Invalid recipients|forwardemail.net
+,40,420 Failed|Verifier is shutting down
+,40,421 4.2.1 Connection deferred - OXSUS0001_102
+,40,421 4.3.4 allocated resources exceeded
+,40,421 4.4.1|TLS is mandatory
+,40,421 Abnormal error
+,40,421 Fork failed
+,40,421 Offline: HELO/TLD
+,40,421 quitting
+,40,421 |proxy destination incorrect
+,40,421 |rejected
+,40,422 ERR.LOGIN.USERSTATUS
+,40,431 4.7.1|File already exists
+,40,431 Backend Replied
+,40,432 Error in mail session
+,40,440 4.0.2 AutoProvision Fault
+,40,450 Account locked
+,40,450 Domain Not Configured
+,40,450 No available space
+,40,450 |cannot deliver mail
+,40,450 |Fingerprint count limit
+,40,450 |mailbox currently unavailable
+,40,451 4.1.0 Recipient disabled
+,40,451 #4.7.5 Unable to verify signature|key server unavailable
+,40,451 4.3.5 Problemas na configuracao do servidor
+,40,451 4.6.0 Alias expansion error
+,40,451 confirm sender account
+,40,451 database unavailable
+,40,451 Error: queue file write error
+,40,451 file creating failed
+,40,451 Mail set NOT to be Archived
+,40,451 Mail transfer aborted
+,40,451 qq read error (#4.3.0)
+,40,451 qq trouble in home directory (#4.3.0)
+,40,451 Unable to process command
+,40,451 Unknown error
+,40,451 Unknown error reading data response
+,40,451 Unknown error|data response
+,40,451 Whose side are you on
+,40,451 Whose side are you on?
+,40,451 Writing data |failed
+,40,451 |error in processing
+,40,451 |local error in processing
+,40,451 |not confirm sender account
+,40,451-failed to expand
+,40,451|failed to expand
+,40,452 4.2.2 Disk 光明网 exceeded
+,40,452 4.2.2 Over 光明网
+,40,452 4.2.2|would exceed|RCPT_DOMAIN
+,40,452 4.3.0 Cannot create file for your message
+,40,452 4.3.1 Insufficient system resources
+,40,452 Couldn't process control file
+,40,452 |command count exceed
+,40,452 |unknown
+,40,452|INSUFFICIENT DISK SPACE
+,40,453 4.3.1 Can't create data file
+,40,491 EXTERNAL discovery |offline
+,40,5.1.0 |address
+,40,5.3.2 Service currently unavailable
+,40,5.7.1 Recipient reject
+,40,5.7.1|Command rejected
+,40,500 5.1.1 |Address Error
+,40,500 5.5.0 Syntax error
+,40,500 Backend Replied
+,40,500 Mensagem parece |solicitada
+,40,550 5.7.1 Connection refused - OXSUS0001_503
+,40,550 messages should have one|to header
+,40,550 recipient verify failed
+,40,500 Syntax error
+,40,500 Syntax error command unrecognized
+,40,500 |Unknown
+,40,500 |unrecognized
+,40,501 5.5.4 Unrecognized parameter
+,40,501 Backend Replied
+,40,501 Server Error
+,40,501 |Syntax
+,40,501 |unrecognized
+,40,502 5.5.1 Error: command not implemented
+,40,502 esam not supported
+,40,502 send not supported
+,40,502 |hash
+,40,502 |send not supported
+,40,503|5.5.1 RCPT first
+,40,504 Command parameter not implemented
+,40,550 5.0.0
+,40,550 5.1.1|e-mail sistemlerinde belirtilen e-mail adresi bulunmamaktadir
+,40,550 5.1.4|Recipient does not have their email address registered
+,40,550 5.2.1 Mailbox currently not available
+,40,550 5.2.1 Mailbox |cannot receive mail
+,40,550 5.2.1 Mailbox|blocked
+,40,550 5.2.1 Mailbox|cannot receive mail
+,40,550 5.2.1 |recipient rejected. Mailbox suspended
+,40,550 5.2.1|Mailbox is inactive
+,40,550 5.5.0 The account is inactive
+,40,550 5.7.0|Message could not be delivered
+,40,550 5.7.1 code B1025
+,40,550 5.7.1 Erro: Numero 00034
+,40,550 5.7.1 Error: Rejected
+,40,550 5.7.1 mineolak12workspace.com|gcdp|gsmtp
+,40,550 5.7.1 Spiked
+,40,550 5.7.1 |Celulite Subject Detected
+,40,550 5.7.1|requires a domain in the header
+,40,550 5.7.23|Message rejected due to: SPF fail
+,40,550 Access denied
+,40,550 delivery denied |authentication missing
+,40,550 Delivery is not allowed to this address
+,40,550 domain of forward path is not allowed
+,40,550 Email não entregue
+,40,550 Email não entregue erro BL-01
+,40,550 Envelope blocked - User Entry
+,40,550 Envelope blocked |User Entry
+,40,550 Error: header
+,40,550 Local user only or Authentication mechanism
+,40,550 Mail could not be processed
+,40,550 Mailbox denied |No access
+,40,550 Mailbox is frozen
+,40,550 Message was not accepted|account is disabled
+,40,550 No valid sender in header
+,40,550 Recipient verification problem
+,40,550 Return Path SenderScore Safe List
+,40,550 System error
+,40,550 |filtered due to mail bomb
+,40,550 |User Entry
+,40,550-(ACLD1001)
+,40,550-5.7.1|Messages missing a valid address in From|not accepted
+,40,550-5.7.1|Messages with multiple addresses in From|not accepted
+,40,550-the mail server could not deliver mail to|domain may not|exist|blacklisted|missing|proper dns
+,40,550|Sender verify failed
+,40,550|syntax error
+,40,550|The account has been suspended
+,40,551 5.4.6 |Loopback Address
+,40,551 5.4.6 |Private
+,40,551 5.4.6|Private
+,40,551 |broken connection
+,40,551|Private/Loopback Address
+,40,552 5.2.0
+,40,552 Backend Replied
+,40,552 End of data failed
+,40,552 |mail receiving disabled, rejecting
+,40,552 |mailbox unavailable
+,40,552 |unrecognized
+,40,553 5.1.3|syntax illegal for recipient addresses
+,40,553 Backend Replied
+,40,553 Impossibile inviare il messaggio
+,40,553 Invalid sender syntax
+,40,553 |Unbalanced
+,40,554 5.4.|Hop count exceeded
+,40,554 5.7.1 Erreur sur le destinataire
+,40,554 5.7.1 Recipient address rejected|Account disabled
+,40,554 5.7.1 |Nenhum incidente criado
+,40,554 5.7.1 |PLEASE CALL THE RECIPIENT
+,40,554 5.7.1|Recipient address rejected: User is suspended
+,40,554 5.7.1|Recipient address rejected|Recipient address rejected|USER IS SUSPENDED
+,40,554 5.7.1|Recipient address rejected|suspended
+,40,554 5.7.1|Recipient address rejected|User is suspended
+,40,554 delivery error: dd Requested mail action aborted, error in processing
+,40,554 delivery error|looping
+,40,554 Failed: Malformed MIME
+,40,554 message body contains illegal|characters.
+,40,554 mx|syd.oss-core.net
+,40,554 server disconnected
+,40,554 |not found
+,40,554 |unknown
+,40,554|Recipient address rejected: USER IS SUSPENDED
+,40,555 5.5.2 Syntax error|gsmtp
+,40,556 Address unavailable
+,40,557 You are not allowed to send mail
+,40,571 Denied by policy
+,40,599 Syntax error
+,40,ad command sequence
+,40,ascii char
+,40,Badly formatted address
+,40,Command 'DKIM-Signature:' not implemented
+,40,could not be identified
+,40,ender ID
+,40,Error resolving address
+,40,ESMTP not accepting messages
+,40,forwarding loop broken
+,40,header_7 - Illegal characters
+,40,Impossibile inviare il messaggio
+,40,internal loop in the Router
+,40,lient was not
+,40,Mail could not be processed
+,40,mail loop detected
+,40,mail receiving disabled
+,40,message could not be stored to disk
+,40,no puede recibir correo
+,40,not a gateway
+,40,o SMTP service
+,40,ommand RCPT |not OK
+,40,ommand rejected
+,40,ot accepted. Reason
+,40,ould not verify recipients
+,40,our email is not using a proper character set
+,40,Recipient address rejected: not available
+,40,Recipient address rejected|not available
+,40,rejected address saying: Denied by policy
+,40,rejected|This user can only receive messages from
+,40,response text could not be identified
+,40,rotocol violation
+,40,Sender address rejected: Access denied
+,40,Sender address verification failed
+,40,The message failed for unspecified reasons
+,40,The response text |identified
+,40,to Lyris Listmanager
+,40,User account not activated
+,40,user currently not able to receive mail
+,40,user locked
+,40,Valid RCPT command must precede DATA
+,40,via its official MX
+,40,was not found in LDAP server
+,40,xcessive mail use
+,50, MX or A record not found
+,50,400 4.7.1 |not allowed by local policy
+,50,400 |blocked |Trend Micro
+,50,401 4.2.0|Client host rejected
+,50,421 4.2.1 Connection refused - OXSUS0001_133
+,50,421 4.3.2 Your ip blocked from this server
+,50,421 4.4.5 attack detected
+,50,421 4.4.5 |harvest attack detected
+,50,421 Your IP is blocked
+,50,421 Your IP is blocked for a long time
+,50,421|banned due to spam complaints
+,50,421|blocked|aup#in-1370
+,50,450 4.7.1|Recipient address rejected: Policy Rejection
+,50,450 mailed |spamtraps
+,50,450 Unauthorized sender
+,50,451 4.2.0 sc973: IP reputation ratelimit|bluewin.ch
+,50,451 delivery|commtouch
+,50,451 DKIM verification invalid
+,50,451 No smarthost found
+,50,451 Not Authorized
+,50,451 Recipient refused
+,50,451 Rejected
+,50,451 Sending IP is restricted
+,50,451 Sending IP|restricted
+,50,451 |Access denied
+,50,451 |active la autentificaci
+,50,451 |delivery|commtouch
+,50,452 4.1.1 ELIR4038|recipient rejected
+,50,452 Message rejected
+,50,452|REJECTED AT THIS TIME
+,50,452|sender rejected. IB504
+,50,454 4.7.1 Service unavailable|blocked
+,50,454 4.7.1 |Client host rejected: Access denied
+,50,456 Mail blocked
+,50,459 4.7.1|Helo command rejected|no mail accepted
+,50,477 4.7.1|Recipient address rejected: Access denied
+,50,5.3.0|mail system problem
+,50,5.5.2 |nknown command
+,50,5.5.2 |Sender address rejected
+,50,5.6.0
+,50,5.7.1 SENDER |/info/policy/10
+,50,500 5.0.0 Service unavailable
+,50,500 Access Denied
+,50,500 Message rejected
+,50,500 Too many connections
+,50,500 |allowed
+,50,500 |disabled
+,50,501 5.0.0 Rejected mail
+,50,501 5.0.0 |Rejected mail
+,50,501 5.7.1 |accept mail
+,50,501 5.7.1 |configured
+,50,501 Rejected
+,50,501 |allowed
+,50,503 5.0.3 |Para envio de mensagens e necessaria autenticacao
+,50,503 5.3.2 Sorry we do not accept connections from your IP
+,50,503 5.3.2 Sorry|not accept connections
+,50,503 AUTH first (#5.5.1)
+,50,503 Servidor bloqueado na MAV BL
+,50,503 you must authenticate
+,50,503 |blocked
+,50,503 |must authenticate
+,50,504 Authenticate first
+,50,505 5.7.1|Authentication
+,50,520 Connection not authorised from this address
+,50,521 5.2.1 |DMARC
+,50,521 OWL BLOCKED
+,50,521 |accept
+,50,521 |Blocked for abuse
+,50,521 |eject
+,50,521 |ejected
+,50,522 |Failed SPF
+,50,530 5.7.0 Authentication required
+,50,530 5.7.1 Authentication required
+,50,530 5.7.1 Client|authenticated
+,50,530 Authentication required
+,50,530 Je moet eerst inloggen als je poort 25 gebruikt
+,50,530 Recipient refused|Blocked
+,50,530 {hash}
+,50,530 |Access denied
+,50,530 |Authentication required
+,50,530 |Barracuda
+,50,530 |denied access
+,50,530 |ejected
+,50,530|recipient declines mail from
+,50,535 5.7.8 blocked
+,50,535 5.7.8 Error: blocked
+,50,535 5.7.8 |blocked
+,50,540 5.7.1|Recipient|address rejected|Your emails has been returned because the intented recipient
+,50,541 5.4.1 Mail rejected by destination domain
+,50,542 |ejected
+,50,543 |eject
+,50,550 5.1.0 |unknown
+,50,550 5.1.0|blocked. Refer to Error Codes
+,50,550 5.1.0|blocked|aup#in-1300
+,50,550 5.1.0|requested action aborted: try again later AUP#POL
+,50,550 5.1.0|sender rejected
+,50,550 5.1.1 Falha de Entrega de mensagem
+,50,550 5.1.1 |blocked
+,50,550 5.1.1|sender rejected
+,50,550 5.1.1|Too many recipients
+,50,550 5.2.0|recipient unavailable
+,50,550 5.2.0|message rejected due to dmarc|comcast|dm000001
+,50,550 5.2.0|sender rejected
+,50,550 5.3.2 Rejected by mailbox host
+,50,550 5.5.0 Invalid sender
+,50,550 5.5.0 Le compte du destinataire est bloque
+,50,550 5.5.0 Mail Administratively Rejected
+,50,550 5.5.0 recipient rejected
+,50,550 5.5.0 Service refuse|LPN00
+,50,550 5.5.0|banned sender
+,50,550 5.5.0|Mensaje bloqueado por el Servicio de Seguridad de Mensajeria DaycoHost
+,50,550 5.7.0 Blocked
+,50,550 5.7.0 message refused
+,50,550 5.7.0 Your mail from|was rejected. We can't currently accept your message
+,50,550 5.7.0 |Blocked
+,50,550|5.7.1|approved domains|gcdp|gsmtp
+,50,550|5.7.1|can only be sent|gcdp|gsmtp
+,50,550|5.7.1 Cette addresse ne peut recevoir, ni envoyer, de courriels|gcdp|gsmtp
+,50,550 5.7.1 Connection refused - OXSUS0001_203
+,50,550 5.7.1 Connection refused - OXSUS0001_403
+,50,550|5.7.1|denied|gcdp|gsmtp
+,50,550|5.7.1|domain isn't|allowed|gcdp|gsmtp
+,50,550|5.7.1|domain|not|approved|gcdp|gsmtp
+,50,550|5.7.1|email address can only send and receive|gcdp|gsmtp
+,50,550|5.7.1|email address does not allow mail
+,50,550|5.7.1|email|limited|gcdp|gsmtp
+,50,550|5.7.1|not configured to|receive|gcdp|gsmtp
+,50,550|5.7.1|not delivered|gcdp|gsmtp
+,50,550|5.7.1|outside|gcdp|gsmtp
+,50,550|5.7.1|policies|gcdp|gsmtp
+,50,550|5.7.1|policy|gcdp|gsmtp
+,50,550|5.7.1|restrict|gcdp|gsmtp
+,50,550|5.7.1|send or receive|email|gcdp|gsmtp
+,50,550 5.7.1 *.edu - gcdp|- gsmtp
+,50,550 5.7.1 ?????????????????????????????? rejected
+,50,550 5.7.1 <|access denied
+,50,550 5.7.1 Abernathy ISD student email is for internal use only|gcdp|gsmtp
+,50,550 5.7.1 access denied
+,50,550 5.7.1 Account limited to school related systems only|gcdp|gsmtp
+,50,550 5.7.1 Address outside acceptable domains|gcdp|gsmtp
+,50,550 5.7.1 All external email has been restricted for this organization
+,50,550 5.7.1 All messages to this recipient will be blocked|gcdp|gsmtp
+,50,550|5.7.1|attempting to send
+,50,550 5.7.1 Bericht kan niet worden afgeleverd aan een extern email adres|gcdp|gsmtp
+,50,550 5.7.1 BISD email is for teacher/student communication only|gcdp|gsmtp
+,50,550 5.7.1 blocked email|gcdp|gsmtp
+,50,550 5.7.1 BLOCKED|gcdp|gsmtp
+,50,550 5.7.1 can only email to users at|gcdp|gsmtp
+,50,550 5.7.1 connection refused - IB116
+,50,550 5.7.1 Connection refused from
+,50,550 5.7.1 Currently, only internal emails are allowed|gcdp|gsmtp
+,50,550 5.7.1 Delivery has been restricted to approved domains
+,50,550 5.7.1 Do not attempt email outside campus|gcdp|gsmtp
+,50,550 5.7.1 E-mail through this domain is for internal use only|gcdp|gsmtp
+,50,550 5.7.1 El envío de Correo no esta permitido|gcdp|gsmtp
+,50,550 5.7.1 Email address is not approved|gcdp|gsmtp
+,50,550 5.7.1 Email can not be sent to this account|gcdp|gsmtp
+,50,550 5.7.1 Email cannot be send to any email address|gcdp|gsmtp
+,50,550 5.7.1 Email enabled for|only|gcdp|gsmtp
+,50,550 5.7.1 Email functionality is limited for your grade level|gcdp|gsmtp
+,50,550 5.7.1 Email is allowed only to a staff member|gcdp|gsmtp
+,50,550 5.7.1 Email is allowed only to other users within Barnstead School|gcdp|gsmtp
+,50,550 5.7.1 Email is only allowed within AUESD
+,50,550 5.7.1 Email is only allowed|gcdp|gsmtp
+,50,550 5.7.1 Email is only available between Teachers and Students|gcdp|gsmtp
+,50,550 5.7.1 Email is restricted to Ceres Unified domains only
+,50,550 5.7.1 Email may only be sent to teachers|gcdp|gsmtp
+,50,550 5.7.1 Email only allowed from the|gcdp|gsmtp
+,50,550 5.7.1 Email to external domains is not permitted|gcdp|gsmtp
+,50,550 5.7.1 Email violation|gcdp|gsmtp
+,50,550 5.7.1 Emails can only be sent and received from bpsne.net|gcdp|gsmtp
+,50,550 5.7.1 Emails can only be sent to and from internal email addresses|gcdp|gsmtp
+,50,550 5.7.1 Emails cannot be sent outside the|gcdp|gsmtp
+,50,550 5.7.1 Emails may only be sent to addresses with the MCHS.net domain|gcdp|gsmtp
+,50,550 5.7.1 External client with IP address |permissions
+,50,550 5.7.1 External email|gcdp|gsmtp
+,50,550 5.7.1 For Distance learning only|gcdp|gsmtp
+,50,550 5.7.1|prohibited|gcdp|gsmtp
+,50,550 5.7.1 Google Apps for Education has blocked this message|gcdp|gsmtp
+,50,550 5.7.1 Hello,|is turned off for our students|gcdp|gsmtp
+,50,550 5.7.1 Hello.  This account is exclusively for use at|gcdp|gsmtp
+,50,550 5.7.1 Het is niet toegestaan om buiten|te mailen|gcdp|gsmtp
+,50,550 5.7.1 I am sorry, you cannot contact this domain|gcdp|gsmtp
+,50,550 5.7.1 Internal email only|gcdp|gsmtp
+,50,550 5.7.1 Internal Only|gcdp|gsmtp
+,50,550 5.7.1 It is only allowed the mail in the institution|gcdp|gsmtp
+,50,550 5.7.1 Local|email allowed|gcdp|gsmtp
+,50,550 5.7.1 mail cannot be sent outside of|gcdp|gsmtp
+,50,550 5.7.1 Mail has been rejected from outside deliveries|gcdp|gsmtp
+,50,550 5.7.1 Mail has been Turned off to Outside Email addresses|gcdp|gsmtp
+,50,550 5.7.1 Mail is not allow into|from your mail system|gcdp|gsmtp
+,50,550 5.7.1 Mail is only allowed for local use|gcdp|gsmtp
+,50,550 5.7.1 Mail is only allowed to be exchanged within the|domain|gcdp|gsmtp
+,50,550 5.7.1 Mail refused|forward 5 Nov 2006
+,50,550 5.7.1 Mailbox unavailable|blacklisted using HOSTKARMA
+,50,550 5.7.1 Mailing-List: the server refuses all newsletters
+,50,550 5.7.1 Message Failure: Send/Receive to this address is not permitted|gcdp|gsmtp
+,50,550 5.7.1 Message rejected - OXSUS0001_507
+,50,550 5.7.1 Message will not be delivered|gcdp|gsmtp
+,50,550 5.7.1 message rejected.
+,50,550 5.7.1 Messages can be sent and received within our|domain|gcdp|gsmtp
+,50,550 5.7.1 Messages can only be sent to|addresses|gcdp|gsmtp
+,50,550 5.7.1 Messages to Outside Email address NOT permitted|gcdp|gsmtp
+,50,550 5.7.1 Messaging only allowed to|addresses|gcdp|gsmtp
+,50,550 5.7.1 No dispones de permiso para escribir a esa organización|gcdp|gsmtp
+,50,550 5.7.1 No estàs autoritzat a rebre missatges a aquest correu|gcdp|gsmtp
+,50,550 5.7.1 No external email to Menasha Joint School District students|gcdp|gsmtp
+,50,550 5.7.1 No external email to|students|gcdp|gsmtp
+,50,550 5.7.1 No se permite|correos fuera de la institución|gcdp|gsmtp
+,50,550 5.7.1 No se pueden enviar correos fuera del dominio|gcdp|gsmtp
+,50,550 5.7.1 No tiene permiso para escribir|gcdp|gsmtp
+,50,550 5.7.1 Non-internal emails are rejected|gcdp|gsmtp
+,50,550 5.7.1 Not a school approved email domain|gcdp|gsmtp
+,50,550 5.7.1 Not authorized to email outside the|domain|gcdp|gsmtp
+,50,550 5.7.1 Not in compliance|gcdp|gsmtp
+,50,550 5.7.1 Não é autorizado o envio de e-mail para domínio externo|gcdp|gsmtp
+,50,550 5.7.1 Não é possível enviar mensagens para fora do domínio|gcdp|gsmtp
+,50,550 5.7.1 Only approved domains can send email to this address|gcdp|gsmtp
+,50,550 5.7.1 only approved domains|gcdp|gsmtp
+,50,550 5.7.1 Only email from|County Schools|gcdp|gsmtp
+,50,550 5.7.1 Only email to and from Keller ISD Faculty is allowed
+,50,550 5.7.1 Only email to other|students or teachers is allowed|gcdp|gsmtp
+,50,550 5.7.1 Only Emails from the|domain are permitted|gcdp|gsmtp
+,50,550 5.7.1 Only Emails From|Teachers And Your Grade Level Are Allowed|gcdp|gsmtp
+,50,550 5.7.1 Only internal school email addresses can be used|gcdp|gsmtp
+,50,550 5.7.1 Only ONSU students and staff are allowed to email this domain
+,50,550 5.7.1 Only|students and staff are allowed to email this domain|gcdp|gsmtp
+,50,550 5.7.1 ONLY|TEACHERS ARE ALLOWED TO CONTACT THIS RECIPIENT|gcdp|gsmtp
+,50,550 5.7.1 Organization only allows email from certain domains|gcdp|gsmtp
+,50,550 5.7.1 Pirate email is not assessable for other domains|gcdp|gsmtp
+,50,550 5.7.1 PLEASE NOTE: Students|gcdp|gsmtp
+,50,550 5.7.1 PLEASE NOTE: This is an internal account only only|gcdp|gsmtp
+,50,550 5.7.1 Please see your teacher for assistance|gcdp|gsmtp
+,50,550 5.7.1 Please use the esdk12.org|gcdp|gsmtp
+,50,550 5.7.1 Reject All|gcdp|gsmtp
+,50,550 5.7.1 Rejected by ClamAV
+,50,550 5.7.1 REJECTED BY JC|gcdp|gsmtp
+,50,550 5.7.1 Rejected email|gcdp|gsmtp
+,50,550 5.7.1 Rejected Error:SSSD-RD-Domain|gcdp|gsmtp
+,50,550 5.7.1 rejected violation of rfc5322 section|, see
+,50,550 5.7.1 Requested action not taken: message refused
+,50,550 5.7.1 Restrict E-mail to Internal Messages Only|gcdp|gsmtp
+,50,550 5.7.1 Right now only staff can email students|gcdp|gsmtp
+,50,550 5.7.1 sender is blacklisted
+,50,550 5.7.1 Sender rejected by domain|gcdp|gsmtp
+,50,550 5.7.1 Sending Faild|gcdp|gsmtp
+,50,550 5.7.1 Sending to this email account is prohibited
+,50,550 5.7.1 service refuse
+,50,550 5.7.1 Service unavailable|blocked
+,50,550 5.7.1 Seu e-mail foi rejeitado por desrespeitar nossa
+,50,550 5.7.1 Solo está permitido correo interno de la institución|gcdp|gsmtp
+,50,550 5.7.1 Sorry, but you can't do that|gcdp|gsmtp
+,50,550 5.7.1 Sorry, this address is blocked from mailing to us
+,50,550 5.7.1 sorry, this email is not allowable|gcdp|gsmtp
+,50,550 5.7.1 Sorry, you can only email someone with an|account|gcdp|gsmtp
+,50,550 5.7.1 Sorry.  Email to this address is limited to internal only|gcdp|gsmtp
+,50,550 5.7.1 Staff Rule is stopping this email|gcdp|gsmtp
+,50,550|5.7.1|student|gcdp|gsmtp
+,50,550 5.7.1 Su cuenta de correo electrónico es únicamente interna|gcdp|gsmtp
+,50,550 5.7.1 Sólo se permite correo|de la institución|gcdp|gsmtp
+,50,550 5.7.1 These users only accept internal E-Mail messages|gcdp|gsmtp
+,50,550 5.7.1 This account is for internal use only|gcdp|gsmtp
+,50,550 5.7.1 This address may not exchange mail outside of it's domain|gcdp|gsmtp
+,50,550 5.7.1 This address only accepts email from within the local domain|gcdp|gsmtp
+,50,550 5.7.1 This domain has not been approved by PALCS|gcdp|gsmtp
+,50,550 5.7.1 This domain is for k-8 usage only|gcdp|gsmtp
+,50,550 5.7.1 This domain only allows email within itself|gcdp|gsmtp
+,50,550 5.7.1 This domain only receives emails from authorized domains|gcdp|gsmtp
+,50,550 5.7.1 This e-mail address may not be used outside our organization|gcdp|gsmtp
+,50,550 5.7.1 This email account is limited to private domains|gcdp|gsmtp
+,50,550 5.7.1 This email account is used for educational purposes only|gcdp|gsmtp
+,50,550 5.7.1 This email address is|gcdp|gsmtp
+,50,550 5.7.1 This email address only|gcdp|gsmtp
+,50,550 5.7.1 This email cannot send or receive from your email address|gcdp|gsmtp
+,50,550 5.7.1 This email is for in school only|gcdp|gsmtp
+,50,550 5.7.1 This email is only allowed to receive email from our domain|gcdp|gsmtp
+,50,550 5.7.1 This email is unable to receive external email|gcdp|gsmtp
+,50,550 5.7.1 This email only accepts allowed domains|gcdp|gsmtp
+,50,550 5.7.1 This email only allow internal email from|gcdp|gsmtp
+,50,550 5.7.1 This email only allows internal messaging|gcdp|gsmtp
+,50,550 5.7.1 This is a non-approved address. Please contact your teacher|gcdp|gsmtp
+,50,550 5.7.1 This is not an approved email address|gcdp|gsmtp
+,50,550 5.7.1 This message has been rejected because of rule|gcdp|gsmtp
+,50,550 5.7.1 This message is rejected|gcdp|gsmtp
+,50,550 5.7.1 This organization rejects outside e-mail|gcdp|gsmtp
+,50,550 5.7.1 This user can not accept mail from outside their domain|gcdp|gsmtp
+,50,550 5.7.1 This user can not receive email from out side|gcdp|gsmtp
+,50,550 5.7.1 This user can only send/receive from within the school domain|gcdp|gsmtp
+,50,550 5.7.1 This user is not accepting email messages at this time|gcdp|gsmtp
+,50,550 5.7.1 This user may not receive email outside of the domain. Thanks|gcdp|gsmtp
+,50,550-5.7.1 Tu corrreo electrónico ha sido rechazado debido a que incumple con|las politicas del Instituto|gcdp|gsmtp
+,50,550 5.7.1 Tu correo electrónico incumple las normas de privacidad|gcdp|gsmtp
+,50,550 5.7.1 UI001: This|has been blocked|RCPT_BÜCHER
+,50,550 5.7.1 Unable to send or receive this email.|gcdp|gsmtp
+,50,550 5.7.1 Unable to send or receive this email|gcdp|gsmtp
+,50,550 5.7.1 Unacceptable hostname|denied - 01
+,50,550 5.7.1 Unfortunately|block list
+,50,550 5.7.1 Ups!!! Algo ha ido mal. Avisa a tu profesor|gcdp|gsmtp
+,50,550 5.7.1 URL(s) listed in multi.surbl.org
+,50,550 5.7.1 Vous ne pouvez pas communiquer avec l'extérieur du LFS|gcdp|gsmtp
+,50,550 5.7.1 You account is not permitted to send to this email address|gcdp|gsmtp
+,50,550 5.7.1 You are allowed to email within the FAST domain only|gcdp|gsmtp
+,50,550 5.7.1 You are being blocked by the|gcdp|gsmtp
+,50,550 5.7.1 You are not authorized to contact this domain|gcdp|gsmtp
+,50,550 5.7.1 You are not authorized to send
+,50,550 5.7.1 You are only able to email specified domains|gcdp|gsmtp
+,50,550 5.7.1 You are only allowed to email to other wajcs email users
+,50,550 5.7.1 You are only allowed to|gcdp|gsmtp
+,50,550 5.7.1 You are only permitted to email internally|gcdp|gsmtp
+,50,550 5.7.1 You are too young to email outside the domain|gcdp|gsmtp
+,50,550 5.7.1 You are unable to email to anyone outside of the|domain|gcdp|gsmtp
+,50,550 5.7.1 You can not email outside of the|domain|gcdp|gsmtp
+,50,550 5.7.1 You can not email outside our domain|gcdp|gsmtp
+,50,550 5.7.1 You can only email|gcdp|gsmtp
+,50,550 5.7.1 You cannot receive emails form this domain|gcdp|gsmtp
+,50,550 5.7.1 You cannot send email to|gcdp|gsmtp
+,50,550 5.7.1 You cannot send it there|gcdp|gsmtp
+,50,550 5.7.1 You cannot send or receive email from|gcdp|gsmtp
+,50,550 5.7.1 You cannot send to this|gcdp|gsmtp
+,50,550 5.7.1 You do not have authority to email the recipient
+,50,550 5.7.1 You do not have permission to email outside|gcdp|gsmtp
+,50,550 5.7.1 You do not have permission to email this recipient|gcdp|gsmtp
+,50,550 5.7.1 You may not send|email|gcdp|gsmtp
+,50,550 5.7.1 You may only email|gcdp|gsmtp
+,50,550 5.7.1 You may only send|gcdp|gsmtp
+,50,550 5.7.1 Your account is only allowed to send to @ksi-bogota.com|gcdp|gsmtp
+,50,550 5.7.1 Your domain is not authorized to send to this domain|gcdp|gsmtp
+,50,550 5.7.1 Your E-mail was rejected and not sent|gcdp|gsmtp
+,50,550 5.7.1 Your email does not comply with|requirements|gcdp|gsmtp
+,50,550 5.7.1 Your email has been rejected|gcdp|gsmtp
+,50,550 5.7.1 Your email only works within the school's domains|gcdp|gsmtp
+,50,550 5.7.1 Your grade level is only allowed to email other SJ students|gcdp|gsmtp
+,50,550 5.7.1 Your IP is on block list
+,50,550 5.7.1 Your mail has been rejected due to|rules|gcdp|gsmtp
+,50,550 5.7.1 Your message cannot be sent to domains outside of NPS|gcdp|gsmtp
+,50,550 5.7.1 Your|only allows email within your domain|gcdp|gsmtp
+,50,550 5.7.1 |Accepted Sender
+,50,550 5.7.1 |blocked due to security reason
+,50,550 5.7.1 |blocked using Cloudmark CSI
+,50,550 5.7.1 |Connection originating from an IP address with a poor reputation
+,50,550 5.7.1 |disallowed delivery of this message
+,50,550 5.7.1|&|only|gcdp|gsmtp
+,50,550 5.7.1|domain rejected
+,50,550 5.7.1|is only used for internal E-mail|gcdp|gsmtp
+,50,550 5.7.1|locked by administration|gcdp|gsmtp
+,50,550 5.7.1|recipient address rejected: access denied
+,50,550 5.7.1|Recipient address rejected: ERS-Customized-Block
+,50,550 5.7.1|Recipient address rejected: Mail appeared to be SPAM or forged
+,50,550 5.7.1|Restricted|gcdp|gsmtp
+,50,550 5.7.1|Sender address rejected
+,50,550 5.7.1|Students have limited email access|gcdp|gsmtp
+,50,550 5.7.1|students may only email|teachers|gcdp|gsmtp
+,50,550 5.7.1|The recipient|server refused to accept your message
+,50,550 <|>: Recipient address rejected
+,50,550 <|> sender rejected
+,50,550 accept email
+,50,550 Addresses failed:
+,50,550 Administrative prohibition
+,50,550 authentication required
+,50,550 Backend Replied
+,50,550 Bad DKIM Header
+,50,550 Banned
+,50,550|been blocked by the recipient
+,50,550 Blocked
+,50,550 Connection refused
+,50,550 delivery denied|authentication missing
+,50,550 dkim=fail
+,50,550 Does not like recipient |rejected
+,50,550 e-mail nao encontrado, verifique o destinatario
+,50,550 emails|blocked
+,50,550 Empty envelope senders |allowed
+,50,550 Envelope blocked
+,50,550 Fake sender
+,50,550 forward failure
+,50,550 Gateway
+,50,550 mail dropped, bare LF found
+,50,550 Mail from|refused|Please refer to http://postmaster.usa.net for an explanation
+,50,550 Mail is rejected by recipients
+,50,550 Mail server configuration error
+,50,550 mail server requires authentication
+,50,550 Message Rejected
+,50,550 No puede entregar correos (DBL)
+,50,550 No valid sender in Sender:, Reply-To:, or From:
+,50,550 Not accepting this mail
+,50,550 permanent failure for one or more recipients|blocked
+,50,550 permanent failure for one or more recipients|Sender denied
+,50,550 permanent failure for one or more recipients|Sender email address rejected
+,50,550 RBL zodiac hit, you are bad
+,50,550 recipient <|denied
+,50,550 REJECT bulk
+,50,550 Rejected
+,50,550 Rejecting due to poor sender reputation
+,50,550 Rejeitado |Defense
+,50,550 Requested action not taken|mail reject by CAC
+,50,550 restricted characters in address
+,50,550 rt-206: Recipient rejected
+,50,550 Rule imposed mailbox access for|refused
+,50,550 Sender address on Block List
+,50,550 Sender email address rejected
+,50,550 sender in prison
+,50,550 Sender IP address rejected
+,50,550 Sender Rejected
+,50,550 Sender |allowed
+,50,550 Service Unavailable
+,50,550 spf hard fail
+,50,550 The domain|is currently suspended. Try later.
+,50,550 The specified recipient is not accepted|using messageid
+,50,550 This message is blocked due to security reason
+,50,550 This operation is not
+,50,550 This server|accept connections
+,50,550 Too many errors from your IP
+,50,550 Too many invalid rcpts
+,50,550 Try again later|Please contact abuse@corp.mail.ru
+,50,550 VERIFICACION DE FIRMA DKIM HA FALLADO
+,50,550 we do not accept mail from this address
+,50,550 Your email has not been delivered as it violates applicable|information security regulations (category=bulk.advertising). Please contact
+,50,550 Your email has not been delivered as it violates|security regulations
+,50,550 |accept email
+,50,550 |authentication required
+,50,550 |badmailfrom list
+,50,550 |Blocked for abuse
+,50,550 |cannot accept connections from your IP
+,50,550 |Connection Denied
+,50,550 |expired
+,50,550 |mail server requires authentication
+,50,550 |MTA
+,50,550 |nauthorized
+,50,550 |not allowed
+,50,550 |policy
+,50,550 |restricted characters in address
+,50,550 |Trend Micro
+,50,550 |your mail is rejected
+,50,550-5.7.1 The user or domain |prohibited
+,50,550-5.7.1 The user or domain|prohibited
+,50,550-5.7.1 This email is in violation
+,50,550-5.7.1 this message has been rejected as this student is not able to send
+,50,550-5.7.1 Your email has been rejected
+,50,550-5.7.1 |blocked
+,50,550-5.7.1 |prohibited the mail
+,50,550-Domain|has been blocked
+,50,550-Message rejected
+,50,550-REJECTED
+,50,550|5.7.1 Sending |disabled
+,50,550|5.7.1|your IP address has been blocked
+,50,550|accept messages
+,50,550|Access Denied Return Path SenderScore
+,50,550|Address or domain has been blocked by recipient
+,50,550|Client rejected by recipient mailbox preferences
+,50,550|Email can only be exchanged with|addresses|gcdp|gsmtp
+,50,550|Email can only be sent within the|domain|gcdp|gsmtp
+,50,550|Email cannot be sent outside the Crown Pointe Academy domain|gcdp|gsmtp
+,50,550|Email from outside|is not accepted for this account|gcdp|gsmtp
+,50,550|Email is only permitted within|gcdp|gsmtp
+,50,550|Email not delivered, if an error please contact the sender by phone
+,50,550|Email outside of the|domain is not permitted|gcdp|gsmtp
+,50,550|Emails are limited to the|domain|gcdp|gsmtp
+,50,550|has been rejected by the recipient
+,50,550|Hello|If you feel we mistreat you, do contact us
+,50,550|Internal email allowed only|gcdp|gsmtp
+,50,550|kbmg.com refused
+,50,550|Mail rejected
+,50,550|mailbox has been blocked
+,50,550|No outside email to this domain|gcdp|gsmtp
+,50,550|No Outside mail permitted|gcdp|gsmtp
+,50,550|Notice: This e-mail account cannot send to this domain|gcdp|gsmtp
+,50,550|not in my list of allowed recipients
+,50,550|Only emails within the domain are allowed|gcdp|gsmtp
+,50,550|Only internal email|gcdp|gsmtp
+,50,550|Our domain will not accept incoming emails|gcdp|gsmtp
+,50,550|Outside our domain|gcdp|gsmtp
+,50,550|Poor Reputation Sender.
+,50,550|recusado/rejected
+,50,550|Requested action not taken: mailbox unavailable|550|Reject due to policy restrictions
+,50,550|Service refuse. Veuillez essayer plus tard|please try later
+,50,550|School email addresses only|gcdp|gsmtp
+,50,550|Sender rejected. IB507
+,50,550|Server|has sent too much mail. Try again later|Protection provided by MagicSpam
+,50,550|Sorry this domain does not accept external email|gcdp|gsmtp
+,50,550|Sorry this Email is for school purposes only|gcdp|gsmtp
+,50,550|Sorry, mail is not accepted from this domain|gcdp|gsmtp
+,50,550|sorry, mail to that recipient|is not accepted
+,50,550|Sorry, no external emails are allowed for this account|gcdp|gsmtp
+,50,550|Student email is only for|domain|gcdp|gsmtp
+,50,550|Student Email Restriction to outside domains|gcdp|gsmtp
+,50,550|Students are not authorized to receive non-school email|gcdp|gsmtp
+,50,550|Students are only allowed to send emails to staff|gcdp|gsmtp
+,50,550|Students can only send and receive email from|gcdp|gsmtp
+,50,550|Students may only correspond with staff or students of|gcdp|gsmtp
+,50,550|Students may only send emails to their teachers|gcdp|gsmtp
+,50,550|These email accounts are for internal|mail only|gcdp|gsmtp
+,50,550|This account does not allow sending or receiving outside mail|gcdp|gsmtp
+,50,550|This account does not have external email permission|gcdp|gsmtp
+,50,550|This host is valid for authenticated
+,50,550|This is rejected by the|gcdp|gsmtp
+,50,550|this message cannot be sent to this destination
+,50,550|This message has been blocked
+,50,550|This message has been rejected by|gcdp|gsmtp
+,50,550|This user is not authorized to receive email|gcdp|gsmtp
+,50,550|trouble to setup DKIM
+,50,550|unable to allow email to this student email address|gcdp|gsmtp
+,50,550|You are not permitted to|gcdp|gsmtp
+,50,550|You can only send|gcdp|gsmtp
+,50,550|You may not email outside of the school domain|gcdp|gsmtp
+,50,550|Your account is only allowed to send to selected domains|gcdp|gsmtp
+,50,550|Your account only allows mail to be sent inside the district|gcdp|gsmtp
+,50,550|Your email is not associated with the|domain|gcdp|gsmtp
+,50,550|Your Message has been rejected for violating school policies|gcdp|gsmtp
+,50,550|Your message has been rejected|gcdp|gsmtp
+,50,551 5.0.0|not allowed to send to recipient
+,50,551 5.7.1 Receive of data is denied
+,50,551 configured to reject email from your domain
+,50,551 Mailhost is on our global block list
+,50,551 reject email |domain
+,50,551 Sending IP is restricted
+,50,551 SMTP service disabled
+,50,551 |configured to reject email from your domain
+,50,551 |reject email |domain
+,50,551 |traffic
+,50,551|reject email from your domain
+,50,552 5.1.1|Mailbox delivery failure policy error
+,50,552 5.4.5|Konto przekroczylo limity wiadomosc odrzucona
+,50,552 5.7.1 Denied by policy
+,50,552 Default Blocking
+,50,552 Default Blocking Message
+,50,552 DKIM|Policy: reject
+,50,552 Message denied
+,50,552 too many recipients
+,50,552 Your message has been rejected
+,50,553 5.3.0 DENY
+,50,553 5.3.0 |DENY
+,50,553 5.7.0 IP REJECT
+,50,553 5.7.1 SENDER REJECT
+,50,553 5.7.4 IP REJECT
+,50,553 Envolope sender mismatch with header from
+,50,553 Remetente Bloqueado pela politica
+,50,553 Servidor bloqueado
+,50,553|sorry|badmailfrom
+,50,553 sorry|denied
+,50,553 |badmailfrom
+,50,553 |blocked
+,50,553 |denied
+,50,553 |not allowed
+,50,553-sorry, your mail was administratively denied
+,50,554 5.1.0 Sender denied
+,50,554 5.2.1 |not accept delivery of this message
+,50,554 5.2.1|HVU:B2
+,50,554 5.7.0 Reject
+,50,554 5.7.1 A filter rejected this email
+,50,554 5.7.1 Access denied
+,50,554 5.7.1 blocked
+,50,554 5.7.1 Error
+,50,554 5.7.1 Favor contactar al administrador de su dominio de correo
+,50,554 5.7.1 Filter
+,50,554 5.7.1 IP Blocked
+,50,554 5.7.1 Message rejected by domain policy
+,50,554 5.7.1 Recipient address rejected: Access denied
+,50,554 5.7.1 Reject due to reject_unauth_destination restriction
+,50,554 5.7.1 Rejected for policy reason
+,50,554 5.7.1 Service Unavailable
+,50,554 5.7.1 Your domain listed in Third Party RBL
+,50,554 5.7.1 Your mail is rejected.
+,50,554 5.7.1 <|>: sender address rejected
+,50,554 5.7.1 |Access denied
+,50,554 5.7.1 |blocked
+,50,554 5.7.1 |Client host rejected
+,50,554 5.7.1 |contactar al administrador
+,50,554 5.7.1 |DSL
+,50,554 5.7.1 |Dynamic
+,50,554 5.7.1 |esta em uma lista negra
+,50,554 5.7.1 |Mail refused
+,50,554 5.7.1 |unsollicited
+,50,554 5.7.1|Helo command rejected
+,50,554 5.7.1|Recipient address rejected: ERS-RBL
+,50,554 5.7.1|Recipient address rejected|BLOCK-SEND-ER
+,50,554 5.7.1|Recipient address rejected|broadband|returned deny
+,50,554 5.7.1|Recipient address rejected|your ip|is listed on too many RBLs
+,50,554 5.7.1|rejected|too many unwanted emails
+,50,554 5.7.1|sender rejected
+,50,554 5.7.1|Sender address rejected: Listed in WH BL
+,50,554 5.7.1|Sender address rejected: Su mensaje no pudo ser entregado: Acceso nacional
+,50,554 5.7.1|should log in|to enable receiving the mail
+,50,554 client's country is banned
+,50,554 Denied (Mode: normal)
+,50,554|delivery not authorized
+,50,554 DoD Enterprise Mail Gateway The receiving mail system has confirmed the current reputation score of the sending IP address is below the threshold to permit access
+,50,554 ESMTP not accepting messages
+,50,554 Invalid sender
+,50,554 IP|A problem occurred. (Ask your postmaster for help
+,50,554 Mail |rejected for policy reasons
+,50,554 Mensagem recusada pelo firewall
+,50,554 Message rejected
+,50,554 rejected by dkim
+,50,554 Rejected by Korumail Promotion Policy
+,50,554 This system is not accepting messages from | at this time.
+,50,554 too many errors detected from your IP
+,50,554 too many errors detected from your IP|, please visit
+,50,554 Your IP |Red Listed
+,50,554 |Access denied
+,50,554 |ailure denied access
+,50,554 |cancelled
+,50,554 |Client host rejected
+,50,554 |client's country is banned
+,50,554 |Denied
+,50,554 |efused
+,50,554 |ESMTP not accepting messages
+,50,554 |locking
+,50,554 |Message rejected
+,50,554 |not allowed
+,50,554 |onnection
+,50,554 |rejected due to security policies
+,50,554-5.7.1 |blocked
+,50,554|5.1.0 Sender denied
+,50,554|accepting messages
+,50,554|Access rejected|Inquiries to postmaster at bnl dot gov
+,50,554|Blocked
+,50,554|blocked for the day|too many invalid recipients
+,50,554|iprd2.amfam.com|554 *****
+,50,554|not accepting messages
+,50,554|RLY:
+,50,554|RTR
+,50,554|Sending IP has been flagged as suspect
+,50,554|Unable to route due to invalid recipient address
+,50,555 5.1.7
+,50,556 |blocked
+,50,557 |mail server
+,50,566 You are not allowed to send mail
+,50,570 5.7.0 |Blocked
+,50,571 5.7.1 your IP|seems to be dynamic|please use the smarthost of your ISP.
+,50,571 This mail is rejected due to the company policies. Thank you
+,50,571 |authorized
+,50,571 |blocked
+,50,571 |qualified
+,50,571 |refused
+,50,571 |security policies
+,50,571 |sender address has invalid format
+,50,571|Client host rejected: UBE
+,50,582 message has been returned
+,50,582 |message has been returned
+,50,597 please don't send|rubbish
+,50,5|0 ...@
+,50,access from your network is restricted
+,50,Administrative prohibition error
+,50,Bad Message. Reason Code:
+,50,Bogus helo
+,50,cannot find your hostname
+,50,Check http://www.apollo3.com/sendmail?s=checkuser
+,50,conb2
+,50,contact HelpDesk at
+,50,contact the RCN Postmaster Group
+,50,demasiados usuarios de correo desconocidos
+,50,Denied [CS] (Mode: normal)
+,50,Denied by policy |banned
+,50,dkim verification failed
+,50,does not accept mail from
+,50,does not comply with required standards
+,50,does not resolve to a name
+,50,Domain pending confirmation
+,50,efused by rule
+,50,ejected by CA Gateway Security
+,50,ejected by eTrust SCM
+,50,Enderecos de Marketing nao permitidos
+,50,eport false positives
+,50,essage unacceptable
+,50,excessive recipients
+,50,forgery
+,50,Go away
+,50,if you need to contact Shaw Digital Cable support
+,50,IP address of MX host is in bogon netspace
+,50,Mail |blocked
+,50,message prohibited
+,50,messages from |will be permanently deferred
+,50,nable to deliver to
+,50,ou cannot send mail to this user
+,50,our access |rejected
+,50,our email address is not listed in the Address Book
+,50,our email was rejected
+,50,PB error
+,50,penalty box
+,50,permfail
+,50,Permission denied
+,50,postmaster.aol.com/error-codes#421rlyb3
+,50,postmaster.aol.com/error-codes#554conb1
+,50,postmaster.aol.com/error-codes#554rlyb1
+,50,postmaster.aol.com/error-codes#554rlyb2
+,50,postmaster.aol.com/error-codes#554rlybd
+,50,postmaster.aol.com/error-codes#554rlybl
+,50,postmaster.aol.com/error-codes#554rtrbb
+,50,postmaster.aol.com/error-codes#554rtrbl
+,50,postmaster.aol.com/error-codes#554rtrch
+,50,postmaster.aol.com/error-codes#554rtrdu
+,50,postmaster.aol.com/error-codes#554rtrge
+,50,postmaster.aol.com/error-codes#554rtrrd
+,50,postmaster.aol.com/error-codes#554rtrsc
+,50,postmaster.info.aol.com/errors/554conb1.html
+,50,qmail-dkim:
+,50,reject your spam|appreciated
+,50,rejected by Recurrent Pattern Detection System
+,50,rejected|Dominio proibido
+,50,rejected|Enderecos de Marketing
+,50,Request cannot be processed
+,50,rlyb1
+,50,rlyb2
+,50,rlyb3
+,50,rlybd
+,50,rlynw
+,50,Sender address rejected|Domain not found
+,50,sender is listed on the block mail
+,50,sender or recipients |invalid
+,50,SERWER|WYMAGA UWIERZYTELNIENIA
+,50,SMTP authentication is required
+,50,SMTP delivery not allowed
+,50,SMTP; rejected by system
+,50,suspicious
+,50,this mailbox only accepts mail from known senders
+,50,Too many invalid recipients
+,50,Transaction rejected
+,50,ules rejection
+,50,unsolicited
+,50,use other means to contact intended recipient
+,50,XM-RJCT18
+,50,You have exceeded the maximum number of recipients this hour
+,51, CDRBL
+,51,400 Mail blocked
+,51,421 4.2.1 Connection refused - OXSUS0001_130
+,51,421 banned |spam complaints
+,51,421 Too many spam mails from this IP
+,51,421 Too many spams
+,51,421 Your ip is filtered by RBL
+,51,421 |Rejected by SPAM firewall system
+,51,421 |spam complaints
+,51,450 4.4.3|L'adresse IP|figure dans Trend Micro Dynamic Reputation Database (QIL)
+,51,450 4.7.0 Server IP|listed as abusive|Protection provided by MagicSpam
+,51,451 4.1.0 spamprotection
+,51,451 4.1.0 |spamprotection
+,51,451 Kieltäydytty yhdistämästä.
+,51,451 mensagem rejeitada |spam
+,51,451 RBL Blacklist. Client host blocked using Uceprotect Reputation
+,51,451 source|spam
+,51,451 spam mail rejected
+,51,451 The IP address you are sending |source of spam
+,51,451 |psmtp
+,51,451 |SBL
+,51,454 |DNSBL
+,51,454 |virus or SPAM
+,51,471 4.7.1 Mail from|refused, refer to http://www.sorbs.net/lookup.shtml
+,51,500 Spam
+,51,500 5.7.1|blacklist|gcdp|gsmtp
+,51,501 5.7.1 |DNSBL
+,51,501 Error – Please visit|to report a problem. Sorry for any inconvience caused
+,51,501 |Blocked
+,51,510|Block For Spam
+,51,511 |dnsbl
+,51,520|Rejected due to DNSBL server response
+,51,521 5.7.1 Service unavailable|blocked using
+,51,521|blocked by barracuda
+,51,521 |DNSRBL
+,51,521|IP|esta listado em Lista-negra|dnsbl.cobion.com
+,51,521|is listed in DNSBL
+,51,521 the email|is blacklisted
+,51,522|found on industry URI blacklists
+,51,530|Mail from|deferred using Trend Micro
+,51,541 |blocked
+,51,542|Spiked: iprep|rep.mailspike.net
+,51,550 5.0.0 bugger|spammer
+,51,550 5.0.0 We dont accept Spam
+,51,550 5.0.0|accept Spam
+,51,550 5.1.0 ESMTP server not available AUP#I-1480
+,51,550 5.1.0 ESMTP server not available AUP#I-1490
+,51,550 5.1.0 |sender rejected AUP#
+,51,550 5.1.0|blocked AUP#CMPOL
+,51,550 5.1.0|identified a number of outgoing emails from your email provider as spam
+,51,550 5.1.3 spamcleaner
+,51,550 5.1.3 |spamcleaner
+,51,550 5.5.4|Your DNS|is listed by Invaluement. Please see|you feel this is in error
+,51,550 5.7.0 550 Server IP|listed as abusive.
+,51,550 5.7.0 DT:SPM
+,51,550 5.7.0 Marcum LLP has rejected your mail.  It has been flagged as possible spam mail. If your mail is legitimate, please contact us
+,51,550 5.7.0 Server IP|listed as abusive.
+,51,550 5.7.0 Spam rejected
+,51,550 5.7.0 Your mail from|was rejected due to being listed by Cloudmark
+,51,550 5.7.0 Your mail from|was rejected|too many DNSBL-listed hosts
+,51,550 5.7.0 |Policy Violation
+,51,550 5.7.1 Connection refused|blacklisted in ReturnPath RPRBL List
+,51,550 5.7.1 Connection refused - OXSUS0001_101
+,51,550 5.7.1 Connection refused - OXSUS0001_201
+,51,550 5.7.1 H:DYNB|Connection refused due to abuse
+,51,550 5.7.1 Mail from|rejected;Please see https://www.spamcow.com/
+,51,550 5.7.1 Message refused - OXS_502
+,51,550 5.7.1 Rejected:|listed at http://www.mail-abuse.com/
+,51,550 5.7.1 Rejected:|listed at RBL truncate.gbudb.net
+,51,550 5.7.1 rejected|as confirmed spam
+,51,550 5.7.1 SPAM
+,51,550 5.7.1 Spam Header Many Spaces 1
+,51,550 5.7.1 Spamholder
+,51,550 5.7.1 Unacceptable Sender address|denied
+,51,550 5.7.1 Your Email has been rejected |violates our privacy policies
+,51,550 5.7.1 Your IP|is on the BitNinja server security greylist
+,51,550 5.7.1|blacklist
+,51,550 5.7.1 |Barracuda
+,51,550 5.7.1 |Phishing
+,51,550 5.7.1|Client address|blocked
+,51,550 5.7.1|Client host rejected: Range de Ips bloqueado por envio de Spam
+,51,550 5.7.1|H:M|Connection refused due to abuse
+,51,550 5.7.1|invaluement
+,51,550 5.7.1|Mail from|refused|spam.html
+,51,550 5.7.1|No thank you rejected: Mail refused|http://spamblock.outblaze.com
+,51,550 5.7.1|RBL Restriction
+,51,550 5.7.1|Sender rejected. Sender domain is blacklisted
+,51,550 5.7.1|Spam blocked. See
+,51,550 5.7.1|your IP has been found on a block list
+,51,550 Access denied...
+,51,550 black ip.
+,51,550 Denied
+,51,550 g_deny_smtp blocked this ip
+,51,550 Host|is listed on
+,51,550 IP |blocked by EarthLink
+,51,550 ip|bloqueado pela RBL|por favor contate o seu provedor de e-mail
+,51,550 Listed in RBL. Please See|
+,51,550 mail from|refused|http://www.spamrats.com
+,51,550 mail from|refused|http://www.uceprotect.net
+,51,550 mail not accepted from blacklisted IP address 
+,51,550 mail not accepted due to bad reputation of IP address
+,51,550 Message was blocked by server
+,51,550 no thanks|contact postmaster
+,51,550 permanent failure |Barracuda
+,51,550 POSSIBLE SPAM
+,51,550 REJECT spam id
+,51,550 Rejeitado |Gateway Security
+,51,550 RP:ORQ
+,51,550 Rule imposed mailbox access for|listed on Spamhaus ZEN
+,51,550 SC-|block list
+,51,550 Sorry, your IP address|is in a block list at bl.mailspike.net
+,51,550 SPAM FOUND
+,51,550 SPAM id=
+,51,550 Spam score
+,51,550 Subject contains invalid characters
+,51,550 Suspected spam ip
+,51,550 The sending IP|is listed on https://spamrl.com
+,51,550 THE SENDING IP|IS LISTED ON HTTPS://SPAMRL.COM AS A SOURCE OF SPAM
+,51,550 This message is administratively prohibited
+,51,550 Too many spams|IP
+,51,550 XM-RJCT22:|is prohibited from connecting|due to high spam volume
+,51,550 |a.b.c.d
+,51,550 |arracuda
+,51,550|blacklisted on Trustwave Email IP Reputation Service
+,51,550 |blocked by prs
+,51,550 |IP blacklisted by CSI
+,51,550 |is for sale
+,51,550 |mail rejected by antispam server
+,51,550|sorbs dnsbl
+,51,550-5.7.1|The IP you're using to send mail is not authorized
+,51,550-5.7.1|spam recognition
+,51,550-domain|suffer screening issues
+,51,550-Mensagem bloqueada|SPAM
+,51,550-rejected|listed at ix.dnsbl.manitu.net
+,51,550-X-SA-Report|REJECTED|VR_SPAM_STATE|550-VR_SPAM_SCORE
+,51,550-Your message was rejected by this user and was not delivered
+,51,550|Access denied, banned sending IP
+,51,550|anti spam engine has blocked this email
+,51,550|blacklisted by Sorbs
+,51,550|Blocked by ivmSIP
+,51,550|Client host rejected: Rejected : Spam
+,51,550|Currently Sending Spam
+,51,550|http://p.imaginet.co.za/RBL
+,51,550|http://p.imaginet.co.za/SPA
+,51,550|IP address refused|reputation of this IP address|trustedsource.org
+,51,550|is listed at bl.mailspike.net ()
+,51,550|is prohibited from connecting to|due to high spam volume
+,51,550|Mail from|SPAM - SORBS
+,51,550|Message is rejected due to filtering restrictions
+,51,550|negra ou por envio de SPAM
+,51,550|Recipient not authorized|your IP has been found on a block list
+,51,550|Reported spam source
+,51,550|Server IP|listed as abusive
+,51,550|spam access denied
+,51,550|Spam-helo blocking
+,51,550|The receiver denied your mail
+,51,550|This email was rejected because it violates our security policy
+,51,550|Too Many Spammy Recipients
+,51,550|XITTEL|Recipients rejected|Recipient verification failed according to
+,51,551 5.0.0 Spam
+,51,551 5.0.0 |Spam
+,51,551 5.7.1 Sender IP found in RBL
+,51,551 5.7.1 |dnsbl
+,51,551 possible spam|delivery denied
+,51,551 possivel spam
+,51,551 Sender is on domain's block list
+,51,551|configured to reject email from your domain
+,51,551|is listed in RBL
+,51,551|message rejected with an automated Rule
+,51,552 RBL blocked
+,51,552|Security enterprise Spam setting
+,51,553 5.3.0 |DNSBL
+,51,553 5.7.1|[BL2
+,51,553|blacklist
+,51,553 Currently Sending Spam|http://www.sorbs.net
+,51,553 sorry, your envelope sender is in my badmail list
+,51,553 Spam source – see
+,51,553 your IP|is on our block list
+,51,553 |barracudacentral
+,51,553 |ejected
+,51,553-Message filtered
+,51,553|spamhaus XBL
+,51,554 5.3.0 |commtouch.com
+,51,554 5.3.0 |HIGH threat
+,51,554 5.5.4 Your IP|address has a bad reputation.
+,51,554 5.7.1 ACL dns_rbl
+,51,554 5.7.1 Connection from|rejected due to RBL. For help:
+,51,554 5.7.1 Extreme Bad IP
+,51,554 5.7.1 Filter |Custom Filter
+,51,554 5.7.1 IP Block-listed globally
+,51,554 5.7.1 Phrase Filter #
+,51,554 5.7.1 Resources restricted for host|rejection limit reached
+,51,554 5.7.1 |lista negra
+,51,554 5.7.1|ERS-QIL
+,51,554 5.7.1|esta em nossa listra negra
+,51,554 5.7.1|RBL listing
+,51,554 5.7.1|RBLTRAP
+,51,554 5.7.1|Recipient address rejected: User not registered with CONTENTCatcher
+,51,554 5.7.1|Sender address rejected: Bloqueio remetente
+,51,554 5.7.1|Sender address rejected: Sender address rejected due to complaints
+,51,554 Backend Replied
+,51,554|blacklist
+,51,554 Communication dropped Harvest attack from this ip
+,51,554 Failure Sorry, address|on blocklist of user
+,51,554 Rejected - see
+,51,554 Rejecting due to security policy
+,51,554 |arracuda
+,51,554 |DNSBL
+,51,554|cmsmtp esmtp server not available
+,51,554 |permanently
+,51,554|cloudmark gateway esmtp server not available
+,51,554|Cloudmark|AUP#
+,51,554|Reject due to policy restrictions
+,51,554|{mxN}
+,51,555 Your IP is blocked.
+,51,557 5.7.1|Client host rejected:|spam noaccess
+,51,557 rejected |spamfilter
+,51,557 spamfilter
+,51,557 This email was rejected by our spamfilter
+,51,557|rejected by our spamfilter
+,51,562 HELO | not allowed
+,51,582 |SPAM
+,51,591|blacklisted. no mail|accepted
+,51,barracudanetworks
+,51,black list
+,51,black-listed
+,51,blocked for spam
+,51,blocklisted
+,51,comcast.net|content|BL
+,51,comcast.net|content|ES
+,51,comcast.net|content|RL
+,51,denylist
+,51,dsbl.org
+,51,efused |reputation
+,51,efused |Senderbase
+,51,ejected per |olicy
+,51,ejected |eputation score
+,51,ejected |reputation
+,51,ejected |Sender Base
+,51,ejected |SenderBase
+,51,ender rejected |policy
+,51,ender's IP |reputation
+,51,from a.b.c.d rejected
+,51,IP address|matched the group: SBRSBlOCK
+,51,is blocked by BRBL
+,51,listas negras
+,51,looks like SPAM
+,51,NJABL
+,51,olicy |iolation
+,51,onnections |efused
+,51,open relay
+,51,ot accepting |reputation
+,51,ot |ccepted for policy
+,51,PLEASE REPORT Code:RBL.
+,51,postmaster.aol.com/error-codes#421rlych
+,51,postmaster.aol.com/error-codes#554rlych
+,51,postmaster.aol.com/error-codes#554rlysn
+,51,reject your spam |appreciated
+,51,rejected |reputation
+,51,Rejected|trendmicro
+,51,reputation error
+,51,reputation fail
+,51,rlych
+,51,rlycs4
+,51,rlysn
+,51,smtp-error-codes.php|BL000000
+,51,SPAM sender
+,51,spamcleaner : Domain is not allowed
+,51,spamcop
+,51,spamhaus
+,51,SPAMRATS IP Addresses|http://www.spamrats.com
+,51,support.proofpoint.com/dnsbl-lookup.cgi?ip=
+,51,UCEPROTECT-Level 1 listed|http://www.uceprotect.net
+,51,Ud posee mala reputacion en senderbase
+,51,www.ordb.org
+,51,| too much spam
+,52,/dit/staff/email/spam
+,52,451 |mail content deny
+,52,453 Blocked Using Spam Pattern|Spam Contents
+,52,453 Blocked|Spam Contents
+,52,454 Transient reject by behaviour spam
+,52,5.7.1 |DCC
+,52,5.7.1| stata considerata indesiderata
+,52,521 5.2.1 |HVU:B2
+,52,535 5.7.0|spam-like characteristics
+,52,543 suspected spam
+,52,550 "This mail cannot be forwarded because it was detected as spam."
+,52,550 5.2.0 spam content detected
+,52,550 5.5.1 |Content
+,52,550 5.7.0 SPAM type=spam
+,52,550|5.7.1|content|gcdp|gsmtp
+,52,550 5.7.1 Assunto proibido|roque o subject e reenvie
+,52,550 5.7.1 Content unacceptable
+,52,550 5.7.1 Inappropriate language use, please consider language use or contact|RCPT_DOMAIN
+,52,550 5.7.1 Mensaje rechazado debido a las restricciones de contenido
+,52,550 5.7.1 Message quality not acceptable
+,52,550 5.7.1 message|junk mail score
+,52,550 5.7.1 PALAVRA BLOQUEADA
+,52,550 5.7.1 reject content
+,52,550 5.7.1 Rejected by Sieve Email Filter
+,52,550 5.7.1 Rejected for SPAM content
+,52,550 5.7.1 Suspect Spam
+,52,550 5.7.1 Your mail is classified as SPAM and REJECTED
+,52,550 5.7.1 |Content unacceptable
+,52,550 accept mail |content
+,52,550 accept|content
+,52,550 content|Heuristic filter
+,52,550 Cyberoam Anti Spam Engine has identified this email as a bulk email
+,52,550 Error: conteudo suspeito
+,52,550 Message content contains spam
+,52,550 permanent failure for one or more recipients|Message rejected as spam by Content Filtering
+,52,550 permanent failure for one or more recipients|quarantined
+,52,550 permanent failure for one or more recipients|rejecting banned content
+,52,550 permanent failure for one or more recipients|spam URL in content
+,52,550 Rejected by content scanner
+,52,550 Sorry the content |Heuristic filter
+,52,550 Sorry|content of this message was caught by an Heuristic filter
+,52,550 Spam is embedded in the email
+,52,550 This message appears to be spam 
+,52,550 This system does not accept mail|content
+,52,550 Unacceptable content
+,52,550 You are sending illegal content
+,52,550 |accept mail |content
+,52,550 |accept|content
+,52,550 |Blocked [content]
+,52,550 |Mail content denied
+,52,550 |malware
+,52,550 |not accept mail with this content
+,52,550 |PALAVRA PROIBIDA NO REMETENTE
+,52,550 |Rejected: Too many links in the message|infected
+,52,550-5.5.1 |Content Block
+,52,550|email|spam
+,52,550|identified as SPAM
+,52,550|message|spam
+,52,550|rejected as spam
+,52,550|spyware
+,52,551 5.0.0 Message contained possible malicious content
+,52,551 5.0.0 |malicious content
+,52,551 5.0.0 |spam
+,52,552 5.2.0|rejected as spam
+,52,552 Message categorized as SPAM. If you feel it is mis-categorized, please visit|to resend the email. Your key is
+,52,552 |content
+,52,553 5.6.1 Message subject indicates spam content
+,52,553 5.6.1 spam content
+,52,553 5.6.1 |content
+,52,553 5.6.1 |spam content
+,52,553 5.7.1 Content unacceptable
+,52,553 5.7.1 |Content unacceptable
+,52,553 5.7.3 |CONTENT
+,52,553 Message delivery denied|Subject
+,52,553 Message filtered
+,52,554 5.5.0 Your message was considered to be spam 
+,52,554 5.7.1 Mensagem rejeitada por conta de conteudo inadequado
+,52,554 5.7.1 Mensagem rejeitada por conter conteudo
+,52,554 5.7.1 Message rejected |content
+,52,554 5.7.1 O |bloqueou a sua mensagem por conter palavras
+,52,554 5.7.1 This message|blocked
+,52,554 5.7.1 URL/Phone Number Filter
+,52,554 5.7.1 |content
+,52,554 Failure bounce
+,52,554 Filtered
+,52,554 rejecting banned content
+,52,554 rejecting |content
+,52,554 rejecting|content
+,52,554 |content
+,52,554 |infected
+,52,554 |rejected because it matches a subject filter
+,52,554 |SPAM
+,52,554 |Symantec
+,52,554-Prohibited |Subject
+,52,555 Rejected message because it contains
+,52,557 content|spam signatures
+,52,557 |unsuitable content
+,52,557|content
+,52,557|content matches known spam signature
+,52,55| PHISHING
+,52,55| virus
+,52,571 |irus
+,52,571 |PHISH
+,52,573 5.0.0 SPAM BLOCK|URIBL
+,52,579 message content|acceptable
+,52,579 |message content
+,52,582 This content was not allowed
+,52,582 This message violates our email policy
+,52,582 |content
+,52,antispam policy
+,52,como SPAM
+,52,considered spam
+,52,contains spam
+,52,declared Spam
+,52,disallowed string
+,52,Distributed Spam Analysis
+,52,due to |content
+,52,email was identified |SPAM
+,52,Error - Blocked for abuse. Contact abuse_rbl@abuse-att.net.
+,52,Error Code: IPBL0100|postmaster.cox.net
+,52,Error Code: IPBL1000|postmaster.cox.net
+,52,essage content reject
+,52,failed spam test
+,52,for more information please visit: |/spam
+,52,hvub1
+,52,hvub2
+,52,hvuweb
+,52,is a spam
+,52,is spam
+,52,legal threats
+,52,looked like spam
+,52,looks |like spam
+,52,may consider spam
+,52,mensaje se considera SPAM
+,52,Message filter|spam
+,52,message rejected as spam
+,52,must be spam
+,52,No SPAM
+,52,ontent filter
+,52,ontent not accepted
+,52,ontent rejected
+,52,ontent rule
+,52,ontents of your body
+,52,politica AntiSpam
+,52,postmaster.aol.com/error-codes#554hvub1
+,52,postmaster.aol.com/error-codes#554hvub2
+,52,probability of spam
+,52,sending spam mail
+,52,Spam detected
+,52,spam detection
+,52,Spam email
+,52,spam filter
+,52,spam message
+,52,Spam not welcome
+,52,Spam not welcome,
+,52,spam points
+,52,spam scale
+,52,Spam score
+,52,Spam suspect
+,52,SpamAssassin
+,52,Spamming
+,52,TOO_SPAMMY
+,52,USER REFUSED MESSAGE DATA
+,52,virus detected
+,52,with the subject of |spam
+,53,550|We do not accept .tgz attachments here
+,54,421 4.0.0 |Relay rejected
+,54,421 Relay is not allowed
+,54,450 |relay
+,54,451 |Relay
+,54,476 connections |denied
+,54,476 |connections from your host are denied
+,54,476 |connections |denied
+,54,5.7.1 | relaying to
+,54,501 |relay
+,54,506 RELAYING DENIED
+,54,506 |Relay
+,54,530 Relay Denied
+,54,530 | relay
+,54,530 |relaying
+,54,550 5.1.2 |omain
+,54,550 5.4.1 |Relay
+,54,550 Relais interdit
+,54,550 RELAY NOT PERMITED
+,54,550 Your IP|spammer
+,54,550-Relaying |denied
+,54,550|Mail relay
+,54,550 5.7.1|not relay
+,54,551 |relay
+,54,553 |domain |allowed
+,54,553 |relay
+,54,554 5.0.0 |relay
+,54,554 5.7.1 |RLY:B1
+,54,554 No relaying allowed |psmtp
+,54,554 | relay
+,54,554|Private Email System
+,54,557 Relay Denied
+,54,558 Relaying denied
+,54,571 | relay
+,54,annot relay
+,54,authentication required for relay
+,54,BAD_RELAY
+,54,currently not permitted
+,54,deny openrelay
+,54,dynamic address
+,54,Dynamic block
+,54,Dynamic IP
+,54,dynamic sender
+,54,dynamic(numerical) name
+,54,dynamically assigned
+,54,must login
+,54,no relay
+,54,Not relaying
+,54,o unauthenticated relaying permitted
+,54,ou |relay
+,54,relay attempt denied
+,54,relay denied
+,54,relay disabled
+,54,relay msg rejected
+,54,relay not allowed
+,54,relay not permitted
+,54,relay |ccess |enied
+,54,relayed mail to
+,54,relaying denied
+,54,relaying disallowed
+,54,relaying is not supported
+,54,Relaying is prohibited
+,54,relaying|not permitted
+,54,Relaying through
+,54,to relay
+,54,trusted senders only
+,54,when attempting to send to a non-local e-mail address
+,60,451 Autoreply
+,70, temporary lookup failure
+,70,4.1.0 |oo much
+,70,4.3.0 Maximum number of recipients reached
+,70,4.3.5 |Server configuration error
+,70,4.7.1 |Recipient not recognized
+,70,4.7.1 |Service is unavailable
+,70,4.7.1 |spferror.html
+,70,4.7.1 |Temporary Error
+,70,400 4.4.7 Message delayed
+,70,400 defer
+,70,400 Temporary failure
+,70,400 |temporary
+,70,410 maximum mail limit exceeded
+,70,410 |try again later
+,70,410|try again later
+,70,411 |please try later
+,70,420 4.0.0 Service unavailable
+,70,420 Try later
+,70,420 |Graylisting
+,70,420 |Login failed
+,70,421 /32 message rate limit exceeded
+,70,421 4.0.0 Intrusion prevention active
+,70,421 4.0.0 out of memory
+,70,421 4.0.0 Tarpitting
+,70,421 4.0.0 |out of memory
+,70,421 4.0.0 |Tarpitting
+,70,421 4.1.0
+,70,421 4.1.0|Throttled - try again later
+,70,421 4.1.1|recipient validation failed
+,70,421 4.2.0|Throttled - try again later
+,70,421 4.2.1
+,70,421 4.3.1 Out of disk space |temp file
+,70,421 4.3.1 queue is full
+,70,421 4.3.2 |can't accept mail right now
+,70,421 4.3.2|Reconfiguration in progress
+,70,421 4.4.1 |Unable to contact destination
+,70,421 4.4.2 Connection refused|exceed max concurrent connections
+,70,421 4.4.2 Message submission rate |exceeded
+,70,421 4.4.5 |connections |exceed
+,70,421 4.5.1 sender mx in an unallocated or reserved network
+,70,421 4.5.1 |sender mx in an unallocated or reserved network
+,70,421 4.7.0 [TS01]
+,70,421 4.7.0 Not allowed
+,70,421 4.7.0|aol.com Error
+,70,421 4.7.0|too many errors
+,70,421 4.7.1
+,70,421 Giving up
+,70,421 Greylist
+,70,421 HL:IFC 
+,70,421 Internal configuration error
+,70,421 Load too high
+,70,421 message again|not spamware
+,70,421 Offline
+,70,421 please try again
+,70,421 PR this is a test message
+,70,421 Recipient not in route list
+,70,421 Servico nao disponivel. Fechando a conexao
+,70,421 Servico temporariamente
+,70,421 temp blocked
+,70,421 The evaluation license has expired
+,70,421 too many errors
+,70,421 Unexpected failure
+,70,421 YopMail.com ERROR
+,70,421 |421dynt1.html
+,70,421 |accepting network
+,70,421 |BUSY
+,70,421 |closing connection
+,70,421 |connection refused
+,70,421 |data
+,70,421 |deferred
+,70,421 |destination not responding
+,70,421 |emporary
+,70,421 |erver
+,70,421 |ervice
+,70,421 |ESMTP
+,70,421 |Gray
+,70,421 |graylist
+,70,421 |imed out
+,70,421 |imeout
+,70,421 |message again|not spamware
+,70,421 |onnection
+,70,421 |oo busy
+,70,421 |please try later
+,70,421 |send the message again
+,70,421 |service
+,70,421 |session
+,70,421 |SMTP
+,70,421 |Temporarily deferred
+,70,421 |Too many connections
+,70,421 |too many errors
+,70,421 |Too many messages
+,70,421 |too many recipients
+,70,421 |try again
+,70,421 |Try Again Later
+,70,421 |try later
+,70,421 |unable
+,70,421 |whose side are you on?
+,70,421 |Whose side you on
+,70,421 |ystem
+,70,421-4.7.0|Error: too many connections from|Please see|for explanation
+,70,421-the config data could not be retrieved
+,70,421|4.3.2 All screening ports are busy
+,70,421|DYN:T2
+,70,421|queue is full
+,70,421|RLY:
+,70,421|Server is too busy
+,70,421|TELUS|too many invalid addresses
+,70,421|temp blocked
+,70,421|Temporarily rejected
+,70,422 IP REPUTATION SUSPECT
+,70,422 License Expired
+,70,422 You have sent more emails than allowed on your current plan per day
+,70,422 |try again later
+,70,422|too many messages
+,70,425 5.1.0 Dropping connection due to an error
+,70,425 service is not ready
+,70,425 |service is not ready
+,70,430 Message Deferred
+,70,435 |connections
+,70,440 4.1.1 |Try Again Later
+,70,440 4.4.0
+,70,440 4.4.2 Try again later
+,70,442 |Bad Connection
+,70,442 |google
+,70,450 4.0.0
+,70,450 4.1.1 |Recipient address rejected
+,70,450 4.1.2 |Recipient address rejected: Domain not found
+,70,450 4.2.0|Recipient address rejected: Greylisted
+,70,450 4.2.1
+,70,450 4.2.2 User is receiving mail too quickly
+,70,450 4.3.2
+,70,450 4.7.0 too many valid commands
+,70,450 4.7.0 |too many errors
+,70,450 4.7.0|defer
+,70,450 4.7.1
+,70,450 4.7.1 |Greylisting in action
+,70,450 4.7.1 |NFN delay
+,70,450 4.7.1 |Recipient address rejected: Greylisting in action
+,70,450 4.7.1 |Recipient address rejected: NFN delay
+,70,450 4.7.1 |Recipient address rejected: Please try again later
+,70,450 4.7.1 |try again later
+,70,450 4.7.1|Greylisted
+,70,450 4.7.1|Recipient address rejected: Greylisted
+,70,450 5.1.1 Mailbox is currently disabled.
+,70,450 Backend Replied
+,70,450 cuda_nsu 4.1.1|Recipient address rejected: unverified address: Address Verification failed
+,70,450 error
+,70,450 Failure flush No space left on device
+,70,450 in grace period
+,70,450 Internal server error
+,70,450 LOGIN REFUSED
+,70,450 mailbox unavailable
+,70,450 server has reached maximum number
+,70,450 server |reached maximum number
+,70,450 Traffic|throttled
+,70,450 Unavailable
+,70,450 User is receiving mail too quickly
+,70,450 |4.2.1
+,70,450 |backlog too large
+,70,450 |busy
+,70,450 |connect
+,70,450 |emporary
+,70,450 |ervice
+,70,450 |graylist
+,70,450 |GREYLIST
+,70,450 |in grace period
+,70,450 |nable
+,70,450 |Numero maximo de conexoes ultrapassado
+,70,450 |orry
+,70,450 |Rcpt
+,70,450 |Requested mail action not taken: mailbox unavailable
+,70,450 |ry
+,70,450 |tempfail
+,70,450 |too many recipients
+,70,450 |try later
+,70,450|Client host rejected: S25R check, be patient
+,70,450|Momentaneamente fuera de servicio
+,70,450|rcpt is receiving at a fast rate
+,70,450|timeout
+,70,451 4.0.0
+,70,451 4.0.0 Temporary System Failure
+,70,451 4.2.0 Internal|error
+,70,451 4.2.1
+,70,451 4.3.0
+,70,451 4.3.0 Could not connect to other SMTP server
+,70,451 4.3.0 We will accept the mail
+,70,451 4.3.0 | <TMPF>
+,70,451 4.3.5 Server |error
+,70,451 4.3.5 |LDAP
+,70,451 4.4.0|Broken pipe
+,70,451 4.4.1
+,70,451 4.4.2 [internal] no
+,70,451 4.4.2 [internal] send BODY failed
+,70,451 4.4.2 |MAIL FROM failed
+,70,451 4.4.2|MAIL FROM failed
+,70,451 4.5.0
+,70,451 4.5.1
+,70,451 4.5.3 No more transactions allowed
+,70,451 4.5.3 transactions allowed
+,70,451 4.5.3 |transactions allowed
+,70,451 4.6.0 Content scanner malfunction
+,70,451 4.7.1
+,70,451 4.7.1|Recipient address rejected: Greylisted
+,70,451 4.7.7 Excessive userid
+,70,451 Aborted
+,70,451 Aborted: exchanger/smtp/inbound
+,70,451 Application error
+,70,451 Backend Replied
+,70,451 Can|t connect
+,70,451 Client host rejected: Server undergoing maintenance
+,70,451 Client host rejected|maintenance
+,70,451 Comando abortad
+,70,451 Comando abortado
+,70,451 communication |failed
+,70,451 Deferred
+,70,451 delayed
+,70,451 Error in writing spool file
+,70,451 failed |open files
+,70,451 file write error
+,70,451 http://|/mta/std3.html
+,70,451 keep trying
+,70,451 Liste grise
+,70,451 load too high
+,70,451 Local Error
+,70,451 Maximum Limit reached
+,70,451 Maximum Sessions reached
+,70,451 MI:SFQ
+,70,451 no mail servers found
+,70,451 O numero maximo de emails enviados por ip por hora foi atingido
+,70,451 Please wait
+,70,451 Policy deferral for a verification check
+,70,451 Retry later
+,70,451 Sender verification failed
+,70,451 Server configuration error
+,70,451 server load too high
+,70,451 Service not avail
+,70,451 temp
+,70,451 too many errors from your ip
+,70,451 too many messages, slow down
+,70,451 unable to exec
+,70,451 unable to execute child process
+,70,451 Unable to process email at this time
+,70,451 unable to verify user
+,70,451 | limit exceeded
+,70,451 |busy
+,70,451 |complete
+,70,451 |deferred
+,70,451 |delayed
+,70,451 |disk is full
+,70,451 |emporary
+,70,451 |emporary failure
+,70,451 |failed
+,70,451 |failed to expand
+,70,451 |file write error
+,70,451 |GreyListed
+,70,451 |held for verification
+,70,451 |imeout
+,70,451 |Internal processing error
+,70,451 |internal system error
+,70,451 |keep trying
+,70,451 |later
+,70,451 |LDAP
+,70,451 |limite maximo
+,70,451 |lista gris
+,70,451 |mailbox unavailable
+,70,451 |Maximum number of emails per sender per hour reached
+,70,451 |message
+,70,451 |no mail servers found
+,70,451 |No space left on device
+,70,451 |not verify
+,70,451 |onnection
+,70,451 |orry
+,70,451 |raylisted
+,70,451 |rcpt check failed
+,70,451 |Requested mail action not taken: mailbox unavailable
+,70,451 |retry
+,70,451 |reylist
+,70,451 |smtp
+,70,451 |spool file
+,70,451 |Temporarily
+,70,451 |time out
+,70,451 |try again
+,70,451 |unable to verify address
+,70,451 |wait
+,70,451 |ystem
+,70,451|Deferred
+,70,451|failure
+,70,451|Grau gelistet - Sie wurden grau gelistet
+,70,451|Por favor active la autentificación en el servidor saliente en su cliente
+,70,451|Ratelimit exceeded consider
+,70,451|Try again
+,70,451-DEFER
+,70,451|Ratio de mensajes superado
+,70,452 4.0.0
+,70,452 4.1.0
+,70,452 4.1.0|AUP#CXMXRT
+,70,452 4.1.0|too busy for now
+,70,452 4.1.1 Account temporarily unavailable |Try again
+,70,452 4.1.1 |rcpt to not found
+,70,452 4.1.1|Account temporarily unavailable. Try again later
+,70,452 4.1.1|too many recent messages
+,70,452 4.1.1|Too much mail
+,70,452 4.2.1
+,70,452 4.3.1 Insufficient free queue space available
+,70,452 4.3.1 Out of memory
+,70,452 4.3.1 |disk space
+,70,452 4.3.1 |temp
+,70,452 4.3.1|Nao ha espaco de armazenamento disponivel
+,70,452 4.3.2 Connection rate limit exceeded
+,70,452 4.5.0 policy based throttling
+,70,452 4.5.3 Service unavailable
+,70,452 4.7.1
+,70,452 Resource problem
+,70,452 Space shortage|try later
+,70,452 Too many recipients
+,70,452 Too many recipients received from the sender
+,70,452 Too many recipients received this hour
+,70,452 try later
+,70,452 |eferred
+,70,452 |emporary
+,70,452 |mail receiving disabled
+,70,452 |maintenance
+,70,452 |Overloaded
+,70,452 |system is under maintenance
+,70,452 |tarpit
+,70,452 |Temporarily
+,70,452 |timeout
+,70,452 |too many recipients
+,70,452 |Too many |connections.
+,70,452|4.3.1 queue full
+,70,452|Max messages per session
+,70,452|Message threshold exceeded
+,70,452|timeout
+,70,452|Unable to check email for Viruses
+,70,453 4.3.1 |try later
+,70,453 Maximum connection |exceeded
+,70,453 Maximum connection|exceeded
+,70,453 |connection rate has been exceeded
+,70,453 |try again later
+,70,454 4.7.1 |Recipient address rejected: Access denied
+,70,454 5.7.3 Client does not have permission to submit mail to this server
+,70,454 |connection limit
+,70,454 |emporary
+,70,454 |try again later
+,70,454|could not be scanned for viruses
+,70,455 sorry, system is too busy
+,70,455 |Temporary
+,70,458 Ratelimit exceeded
+,70,45|equested action aborted
+,70,462 4.7.1 |temporary failure
+,70,470 |too many e-mails
+,70,470|SMTP connection
+,70,471|one recipient domain per session
+,70,472 Deferred relaying
+,70,475 connections from your network are restricted
+,70,491 RCPT discovery for | is offline
+,70,491 Session verify is offline
+,70,491 Session verify |offline
+,70,491 VRFY discovery |offline
+,70,500 temporary server error
+,70,503 Could not deliver message
+,70,550 Connection frequency limited
+,70,550 Domain frequency limited
+,70,550 Ip frequency limited
+,70,550 Mailbox locked
+,70,550 Please re-check the email address
+,70,550 Sender frequency limited
+,70,550 Too many connect
+,70,550 Too many recipients
+,70,550 Transient
+,70,550 5.1.1|recipient unallocated
+,70,550-5.2.1 |rate |prevents additional messages from being delivered
+,70,550 5.7.1 Connection refused - OXSUS0001_301
+,70,550 5.7.1|too many similar subject emails
+,70,550|Rate Control, please wait
+,70,551 |full
+,70,552 5.5.3 Service unavailable
+,70,552 Requested mail action aborted: exceeded storage allocation
+,70,552 Too many message current session
+,70,552|Sender daily sent mail exceed limit
+,70,554 5.2.1 |DYN:T1
+,70,554 5.7.1|failed deliveries|try again later
+,70,554 HL:ITC 0,163|421 IP is rejected
+,70,554 Mailbox status error
+,70,554 message delivery error
+,70,554 MI:STC
+,70,554|the domain is not reachable
+,70,571 sorry reached maximum|recipients
+,70,account is unavailable
+,70,account|maintenance
+,70,Address verification in progress
+,70,call back later
+,70,closing transmission
+,70,count not available
+,70,ecipient address greylist
+,70,ecipient Rejected: Temporarily inactive
+,70,ejected: |reylist
+,70,elivery resource unavailabl
+,70,emporary embargo.
+,70,emporary service error
+,70,emporary |unavailable
+,70,erver aborted connection
+,70,erver |problem
+,70,essage |temporarily deferred
+,70,exceed|daily limit
+,70,GREYLISTED
+,70,inactivity
+,70,Internal Error
+,70,Internal server error
+,70,is not yet authorized to deliver
+,70,lease come back later
+,70,lease retry
+,70,lease send again.
+,70,lease try |shortly
+,70,line limit
+,70,Mail box busy
+,70,MAIL-DELIVERY-DELAY-DUE-TO-GREYLISTING
+,70,mailbox not available
+,70,network is not reachable
+,70,no response
+,70,nsufficient system storage
+,70,nternal error
+,70,o such file or directory
+,70,ome again later
+,70,ome back
+,70,ostgrey
+,70,postmaster.aol.com/error-codes#421conb1
+,70,postmaster.aol.com/error-codes#421dynt1
+,70,postmaster.aol.com/error-codes#421dynt2
+,70,postmaster.info.aol.com/errors/421conb1.html
+,70,ransaction fail
+,70,ray listing
+,70,Recipient address rejected|try again
+,70,Recipient address rejected|try it again later
+,70,rey bounce
+,70,rey-List
+,70,rey-liste
+,70,reylist
+,70,reylisting
+,70,rror writing
+,70,ry me again later
+,70,send again
+,70,send RSET failed
+,70,sending too many emails
+,70,server are unavailabl
+,70,Service not availabl
+,70,temporarily
+,70,too many concurrents|try again later
+,70,User suspended
+,100,4.3.0 Message held for human verification
+,100,550-Verification failed
+,100,550|result of an earlier callout
+,100,Callout verification failed
+,100,Click link to validate your email address and deliver your email
+,100,Delivery will ONLY occur if you click on this link
+,100,Failure Email delivery pending, to confirm send an email to:
+,100,send an email to allow-|then resend original email
+,100,Sender verify failed
+,100,Your server requires confirmation|to confirm

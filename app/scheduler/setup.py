@@ -9,6 +9,8 @@ from app.scheduler.jobs import (
     job_metrics_update,
     job_monthly_rotation,
     job_quarantine_check,
+    job_retry_queue,
+    job_sync_warmup_quotas,
     job_warmup_daily,
 )
 
@@ -89,6 +91,26 @@ def create_scheduler() -> AsyncIOScheduler:
         minutes=1,
         id="metrics_update",
         name="Metrics Update",
+        replace_existing=True,
+    )
+
+    # Retry failed scraper-pro forwards every 2 minutes
+    scheduler.add_job(
+        job_retry_queue,
+        "interval",
+        minutes=2,
+        id="retry_queue",
+        name="Retry Queue",
+        replace_existing=True,
+    )
+
+    # Sync warmup quotas to MailWizz every hour
+    scheduler.add_job(
+        job_sync_warmup_quotas,
+        "interval",
+        hours=1,
+        id="sync_warmup_quotas",
+        name="Sync Warmup Quotas",
         replace_existing=True,
     )
 
