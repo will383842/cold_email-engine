@@ -1,5 +1,6 @@
 """Alembic environment configuration."""
 
+import os
 import sys
 from pathlib import Path
 from logging.config import fileConfig
@@ -11,8 +12,13 @@ from sqlalchemy import engine_from_config, pool
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.models import Base
+from app.config import settings
 
 config = context.config
+
+# Override sqlalchemy.url with DATABASE_URL from environment
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
