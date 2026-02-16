@@ -9,7 +9,11 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """All settings loaded from .env file."""
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "extra": "ignore"
+    }
 
     # --- API ---
     API_KEY: str = "changeme"
