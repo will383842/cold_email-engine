@@ -27,6 +27,8 @@ Thumbs.db
 
 # Backups
 backups/
+backup-source/
+mailwizz/
 
 # Monitoring data
 monitoring/prometheus_data/
