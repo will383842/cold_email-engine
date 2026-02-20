@@ -95,7 +95,13 @@ def _create_contact_event(
     metadata: Optional[dict] = None,
 ) -> ContactEvent:
     """Create a contact event."""
+    # Récupérer le contact pour obtenir le tenant_id
+    contact = db.query(Contact).filter(Contact.id == contact_id).first()
+    if not contact:
+        raise ValueError(f"Contact {contact_id} not found")
+
     event = ContactEvent(
+        tenant_id=contact.tenant_id,
         contact_id=contact_id,
         campaign_id=campaign_id,
         event_type=event_type,

@@ -15,7 +15,7 @@ import pytest
 from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, patch
 
-from app.models import IP, WarmupDailyStat, WarmupPlan
+from app.models import IP, Tenant, WarmupDailyStat, WarmupPlan
 from app.services.warmup_engine import (
     DAILY_QUOTAS,
     WARMUP_TOTAL_DAYS,
@@ -29,8 +29,32 @@ from app.services.warmup_engine import (
 # Helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _make_ip(db, status="warming"):
-    ip = IP(address="1.2.3.4", hostname="mail.test.com", status=status, purpose="marketing")
+def _make_tenant(db, slug="test-tenant"):
+    """Crée un tenant de test."""
+    tenant = Tenant(
+        slug=slug,
+        name="Test Tenant",
+        brand_domain="test.com",
+        sending_domain_base="mail.test.com",
+    )
+    db.add(tenant)
+    db.commit()
+    db.refresh(tenant)
+    return tenant
+
+
+def _make_ip(db, status="warming", tenant=None):
+    """Crée une IP de test. Si tenant non fourni, en crée un."""
+    if tenant is None:
+        tenant = _make_tenant(db)
+
+    ip = IP(
+        tenant_id=tenant.id,
+        address="1.2.3.4",
+        hostname="mail.test.com",
+        status=status,
+        purpose="marketing",
+    )
     db.add(ip)
     db.commit()
     db.refresh(ip)

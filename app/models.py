@@ -8,6 +8,7 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
@@ -224,6 +225,7 @@ class ContactEvent(Base):
     __tablename__ = "contact_events"
 
     id = Column(Integer, primary_key=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
     contact_id = Column(Integer, ForeignKey("contacts.id", ondelete="CASCADE"), nullable=False, index=True)
     campaign_id = Column(Integer, ForeignKey("campaigns.id"), nullable=True, index=True)
     event_type = Column(String(30), nullable=False)  # ingested, validated, sent, delivered, opened, clicked, bounced, unsubscribed
@@ -231,8 +233,14 @@ class ContactEvent(Base):
     timestamp = Column(DateTime, nullable=False, default=datetime.utcnow, index=True)
 
     # Relationships
+    tenant = relationship("Tenant")
     contact = relationship("Contact", back_populates="events")
     campaign = relationship("Campaign", back_populates="events")
+
+    __table_args__ = (
+        # Index composé (tenant_id, event_type) pour analytics par tenant
+        Index("ix_contact_events_tenant_event", "tenant_id", "event_type"),
+    )
 
 
 class MailwizzInstance(Base):
@@ -314,6 +322,7 @@ class WarmupPlan(Base):
     __tablename__ = "warmup_plans"
 
     id = Column(Integer, primary_key=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
     ip_id = Column(Integer, ForeignKey("ips.id"), unique=True, nullable=False)
     phase = Column(String(20), nullable=False, default="week_1")
     started_at = Column(DateTime, default=datetime.utcnow)
@@ -324,6 +333,7 @@ class WarmupPlan(Base):
     paused = Column(Boolean, default=False)
     pause_until = Column(DateTime)
 
+    tenant = relationship("Tenant")
     ip = relationship("IP", back_populates="warmup_plan")
     daily_stats = relationship("WarmupDailyStat", back_populates="plan")
 
@@ -350,12 +360,15 @@ class BlacklistEvent(Base):
     __tablename__ = "blacklist_events"
 
     id = Column(Integer, primary_key=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
     ip_id = Column(Integer, ForeignKey("ips.id"), nullable=False)
     blacklist_name = Column(String(100), nullable=False)
     listed_at = Column(DateTime, default=datetime.utcnow)
     delisted_at = Column(DateTime)
     auto_recovered = Column(Boolean, default=False)
     standby_ip_activated_id = Column(Integer, ForeignKey("ips.id"))
+
+    tenant = relationship("Tenant")
 
     ip = relationship("IP", back_populates="blacklist_events", foreign_keys=[ip_id])
 

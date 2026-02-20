@@ -116,6 +116,7 @@ class BlacklistChecker:
             if not existing:
                 self.db.add(
                     BlacklistEvent(
+                        tenant_id=ip.tenant_id,
                         ip_id=ip.id,
                         blacklist_name=bl_name,
                         listed_at=datetime.utcnow(),

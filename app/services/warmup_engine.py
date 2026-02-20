@@ -115,6 +115,7 @@ class WarmupEngine:
         """
         initial_quota = DAILY_QUOTAS[0]
         plan = WarmupPlan(
+            tenant_id=ip.tenant_id,
             ip_id=ip.id,
             phase="day_1",
             started_at=datetime.utcnow(),
