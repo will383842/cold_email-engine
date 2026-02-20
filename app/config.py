@@ -167,6 +167,13 @@ class Settings(BaseSettings):
     GRAFANA_ROOT_URL: str = "http://localhost:3000"
 
     # ─────────────────────────────────────────────────────────────
+    # External Services — Scraper-Pro (optionnel)
+    # ─────────────────────────────────────────────────────────────
+    SCRAPER_PRO_BOUNCE_URL: str = ""
+    SCRAPER_PRO_DELIVERY_URL: str = ""
+    SCRAPER_PRO_HMAC_SECRET: str = ""
+
+    # ─────────────────────────────────────────────────────────────
     # Domaines d'envoi (pour validation et référence)
     # ─────────────────────────────────────────────────────────────
     DOMAIN_COUNT: int = 4

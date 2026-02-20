@@ -9,7 +9,8 @@ from sqlalchemy.orm import Session
 
 from app.enums import AlertCategory, AlertSeverity
 from app.models import HealthCheck
-from app.services.powermta_config import PowerMTAConfig
+# TODO: PowerMTAConfig refactoré en PmtaNode — health monitor à mettre à jour
+# from app.services.powermta_config import PowerMTAConfig
 from app.services.telegram_alerter import alerter
 
 logger = structlog.get_logger(__name__)
@@ -24,11 +25,13 @@ class HealthMonitor:
 
     def __init__(self, db: Session):
         self.db = db
-        self.pmta = PowerMTAConfig()
+        # TODO: PowerMTAConfig refactoré en PmtaNode — à adapter
+        # self.pmta = PowerMTAConfig()
 
     def check_pmta(self) -> bool:
         """Check if PowerMTA is running."""
-        return self.pmta.is_running()
+        # TODO: Adapter pour PmtaNode multi-nodes
+        return False  # Temporairement désactivé
 
     def check_disk(self) -> float:
         """Return disk usage percentage."""
@@ -47,7 +50,8 @@ class HealthMonitor:
 
     def check_queue(self) -> int:
         """Return PowerMTA queue size."""
-        return self.pmta.get_queue_size()
+        # TODO: Adapter pour PmtaNode multi-nodes (query tous les nœuds)
+        return 0  # Temporairement désactivé
 
     async def run_health_check(self) -> HealthCheck:
         """Run full health check and save to DB."""
