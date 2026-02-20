@@ -11,22 +11,22 @@
 
 ```
 Serveur: 46.62.168.55 (Helsinki)
-Domaine: mail.sos-expat.com
+Domaine: mail.client1-domain.com
 
 IPs Configurées:
-  ├─ IP1: 46.62.168.55  (mail1.ulixai-expat.com)
-  └─ IP2: 95.216.179.163 (mail2.ulixai-expat.com)
+  ├─ IP1: 46.62.168.55  (mail1.client2-domain.com)
+  └─ IP2: 95.216.179.163 (mail2.client2-domain.com)
 
 Virtual MTAs:
   ├─ pmta-vmta0 (IP1)
   │   ├─ Quota: 400 emails/jour
   │   ├─ Rate: 1000/heure
-  │   └─ DKIM: ulixai-expat.com
+  │   └─ DKIM: client2-domain.com
   │
   └─ pmta-vmta1 (IP2)
       ├─ Quota: 400 emails/jour
       ├─ Rate: 1000/heure
-      └─ DKIM: ulixai-expat.com
+      └─ DKIM: client2-domain.com
 
 Pool: pmta-pool (load balance entre vmta0 et vmta1)
 ```
@@ -38,7 +38,7 @@ Pool: pmta-pool (load balance entre vmta0 et vmta1)
 ✅ Rate limiting par ISP (Gmail: 250/h, Yahoo: 250/h, etc.)
 ✅ Backoff automatique sur erreurs temporaires
 ✅ Bounce categorization (spam, quota, bad-mailbox, etc.)
-✅ DKIM signing (ulixai-expat.com)
+✅ DKIM signing (client2-domain.com)
 ✅ STARTTLS (encryption)
 ✅ SMTP Auth (password protected)
 ```
@@ -116,12 +116,12 @@ Pour changer un quota:
 
 ```
 Configuration actuelle:
-  ulixai-expat.com (un seul domaine)
+  client2-domain.com (un seul domaine)
 
-❌ Si on veut ajouter SOS-Expat:
+❌ Si on veut ajouter Client 1:
   1. Changer config PMTA manuellement
   2. Redémarrer service
-  3. Risque de casser Ulixai
+  3. Risque de casser Client 2
 
 ❌ Pas d'isolation entre tenants
 ❌ Pas de quotas séparés
@@ -189,20 +189,20 @@ PUT /api/v2/powermta/config
 
 ```python
 # email-engine gère 2 tenants séparés
-Tenant 1: SOS-Expat
+Tenant 1: Client 1
   ├─ IPs: [46.62.168.55]
   ├─ Domain: sos-mail.com
-  ├─ VMTA: pool-sos
+  ├─ VMTA: client1-pool
   └─ Quota: 5000/jour
 
-Tenant 2: Ulixai
+Tenant 2: Client 2
   ├─ IPs: [95.216.179.163]
-  ├─ Domain: ulixai-mail.com
-  ├─ VMTA: pool-ulixai
+  ├─ Domain: client2-mail.com
+  ├─ VMTA: client2-pool
   └─ Quota: 10000/jour
 
 → ISOLATION TOTALE
-→ Un problème SOS n'affecte pas Ulixai
+→ Un problème Client 1 n'affecte pas Client 2
 ```
 
 ### 5. Sync avec MailWizz
@@ -394,7 +394,7 @@ GAIN: 5h20 par semaine = 23h par mois = 276h par an
 - ✅ Warmup 6 semaines (zéro intervention)
 - ✅ Blacklist check 6×/jour (9 RBL)
 - ✅ Config PMTA dynamique (API)
-- ✅ Multi-tenant (SOS-Expat + Ulixai isolés)
+- ✅ Multi-tenant (Client 1 + Client 2 isolés)
 - ✅ Sync hourly avec MailWizz
 - ✅ Alertes Telegram temps réel
 - ✅ Prometheus + Grafana monitoring

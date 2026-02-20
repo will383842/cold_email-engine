@@ -13,7 +13,7 @@ L'implémentation complète de l'Email Engine est terminée avec succès. Le sys
 - **Architecture**: Clean Architecture (Hexagonal/DDD)
 - **API Endpoints**: 45+ (v1 + v2)
 - **Database Tables**: 20
-- **Tenants**: 2 (SOS-Expat, Ulixai)
+- **Tenants**: 2 (Client 1, Client 2)
 - **Languages**: 9 (FR, EN, ES, DE, PT, RU, ZH, HI, AR)
 - **Background Jobs**: 4 Celery queues
 - **Docker Services**: 9 containers
@@ -47,7 +47,7 @@ L'implémentation complète de l'Email Engine est terminée avec succès. Le sys
 
 ### Data Seeding
 - Script: `scripts/seed_enterprise_data.py`
-- Creates 2 tenants (SOS-Expat, Ulixai)
+- Creates 2 tenants (Client 1, Client 2)
 - Creates 100 IPs (50 per tenant)
 - Creates 100 domains (50 per tenant)
 - Creates 2 MailWizz instances
@@ -104,7 +104,7 @@ WarmupPhase(6 weeks)
 
 ### Authentication
 - Simple API Key authentication for internal tool
-- 3 hardcoded keys (SOS-Expat, Ulixai, Admin)
+- 3 hardcoded keys (Client 1, Client 2, Admin)
 - Optional `no_auth()` for truly internal endpoints
 
 ### Use Cases (6 new)
@@ -238,23 +238,23 @@ WarmupPhase(6 weeks)
 
 ### Multi-Tenant Isolation
 
-**Tenant 1: SOS-Expat**
-- Brand: sos-expat.com
+**Tenant 1: Client 1**
+- Brand: client1-domain.com
 - Sending: mail1-50.sos-mail.com
 - IPs: 45.123.10.1-50
-- MailWizz: mail.sos-expat.com
+- MailWizz: mail.client1-domain.com
 
-**Tenant 2: Ulixai**
-- Brand: ulixai.com
-- Sending: mail1-50.ulixai-mail.com
+**Tenant 2: Client 2**
+- Brand: client2-domain.com
+- Sending: mail1-50.client2-mail.com
 - IPs: 45.124.20.1-50
-- MailWizz: mail.ulixai.com
+- MailWizz: mail.client2-domain.com
 
 ### Multi-Language Support
 
 9 languages with intelligent fallback:
-- French (fr) - Primary for SOS-Expat
-- English (en) - Fallback + Ulixai primary
+- French (fr) - Primary for Client 1
+- English (en) - Fallback + Client 2 primary
 - Spanish (es), German (de), Portuguese (pt)
 - Russian (ru), Chinese (zh), Hindi (hi)
 - Arabic (ar) - with RTL support
@@ -416,7 +416,7 @@ pytest tests/ --cov=src --cov-report=html
 ## 💡 Key Achievements
 
 ✅ **Clean Architecture**: Complete separation of concerns
-✅ **Multi-Tenant**: Full isolation between SOS-Expat and Ulixai
+✅ **Multi-Tenant**: Full isolation between Client 1 and Client 2
 ✅ **Multi-Language**: 9 languages with intelligent fallback
 ✅ **Scalable**: Horizontal scaling ready with Docker
 ✅ **Background Jobs**: Celery with 4 specialized queues
@@ -444,7 +444,7 @@ Pour toute question ou problème:
 **Architecture**: Clean/Hexagonal (DDD)
 **Status**: ✅ PRODUCTION READY
 **Stack**: FastAPI + PostgreSQL + Redis + Celery + Docker
-**Tenants**: SOS-Expat + Ulixai
+**Tenants**: Client 1 + Client 2
 **Languages**: 9 (FR, EN, ES, DE, PT, RU, ZH, HI, AR)
 
 ---

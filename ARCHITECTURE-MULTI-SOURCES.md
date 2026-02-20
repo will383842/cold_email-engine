@@ -26,7 +26,7 @@
 **Email Engine** doit devenir le **hub central** qui :
 - ✅ Reçoit des contacts de **sources multiples**
 - ✅ Valide et enrichit les données
-- ✅ Route vers les bonnes **instances MailWizz** (SOS-Expat, Ulixai, etc.)
+- ✅ Route vers les bonnes **instances MailWizz** (Client 1, Client 2, etc.)
 - ✅ Gère des **campagnes indépendantes** par source
 - ✅ Suivi granulaire par **source + campagne + contact**
 
@@ -70,7 +70,7 @@
 │  │  2. Deduplication (email hash)                          │      │
 │  │  3. Validation (email SMTP check)                       │      │
 │  │  4. Enrichment (categorization)                         │      │
-│  │  5. Routing (SOS-Expat vs Ulixai)                       │      │
+│  │  5. Routing (Client 1 vs Client 2)                      │      │
 │  └────────────────────┬─────────────────────────────────────┘      │
 │                       │                                             │
 │                       ↓                                             │
@@ -84,8 +84,8 @@
 │                       ↓                                             │
 │  ┌──────────────────────────────────────────────────────────┐      │
 │  │         MAILWIZZ MULTI-INSTANCE ROUTER                   │      │
-│  │  - SOS-Expat MailWizz (avocats, assureurs, notaires)   │      │
-│  │  - Ulixai MailWizz (blogueurs, influenceurs, admins)   │      │
+│  │  - Client 1 MailWizz (avocats, assureurs, notaires)    │      │
+│  │  - Client 2 MailWizz (blogueurs, influenceurs, admins) │      │
 │  │  - API sync + MySQL fallback                            │      │
 │  └────────────────────┬─────────────────────────────────────┘      │
 │                       │                                             │
@@ -126,14 +126,14 @@ Chaque source de données est enregistrée avec :
 
 | Source | ID Unique | Type | Destination | Fréquence |
 |--------|-----------|------|-------------|-----------|
-| **Scraper-Pro Google** | `scraper-google-001` | scraping | SOS-Expat | Quotidien |
-| **Scraper-Pro Maps** | `scraper-maps-001` | scraping | SOS-Expat | Quotidien |
-| **Scraper-Pro LinkedIn** | `scraper-linkedin-001` | scraping | SOS-Expat | Quotidien |
-| **Scraper-Pro URLs** | `scraper-urls-001` | scraping | SOS-Expat | Hebdo |
-| **Backlink Engine** | `backlink-engine-001` | api | SOS-Expat | Temps réel |
+| **Scraper-Pro Google** | `scraper-google-001` | scraping | Client 1 | Quotidien |
+| **Scraper-Pro Maps** | `scraper-maps-001` | scraping | Client 1 | Quotidien |
+| **Scraper-Pro LinkedIn** | `scraper-linkedin-001` | scraping | Client 1 | Quotidien |
+| **Scraper-Pro URLs** | `scraper-urls-001` | scraping | Client 1 | Hebdo |
+| **Backlink Engine** | `backlink-engine-001` | api | Client 1 | Temps réel |
 | **Import CSV Manual** | `csv-manual-{timestamp}` | upload | Configurable | Ad-hoc |
-| **Scraper Instagram** | `scraper-instagram-001` | scraping | Ulixai | Quotidien |
-| **Scraper YouTube** | `scraper-youtube-001` | scraping | Ulixai | Quotidien |
+| **Scraper Instagram** | `scraper-instagram-001` | scraping | Client 2 | Quotidien |
+| **Scraper YouTube** | `scraper-youtube-001` | scraping | Client 2 | Quotidien |
 | **Import API** | `api-{client_id}` | api | Configurable | Temps réel |
 
 ### 2.2 Metadata par Source
@@ -186,7 +186,7 @@ CREATE TABLE data_sources (
     is_active BOOLEAN DEFAULT TRUE,
 
     -- Routing
-    default_mailwizz_instance VARCHAR(50),   -- 'sos-expat', 'ulixai'
+    default_mailwizz_instance VARCHAR(50),   -- 'client-1', 'client-2'
     default_list_mapping JSONB,              -- Mapping catégorie → list_id
 
     -- Metadata
@@ -243,7 +243,7 @@ CREATE TABLE contacts (
     score INTEGER DEFAULT 50,                -- 0-100 (qualité lead)
 
     -- Routing
-    mailwizz_instance VARCHAR(50),           -- 'sos-expat', 'ulixai'
+    mailwizz_instance VARCHAR(50),           -- 'client-1', 'client-2'
     mailwizz_list_id INTEGER,                -- ID liste MailWizz
 
     -- Status pipeline
@@ -289,7 +289,7 @@ CREATE TABLE campaigns (
     source_id VARCHAR(100) REFERENCES data_sources(source_id),
 
     -- Configuration
-    mailwizz_instance VARCHAR(50) NOT NULL,  -- 'sos-expat', 'ulixai'
+    mailwizz_instance VARCHAR(50) NOT NULL,  -- 'client-1', 'client-2'
     mailwizz_campaign_id INTEGER,            -- ID campagne MailWizz
     mailwizz_list_id INTEGER NOT NULL,       -- ID liste MailWizz
 
@@ -416,12 +416,12 @@ CREATE TABLE mailwizz_instances (
     id SERIAL PRIMARY KEY,
 
     -- Identification
-    instance_id VARCHAR(50) UNIQUE NOT NULL, -- 'sos-expat', 'ulixai'
-    name VARCHAR(255) NOT NULL,              -- 'SOS-Expat MailWizz'
+    instance_id VARCHAR(50) UNIQUE NOT NULL, -- 'client-1', 'client-2'
+    name VARCHAR(255) NOT NULL,              -- 'Client 1 MailWizz'
     description TEXT,
 
     -- Configuration
-    api_url VARCHAR(500) NOT NULL,           -- 'https://mailwizz.sos-expat.com/api'
+    api_url VARCHAR(500) NOT NULL,           -- 'https://mail.client1-domain.com/api'
     api_key VARCHAR(255) NOT NULL,           -- Clé API MailWizz
 
     -- Fallback MySQL (optionnel)
@@ -529,12 +529,12 @@ mailwizz_instances (1) ──→ (N) contacts (routing)
    {
      "name": "Campagne Avocats Bangkok",
      "source_id": "scraper-google-001",  // Optionnel
-     "mailwizz_instance": "sos-expat",
+     "mailwizz_instance": "client-1",
      "mailwizz_list_id": 12,
      "email_template_id": 5,
-     "subject_line": "Partenariat SOS-Expat",
-     "from_name": "William - SOS-Expat",
-     "from_email": "contact@sos-expat.com",
+     "subject_line": "Partenariat Client 1",
+     "from_name": "William - Client 1",
+     "from_email": "contact@client1-domain.com",
      "target_category": "avocat",
      "target_tags": ["bangkok", "expat"],
      "target_country_codes": ["TH"],
@@ -707,8 +707,8 @@ class ContactEventType(str, Enum):
     BLACKLISTED = "blacklisted"
 
 class MailWizzInstance(str, Enum):
-    SOS_EXPAT = "sos-expat"
-    ULIXAI = "ulixai"
+    CLIENT1 = "client-1"
+    CLIENT2 = "client-2"
 ```
 
 ---
@@ -733,7 +733,7 @@ class MailWizzInstance(str, Enum):
     "query_template": "avocat {country}",
     "max_results": 100
   },
-  "default_mailwizz_instance": "sos-expat",
+  "default_mailwizz_instance": "client-1",
   "default_list_mapping": {
     "avocat": 12,
     "assureur": 13,
@@ -781,7 +781,7 @@ class MailWizzInstance(str, Enum):
 # ?source_id=scraper-google-001
 # &status=validated
 # &category=avocat
-# &mailwizz_instance=sos-expat
+# &mailwizz_instance=client-1
 # &page=1&limit=50
 
 # GET /api/v1/contacts/{contact_id}
@@ -809,12 +809,12 @@ class MailWizzInstance(str, Enum):
   "name": "Campagne Avocats Bangkok",
   "description": "Partenariat avocats expatriés",
   "source_id": "scraper-google-001",
-  "mailwizz_instance": "sos-expat",
+  "mailwizz_instance": "client-1",
   "mailwizz_list_id": 12,
   "email_template_id": 5,
-  "subject_line": "Partenariat SOS-Expat",
-  "from_name": "William - SOS-Expat",
-  "from_email": "contact@sos-expat.com",
+  "subject_line": "Partenariat Client 1",
+  "from_name": "William - Client 1",
+  "from_email": "contact@client1-domain.com",
   "target_category": "avocat",
   "target_tags": ["bangkok", "expat"],
   "target_country_codes": ["TH"],
@@ -854,7 +854,7 @@ class MailWizzInstance(str, Enum):
   "description": "Email partenariat avocats francophones",
   "source_id": "scraper-google-001",
   "category": "avocat",
-  "subject_line": "Partenariat SOS-Expat - {COMPANY}",
+  "subject_line": "Partenariat Client 1 - {COMPANY}",
   "html_content": "<html>...</html>",
   "plain_text_content": "Bonjour {FNAME}...",
   "language": "fr"
@@ -879,17 +879,17 @@ class MailWizzInstance(str, Enum):
 # POST /api/v1/mailwizz-instances
 # Configuration nouvelle instance
 {
-  "instance_id": "sos-expat",
-  "name": "SOS-Expat MailWizz",
-  "api_url": "https://mailwizz.sos-expat.com/api",
+  "instance_id": "client-1",
+  "name": "Client 1 MailWizz",
+  "api_url": "https://mail.client1-domain.com/api",
   "api_key": "YOUR_API_KEY",
   "mysql_enabled": true,
   "mysql_host": "localhost",
   "mysql_database": "mailwizz",
   "mysql_user": "mailwizz",
   "mysql_password": "encrypted_password",
-  "default_from_name": "SOS-Expat",
-  "default_from_email": "contact@sos-expat.com",
+  "default_from_name": "Client 1",
+  "default_from_email": "contact@client1-domain.com",
   "list_mapping": {
     "avocat": 12,
     "assureur": 13,
@@ -1056,7 +1056,7 @@ class ContactRouter:
 
         # 2. Règles business custom
         if contact.category in ["avocat", "assureur", "notaire"]:
-            instance_id = "sos-expat"
+            instance_id = "client-1"
             list_mapping = {
                 "avocat": 12,
                 "assureur": 13,
@@ -1066,7 +1066,7 @@ class ContactRouter:
             return (instance_id, list_id)
 
         elif contact.category in ["blogueur", "influenceur", "admin_facebook"]:
-            instance_id = "ulixai"
+            instance_id = "client-2"
             list_mapping = {
                 "blogueur": 45,
                 "influenceur": 46,
@@ -1169,7 +1169,7 @@ class ContactRouter:
 **Tâches** :
 - ✅ Backup database production
 - ✅ Run migration Alembic en prod
-- ✅ Configuration instances MailWizz (SOS-Expat, Ulixai)
+- ✅ Configuration instances MailWizz (Client 1, Client 2)
 - ✅ Configuration sources initiales
 - ✅ Tests smoke production
 - ✅ Monitoring Grafana (nouvelles métriques)

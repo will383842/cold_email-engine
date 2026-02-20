@@ -69,34 +69,34 @@ def download_powermta_config(
     try:
         generator = PowerMTAConfigGenerator()
 
-        # Get SOS-Expat IPs
-        sos_ips = db.query(IP).filter_by(tenant_id=1).all()
-        sos_ip_configs = [
+        # Get Tenant 1 IPs
+        tenant1_ips = db.query(IP).filter_by(tenant_id=1).all()
+        tenant1_ip_configs = [
             {
                 "address": ip.address,
-                "hostname": ip.domain.domain if ip.domain else f"mail{ip.id}.sos-mail.com",
-                "vmta_name": f"vmta-sos-expat-{ip.id}",
+                "hostname": ip.domain.domain if ip.domain else f"mail{ip.id}.tenant1-mail.com",
+                "vmta_name": f"vmta-tenant1-{ip.id}",
                 "weight": ip.weight,
             }
-            for ip in sos_ips
+            for ip in tenant1_ips
         ]
 
-        # Get Ulixai IPs
-        ulixai_ips = db.query(IP).filter_by(tenant_id=2).all()
-        ulixai_ip_configs = [
+        # Get Tenant 2 IPs
+        tenant2_ips = db.query(IP).filter_by(tenant_id=2).all()
+        tenant2_ip_configs = [
             {
                 "address": ip.address,
-                "hostname": ip.domain.domain if ip.domain else f"mail{ip.id}.ulixai-mail.com",
-                "vmta_name": f"vmta-ulixai-{ip.id}",
+                "hostname": ip.domain.domain if ip.domain else f"mail{ip.id}.tenant2-mail.com",
+                "vmta_name": f"vmta-tenant2-{ip.id}",
                 "weight": ip.weight,
             }
-            for ip in ulixai_ips
+            for ip in tenant2_ips
         ]
 
         # Generate full config
         config = generator.generate_full_config(
-            sos_expat_ips=sos_ip_configs,
-            ulixai_ips=ulixai_ip_configs,
+            tenant1_ips=tenant1_ip_configs,
+            tenant2_ips=tenant2_ip_configs,
         )
 
         return config

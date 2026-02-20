@@ -14,7 +14,7 @@
 - ✅ **Webhooks MailWizz/PowerMTA** - Réception événements
 - ✅ **WarmupEngine professionnel** - Gestion quotas
 - ✅ **Architecture Clean** - Séparation parfaite
-- ✅ **Multi-tenant** - Isolation SOS-Expat/Ulixai
+- ✅ **Multi-tenant** - Isolation Client 1/Client 2
 - ✅ **Tracking warmup** - Redis + PostgreSQL
 
 ### ⚠️ CE QUI MANQUE (Configuration + Glue)
@@ -92,8 +92,8 @@ class PowerMTAConfigGenerator:
 
 2. **Pas de sélection VirtualMTA par tenant**
    - Pas de logique pour router:
-     - SOS-Expat → `sos-expat-pool`
-     - Ulixai → `ulixai-pool`
+     - Client 1 → `client1-pool`
+     - Client 2 → `client2-pool`
 
 3. **Pas d'application automatique config**
    - Génère le fichier mais pas de:
@@ -134,7 +134,7 @@ POST /api/v2/mailwizz/configure-delivery-server
 {
   "tenant_id": 1,
   "mailwizz_instance_id": 1,
-  "vmta_pool": "sos-expat-pool"
+  "vmta_pool": "client1-pool"
 }
 
 # Devrait:
@@ -278,8 +278,8 @@ html_content = "<p>Hello!</p>"
   - **Temps**: 3-4 heures
 
 - [ ] **VirtualMTA selection par tenant**
-  - SOS-Expat → `sos-expat-pool`
-  - Ulixai → `ulixai-pool`
+  - Client 1 → `client1-pool`
+  - Client 2 → `client2-pool`
   - **Temps**: 2 heures
 
 - [ ] **PowerMTA config auto-generation endpoint**
@@ -331,7 +331,7 @@ html_content = "<p>Hello!</p>"
 
 ```bash
 # 1. Configurer MailWizz manuellement
-# - Créer 2 instances (SOS-Expat, Ulixai)
+# - Créer 2 instances (Client 1, Client 2)
 # - Créer Delivery Servers (PowerMTA localhost:25)
 # - Créer Lists
 
@@ -347,7 +347,7 @@ sos_ips = db.query(IP).filter_by(tenant_id=1).all()
 
 generator = PowerMTAConfigGenerator()
 config = generator.generate_vmta_pool(
-    pool_name='sos-expat-pool',
+    pool_name='client1-pool',
     ips=[{
         'address': ip.address,
         'hostname': ip.domain.domain,

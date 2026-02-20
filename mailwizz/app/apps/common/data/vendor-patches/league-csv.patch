@@ -1,0 +1,24 @@
+diff --git a/src/Reader.php b/src/Reader.php
+index e29351d..223b1d1 100644
+--- a/src/Reader.php
++++ b/src/Reader.php
+@@ -246,6 +246,7 @@ class Reader extends AbstractCsv implements TabularDataReader, JsonSerializable
+     /**
+      * {@inheritdoc}
+      */
++    #[\ReturnTypeWillChange]
+     public function jsonSerialize(): array
+     {
+         return iterator_to_array($this->getRecords(), false);
+diff --git a/src/ResultSet.php b/src/ResultSet.php
+index 7642a15..62d0cca 100644
+--- a/src/ResultSet.php
++++ b/src/ResultSet.php
+@@ -145,6 +145,7 @@ class ResultSet implements TabularDataReader, JsonSerializable
+     /**
+      * {@inheritdoc}
+      */
++    #[\ReturnTypeWillChange]
+     public function jsonSerialize(): array
+     {
+         return iterator_to_array($this->records, false);

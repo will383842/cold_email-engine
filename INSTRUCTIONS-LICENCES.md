@@ -11,11 +11,11 @@ Modifiez ces lignes :
 MAILWIZZ_API_PUBLIC_KEY=votre_cle_publique_ici
 MAILWIZZ_API_PRIVATE_KEY=votre_cle_privee_ici
 
-# Tenant SOS-Expat (ligne 70)
-MAILWIZZ_SOS_API_KEY=votre_cle_api_sos_expat
+# Tenant Client 1 (ligne 70)
+MAILWIZZ_CLIENT1_API_KEY=votre_cle_api_client1
 
-# Tenant Ulixai (ligne 75)
-MAILWIZZ_ULIXAI_API_KEY=votre_cle_api_ulixai
+# Tenant Client 2 (ligne 75)
+MAILWIZZ_CLIENT2_API_KEY=votre_cle_api_client2
 ```
 
 ### 2. Licence PowerMTA
@@ -61,7 +61,7 @@ docker-compose logs api
 Si vous voyez des erreurs liées à MailWizz ou PMTA, vérifiez que :
 - Les clés API sont correctes (pas d'espaces avant/après)
 - Le fichier de licence PMTA existe bien dans `powermta/license`
-- Les URLs MailWizz sont correctes (https://mail.sos-expat.com/api)
+- Les URLs MailWizz sont correctes (https://mail.client1-domain.com/api)
 
 ---
 

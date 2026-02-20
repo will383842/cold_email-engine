@@ -4,7 +4,7 @@
 
 Architecture enterprise Clean/Hexagonal pour un système d'email marketing multi-tenant avec:
 
-- ✅ **2 Tenants** - SOS-Expat et Ulixai (isolation complète)
+- ✅ **2 Tenants** - Client 1 et Client 2 (isolation complète)
 - ✅ **Multi-sources** - Scraper-Pro, Backlink Engine, CSV, API webhooks
 - ✅ **100 IPs rotatifs** - 50 par tenant avec warmup automatique
 - ✅ **100 domaines d'envoi** - 1 par IP (séparé des domaines de marque)
@@ -73,7 +73,7 @@ email-engine/
 ### Nouvelles tables (migration 003)
 
 ```sql
--- Tenants (SOS-Expat, Ulixai)
+-- Tenants (Client 1, Client 2)
 tenants (id, slug, name, brand_domain, sending_domain_base, is_active)
 
 -- Sources de données
@@ -151,15 +151,15 @@ python scripts/seed_enterprise_data.py
 ```
 
 **Résultat:**
-- ✅ 2 Tenants (SOS-Expat, Ulixai)
+- ✅ 2 Tenants (Client 1, Client 2)
 - ✅ 100 IPs (50 par tenant)
-  - SOS-Expat: `45.123.10.1-50`
-  - Ulixai: `45.124.20.1-50`
+  - Client 1: `45.123.10.1-50`
+  - Client 2: `45.124.20.1-50`
 - ✅ 100 Domaines (1 par IP)
-  - SOS-Expat: `mail1.sos-mail.com` → `mail50.sos-mail.com`
-  - Ulixai: `mail1.ulixai-mail.com` → `mail50.ulixai-mail.com`
+  - Client 1: `mail1.sos-mail.com` → `mail50.sos-mail.com`
+  - Client 2: `mail1.client2-mail.com` → `mail50.client2-mail.com`
 - ✅ 2 instances MailWizz
-- ✅ 16 tags de base (SOS-Expat)
+- ✅ 16 tags de base (Client 1)
 
 ### 3. Configuration post-seed
 
@@ -169,12 +169,12 @@ python scripts/seed_enterprise_data.py
 UPDATE mailwizz_instances
 SET api_public_key = 'VOTRE_CLE_PUBLIQUE',
     api_private_key = 'VOTRE_CLE_PRIVEE'
-WHERE tenant_id = 1;  -- SOS-Expat
+WHERE tenant_id = 1;  -- Client 1
 
 UPDATE mailwizz_instances
 SET api_public_key = 'VOTRE_CLE_PUBLIQUE',
     api_private_key = 'VOTRE_CLE_PRIVEE'
-WHERE tenant_id = 2;  -- Ulixai
+WHERE tenant_id = 2;  -- Client 2
 ```
 
 #### B. Configurer DNS (SPF, DKIM, DMARC, PTR)
@@ -189,7 +189,7 @@ mail1.sos-mail.com.  TXT  "v=spf1 ip4:45.123.10.1 -all"
 default._domainkey.mail1.sos-mail.com.  TXT  "v=DKIM1; k=rsa; p=VOTRE_CLE_PUBLIQUE"
 
 # DMARC
-_dmarc.mail1.sos-mail.com.  TXT  "v=DMARC1; p=quarantine; rua=mailto:dmarc@sos-expat.com"
+_dmarc.mail1.sos-mail.com.  TXT  "v=DMARC1; p=quarantine; rua=mailto:dmarc@client1-domain.com"
 
 # PTR (reverse DNS)
 1.10.123.45.in-addr.arpa.  PTR  mail1.sos-mail.com.
@@ -200,23 +200,23 @@ _dmarc.mail1.sos-mail.com.  TXT  "v=DMARC1; p=quarantine; rua=mailto:dmarc@sos-e
 Créer 100 VirtualMTAs (1 par IP):
 
 ```pmta
-# Pool SOS-Expat
-<VirtualMTA vmta-sos-expat-1>
+# Pool Client 1
+<VirtualMTA vmta-client1-1>
     smtp-source-host mail1.sos-mail.com 45.123.10.1
 </VirtualMTA>
 
-<VirtualMTA vmta-sos-expat-2>
+<VirtualMTA vmta-client1-2>
     smtp-source-host mail2.sos-mail.com 45.123.10.2
 </VirtualMTA>
 
-# ... (répéter pour les 50 IPs SOS-Expat)
+# ... (répéter pour les 50 IPs Client 1)
 
-# Pool Ulixai
-<VirtualMTA vmta-ulixai-1>
-    smtp-source-host mail1.ulixai-mail.com 45.124.20.1
+# Pool Client 2
+<VirtualMTA vmta-client2-1>
+    smtp-source-host mail1.client2-mail.com 45.124.20.1
 </VirtualMTA>
 
-# ... (répéter pour les 50 IPs Ulixai)
+# ... (répéter pour les 50 IPs Client 2)
 ```
 
 ---
@@ -295,7 +295,7 @@ curl http://localhost:8000/api/v2/contacts/1/123
 
 ## 🏷️ Système de tags
 
-### Tags SOS-Expat (créés par défaut)
+### Tags Client 1 (créés par défaut)
 
 ```
 Prestataires:
@@ -415,12 +415,12 @@ Utiliser l'endpoint `/render` pour tester le rendu avant envoi.
 
 ### Distribution par tenant
 
-**SOS-Expat (50 IPs):**
+**Client 1 (50 IPs):**
 - **40 IPs actifs** (`45.123.10.1-40`) - weight 100
 - **7 IPs en warmup** (`45.123.10.41-47`) - weight 50
 - **3 IPs standby** (`45.123.10.48-50`) - weight 0
 
-**Ulixai (50 IPs):**
+**Client 2 (50 IPs):**
 - **40 IPs actifs** (`45.124.20.1-40`) - weight 100
 - **7 IPs en warmup** (`45.124.20.41-47`) - weight 50
 - **3 IPs standby** (`45.124.20.48-50`) - weight 0

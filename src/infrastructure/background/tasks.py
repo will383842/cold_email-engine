@@ -296,19 +296,11 @@ def send_campaign_task(campaign_id: int) -> dict:
         # =====================================================================
         # 7. Create Campaign in MailWizz
         # =====================================================================
-        # Determine from_email based on tenant
-        if campaign.tenant_id == 1:  # SOS-Expat
-            from_name = "SOS Expat"
-            from_email = "contact@sos-expat.com"
-            reply_to = "contact@sos-expat.com"
-        elif campaign.tenant_id == 2:  # Ulixai
-            from_name = "Ulixai"
-            from_email = "contact@ulixai.com"
-            reply_to = "contact@ulixai.com"
-        else:
-            from_name = "Email Engine"
-            from_email = f"contact@tenant{campaign.tenant_id}.com"
-            reply_to = from_email
+        # Determine from_email based on tenant configuration
+        # TODO: fetch from_name/from_email from Tenant record in database
+        from_name = f"Tenant {campaign.tenant_id}"
+        from_email = f"contact@tenant{campaign.tenant_id}.com"
+        reply_to = from_email
 
         mw_campaign = client.create_campaign(
             list_id=str(mailwizz.default_list_id),

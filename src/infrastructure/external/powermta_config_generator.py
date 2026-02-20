@@ -20,7 +20,7 @@ class PowerMTAConfigGenerator:
         Generate VirtualMTA pool configuration.
 
         Args:
-            pool_name: Pool name (e.g., "sos-expat-pool")
+            pool_name: Pool name (e.g., "hub-travelers-pool")
             ips: List of IP dicts with keys: address, hostname, vmta_name, weight
             rotation_mode: Rotation mode (weighted, round-robin, least-used)
 
@@ -29,10 +29,10 @@ class PowerMTAConfigGenerator:
 
         Example:
             config = generator.generate_vmta_pool(
-                pool_name="sos-expat-pool",
+                pool_name="hub-travelers-pool",
                 ips=[
-                    {"address": "45.123.10.1", "hostname": "mail1.sos-mail.com", "vmta_name": "vmta-sos-1", "weight": 100},
-                    {"address": "45.123.10.2", "hostname": "mail2.sos-mail.com", "vmta_name": "vmta-sos-2", "weight": 100},
+                    {"address": "45.123.10.1", "hostname": "mail.hub-travelers.com", "vmta_name": "vmta-hub-travelers", "weight": 100},
+                    {"address": "45.123.10.2", "hostname": "mail.emilia-mullerd.com", "vmta_name": "vmta-emilia-mullerd", "weight": 100},
                 ],
                 rotation_mode="weighted",
             )
@@ -122,21 +122,21 @@ class PowerMTAConfigGenerator:
         lines.append("bounce-upon-no-mx true")
         lines.append("")
 
-        # SOS-Expat pool
-        sos_config = self.generate_vmta_pool(
-            pool_name="sos-expat-pool",
-            ips=sos_expat_ips,
+        # Tenant 1 pool
+        tenant1_config = self.generate_vmta_pool(
+            pool_name="tenant1-pool",
+            ips=tenant1_ips,
             rotation_mode="weighted",
         )
-        lines.append(sos_config)
+        lines.append(tenant1_config)
 
-        # Ulixai pool
-        ulixai_config = self.generate_vmta_pool(
-            pool_name="ulixai-pool",
-            ips=ulixai_ips,
+        # Tenant 2 pool
+        tenant2_config = self.generate_vmta_pool(
+            pool_name="tenant2-pool",
+            ips=tenant2_ips,
             rotation_mode="weighted",
         )
-        lines.append(ulixai_config)
+        lines.append(tenant2_config)
 
         # Domain routing (example)
         lines.append("# ================================================================")
@@ -144,8 +144,8 @@ class PowerMTAConfigGenerator:
         lines.append("# ================================================================")
         lines.append("")
         lines.append("<domain *>")
-        lines.append("    # Default pool: SOS-Expat")
-        lines.append("    virtual-mta-pool sos-expat-pool")
+        lines.append("    # Default pool: Tenant 1")
+        lines.append("    virtual-mta-pool tenant1-pool")
         lines.append("</domain>")
         lines.append("")
 

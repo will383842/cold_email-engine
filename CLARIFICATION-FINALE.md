@@ -248,14 +248,14 @@ WARMING (nouveau cycle warmup)
 **MailWizz :**
 ```
 ❌ 1 instance = 1 customer à la fois
-❌ Pour gérer SOS-Expat + Ulixai:
+❌ Pour gérer Client 1 + Client 2:
    - Option 1: 2 instances MailWizz séparées
-     ├─ mail.sos-expat.com
-     └─ mail.ulixai.com
+     ├─ mail.client1-domain.com
+     └─ mail.client2-domain.com
      → Coût x2, maintenance x2
 
    - Option 2: Tout mélanger dans 1 instance
-     → SOS peut voir données Ulixai (BAD!)
+     → Client 1 peut voir données Client 2 (BAD!)
 
 ❌ Pas d'isolation quotas
 ❌ Pas d'isolation IPs
@@ -268,36 +268,36 @@ WARMING (nouveau cycle warmup)
 POST /api/v2/tenants
 [
   {
-    "slug": "sos-expat",
-    "name": "SOS Expat",
-    "brand_domain": "sos-expat.com",
+    "slug": "client-1",
+    "name": "Client 1",
+    "brand_domain": "client1-domain.com",
     "sending_domain_base": "sos-mail.com"
   },
   {
-    "slug": "ulixai",
-    "name": "Ulixai",
-    "brand_domain": "ulixai.com",
-    "sending_domain_base": "ulixai-mail.com"
+    "slug": "client-2",
+    "name": "Client 2",
+    "brand_domain": "client2-domain.com",
+    "sending_domain_base": "client2-mail.com"
   }
 ]
 
 ✅ Isolation COMPLÈTE:
-   Tenant 1 (SOS-Expat)
+   Tenant 1 (Client 1)
    ├─ IPs dédiées: [1.2.3.4, 1.2.3.5]
    ├─ Sending domains: [sos-mail.com]
    ├─ Quotas: 5000/jour
-   ├─ MailWizz instance: mail.sos-expat.com
+   ├─ MailWizz instance: mail.client1-domain.com
    └─ Base de données isolée
 
-   Tenant 2 (Ulixai)
+   Tenant 2 (Client 2)
    ├─ IPs dédiées: [5.6.7.8, 5.6.7.9]
-   ├─ Sending domains: [ulixai-mail.com]
+   ├─ Sending domains: [client2-mail.com]
    ├─ Quotas: 10000/jour
-   ├─ MailWizz instance: mail.ulixai.com
+   ├─ MailWizz instance: mail.client2-domain.com
    └─ Base de données isolée
 
-✅ SOS ne peut PAS voir Ulixai
-✅ Problème SOS n'affecte PAS Ulixai
+✅ Client 1 ne peut PAS voir Client 2
+✅ Problème Client 1 n'affecte PAS Client 2
 ✅ Quotas séparés, métriques séparées
 ```
 

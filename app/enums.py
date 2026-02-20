@@ -10,6 +10,7 @@ class IPStatus(str, enum.Enum):
     WARMING = "warming"
     BLACKLISTED = "blacklisted"
     STANDBY = "standby"
+    QUARANTINED = "quarantined"  # Arrêt d'urgence warmup (bounce/spam critiques)
 
 
 class IPPurpose(str, enum.Enum):

@@ -35,8 +35,8 @@ CELERY_BROKER_URL=redis://redis:6379/0
 CELERY_RESULT_BACKEND=redis://redis:6379/0
 
 # API Keys (utilisez ces valeurs par défaut pour commencer)
-API_KEY_SOS_EXPAT=sos-expat-internal-key-2026
-API_KEY_ULIXAI=ulixai-internal-key-2026
+API_KEY_CLIENT1=client-1-internal-key-2026
+API_KEY_CLIENT2=client-2-internal-key-2026
 API_KEY_ADMIN=admin-master-key-2026
 ```
 
@@ -94,10 +94,10 @@ curl http://localhost:8000/api/v2/stats/2/overview
 ### 2. Lister les Contacts
 
 ```bash
-# SOS-Expat (tenant 1)
+# Client 1 (tenant 1)
 curl http://localhost:8000/api/v2/contacts/1
 
-# Ulixai (tenant 2)
+# Client 2 (tenant 2)
 curl http://localhost:8000/api/v2/contacts/2
 ```
 
@@ -126,16 +126,16 @@ curl http://localhost:8000/api/v2/tags/1
 Après `seed_enterprise_data.py`:
 
 ### Tenants
-- **Tenant 1**: SOS-Expat (id=1)
-- **Tenant 2**: Ulixai (id=2)
+- **Tenant 1**: Client 1 (id=1)
+- **Tenant 2**: Client 2 (id=2)
 
 ### IPs
-- **SOS-Expat**: 50 IPs (45.123.10.1-50)
-- **Ulixai**: 50 IPs (45.124.20.1-50)
+- **Client 1**: 50 IPs (45.123.10.1-50)
+- **Client 2**: 50 IPs (45.124.20.1-50)
 
 ### Domaines
-- **SOS-Expat**: mail1-50.sos-mail.com
-- **Ulixai**: mail1-50.ulixai-mail.com
+- **Client 1**: mail1-50.sos-mail.com
+- **Client 2**: mail1-50.client2-mail.com
 
 ### Tags (16 tags par tenant)
 - verified, active, inactive, high_value, real_estate
@@ -143,8 +143,8 @@ Après `seed_enterprise_data.py`:
 - france, belgium, switzerland, canada, unsubscribed, bounced
 
 ### MailWizz Instances
-- **SOS-Expat**: mail.sos-expat.com
-- **Ulixai**: mail.ulixai.com
+- **Client 1**: mail.client1-domain.com
+- **Client 2**: mail.client2-domain.com
 
 ---
 

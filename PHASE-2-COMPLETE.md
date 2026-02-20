@@ -116,7 +116,7 @@ status, score, errors = validator.validate("temp@tempmail.com")
 from src.infrastructure.external import MailWizzClient
 
 client = MailWizzClient(
-    base_url="https://mailwizz-sos-expat.example.com",
+    base_url="https://mailwizz-client1.example.com",
     public_key="your-public-key",
     private_key="your-private-key"
 )
@@ -162,9 +162,9 @@ from src.infrastructure.external import PowerMTAConfigGenerator
 
 generator = PowerMTAConfigGenerator()
 
-# Générer pool SOS-Expat
+# Générer pool Client 1
 config = generator.generate_vmta_pool(
-    pool_name="sos-expat-pool",
+    pool_name="client1-pool",
     ips=[
         {"address": "45.123.10.1", "hostname": "mail1.sos-mail.com", "vmta_name": "vmta-sos-1", "weight": 100},
         {"address": "45.123.10.2", "hostname": "mail2.sos-mail.com", "vmta_name": "vmta-sos-2", "weight": 100},
@@ -436,7 +436,7 @@ POST /api/v2/campaigns
 ```python
 send_campaign_task.delay(campaign_id=456)
 # → Crée campagne dans MailWizz
-# → Sélectionne IPs du pool SOS-Expat
+# → Sélectionne IPs du pool Client 1
 # → Envoie via PowerMTA
 # → campaign.status = "sending"
 ```

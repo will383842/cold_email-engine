@@ -33,7 +33,7 @@ class Tenant(Base):
     id = Column(Integer, primary_key=True)
     slug = Column(String(50), unique=True, nullable=False, index=True)
     name = Column(String(100), nullable=False)
-    brand_domain = Column(String(255), nullable=False)  # sos-expat.com
+    brand_domain = Column(String(255), nullable=False)  # brand domain (e.g., client-brand.com)
     sending_domain_base = Column(String(255), nullable=False)  # sos-mail.com
     is_active = Column(Boolean, nullable=False, default=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
@@ -273,11 +273,13 @@ class IP(Base):
     vmta_name = Column(String(100))
     pool_name = Column(String(100))
     mailwizz_server_id = Column(Integer)
+    sender_email = Column(String(255))           # Email expéditeur = pattern-list PowerMTA
+    pmta_node_id = Column(String(10), default="vps2")  # vps2 / vps3 / vps4
     quarantine_until = Column(DateTime)
     blacklisted_on = Column(Text, default="[]")  # JSON array
     status_changed_at = Column(DateTime, default=datetime.utcnow)
     created_at = Column(DateTime, default=datetime.utcnow)
-    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=True, index=True)  # Added 2026-02-16
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=True, index=True)
 
     domains = relationship("Domain", back_populates="ip")
     warmup_plan = relationship("WarmupPlan", back_populates="ip", uselist=False)

@@ -23,8 +23,8 @@
 
 ### Configure DNS (wait 24-48h propagation)
 
-- [ ] DNS for trans.mail-ulixai.com (see dns/dns-templates.md)
-- [ ] DNS for news.sos-expat.com
+- [ ] DNS for trans.mail-client2.com (see dns/dns-templates.md)
+- [ ] DNS for news.client1-domain.com
 - [ ] DNS for cold-outreach-1.com
 - [ ] DNS for cold-outreach-2.com
 - [ ] DNS for cold-outreach-3.com
@@ -63,8 +63,8 @@ ssh root@VDS_IP "/opt/email-engine/scripts/generate-dkim.sh"
 # -> Note public keys, add to DNS as TXT records
 
 # Configure PTR records at Hetzner (admin panel)
-# IP1 -> trans.mail-ulixai.com
-# IP2 -> news.sos-expat.com
+# IP1 -> trans.mail-client2.com
+# IP2 -> news.client1-domain.com
 # IP3 -> cold-outreach-1.com
 # IP4 -> cold-outreach-2.com
 # IP5 -> cold-outreach-3.com

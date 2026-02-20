@@ -1,0 +1,61 @@
+diff --git a/src/QueryPath/CSS/Selector.php b/src/QueryPath/CSS/Selector.php
+index 4b538bd..387a11b 100644
+--- a/src/QueryPath/CSS/Selector.php
++++ b/src/QueryPath/CSS/Selector.php
+@@ -58,6 +58,7 @@ class Selector implements EventHandler, \IteratorAggregate, \Countable {
+     $this->selectors[$this->groupIndex][] = $this->currSelector;
+   }
+ 
++  #[\ReturnTypeWillChange]
+   public function getIterator() {
+     return new \ArrayIterator($this->selectors);
+   }
+@@ -73,6 +74,7 @@ class Selector implements EventHandler, \IteratorAggregate, \Countable {
+     return $this->selectors;
+   }
+ 
++  #[\ReturnTypeWillChange]
+   public function count() {
+     return count($this->selectors);
+   }
+diff --git a/src/QueryPath/DOMQuery.php b/src/QueryPath/DOMQuery.php
+index 15ab893..a497c27 100644
+--- a/src/QueryPath/DOMQuery.php
++++ b/src/QueryPath/DOMQuery.php
+@@ -97,7 +97,7 @@ class DOMQuery implements \QueryPath\Query, \IteratorAggregate, \Countable {
+    * @see qp()
+    */
+   public function __construct($document = NULL, $string = NULL, $options = array()) {
+-    $string = trim($string);
++    $string = trim((string)$string);
+     $this->options = $options + Options::get() + $this->options;
+ 
+     $parser_flags = isset($options['parser_flags']) ? $options['parser_flags'] : self::DEFAULT_PARSER_FLAGS;
+@@ -364,6 +364,7 @@ class DOMQuery implements \QueryPath\Query, \IteratorAggregate, \Countable {
+    * @return int
+    *  The number of matches in the DOMQuery.
+    */
++   #[\ReturnTypeWillChange]
+   public function count() {
+     return $this->matches->count();
+   }
+@@ -3985,6 +3986,7 @@ class DOMQuery implements \QueryPath\Query, \IteratorAggregate, \Countable {
+    * @return Iterable
+    *  Returns an iterator.
+    */
++   #[\ReturnTypeWillChange]
+   public function getIterator() {
+     $i = new QueryPathIterator($this->matches);
+     $i->options = $this->options;
+diff --git a/src/QueryPath/QueryPathIterator.php b/src/QueryPath/QueryPathIterator.php
+index be2e66f..5a96c80 100644
+--- a/src/QueryPath/QueryPathIterator.php
++++ b/src/QueryPath/QueryPathIterator.php
+@@ -19,6 +19,7 @@ class QueryPathIterator extends \IteratorIterator {
+   public $options = array();
+   private $qp = NULL;
+ 
++  #[\ReturnTypeWillChange]
+   public function current() {
+     if (!isset($this->qp)) {
+       $this->qp = \QueryPath::with(parent::current(), NULL, $this->options);

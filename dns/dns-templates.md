@@ -2,91 +2,115 @@
 
 Pour chaque domaine email, creer ces enregistrements DNS.
 
-## trans.mail-ulixai.com (Transactionnel)
+## hub-travelers.com (VPS2 — IP1)
 
 ```
 Type: A
-Name: trans.mail-ulixai.com
-Value: IP1_ADDRESS
+Name: mail.hub-travelers.com
+Value: IP_VPS2_1
 
 Type: MX
-Name: trans.mail-ulixai.com
-Value: trans.mail-ulixai.com (priority 10)
+Name: mail.hub-travelers.com
+Value: mail.hub-travelers.com (priority 10)
 
 Type: TXT (SPF)
-Name: trans.mail-ulixai.com
-Value: v=spf1 ip4:IP1_ADDRESS -all
+Name: hub-travelers.com
+Value: v=spf1 ip4:IP_VPS2_1 -all
 
 Type: TXT (DKIM)
-Name: default._domainkey.trans.mail-ulixai.com
+Name: default._domainkey.hub-travelers.com
 Value: v=DKIM1; k=rsa; p=DKIM_PUBLIC_KEY_HERE
 
 Type: TXT (DMARC)
-Name: _dmarc.trans.mail-ulixai.com
-Value: v=DMARC1; p=reject; rua=mailto:dmarc@ulixai.com
+Name: _dmarc.hub-travelers.com
+Value: v=DMARC1; p=quarantine; rua=mailto:dmarc@hub-travelers.com
 
-PTR (chez Hetzner): IP1_ADDRESS -> trans.mail-ulixai.com
+PTR (chez Hetzner/Contabo): IP_VPS2_1 -> mail.hub-travelers.com
 ```
 
-## news.sos-expat.com (Marketing)
+## emilia-mullerd.com (VPS2 — IP2)
 
 ```
 Type: A
-Name: news.sos-expat.com
-Value: IP2_ADDRESS
+Name: mail.emilia-mullerd.com
+Value: IP_VPS2_2
 
 Type: MX
-Name: news.sos-expat.com
-Value: news.sos-expat.com (priority 10)
+Name: mail.emilia-mullerd.com
+Value: mail.emilia-mullerd.com (priority 10)
 
 Type: TXT (SPF)
-Name: news.sos-expat.com
-Value: v=spf1 ip4:IP2_ADDRESS -all
+Name: emilia-mullerd.com
+Value: v=spf1 ip4:IP_VPS2_2 -all
 
 Type: TXT (DKIM)
-Name: default._domainkey.news.sos-expat.com
+Name: default._domainkey.emilia-mullerd.com
 Value: v=DKIM1; k=rsa; p=DKIM_PUBLIC_KEY_HERE
 
 Type: TXT (DMARC)
-Name: _dmarc.news.sos-expat.com
-Value: v=DMARC1; p=quarantine; rua=mailto:dmarc@sos-expat.com
+Name: _dmarc.emilia-mullerd.com
+Value: v=DMARC1; p=quarantine; rua=mailto:dmarc@emilia-mullerd.com
 
-PTR (chez Hetzner): IP2_ADDRESS -> news.sos-expat.com
+PTR (chez Hetzner/Contabo): IP_VPS2_2 -> mail.emilia-mullerd.com
 ```
 
-## cold-outreach-1.com (Cold - IP3)
+## plane-liberty.com (VPS3 — IP1)
 
 ```
 Type: A
-Name: @
-Value: IP3_ADDRESS
+Name: mail.plane-liberty.com
+Value: IP_VPS3_1
 
 Type: MX
-Name: @
-Value: cold-outreach-1.com (priority 10)
+Name: mail.plane-liberty.com
+Value: mail.plane-liberty.com (priority 10)
 
 Type: TXT (SPF)
-Name: @
-Value: v=spf1 ip4:IP3_ADDRESS -all
+Name: plane-liberty.com
+Value: v=spf1 ip4:IP_VPS3_1 -all
 
 Type: TXT (DKIM)
-Name: default._domainkey
+Name: default._domainkey.plane-liberty.com
 Value: v=DKIM1; k=rsa; p=DKIM_PUBLIC_KEY_HERE
 
 Type: TXT (DMARC)
-Name: _dmarc
-Value: v=DMARC1; p=none; rua=mailto:dmarc@cold-outreach-1.com
+Name: _dmarc.plane-liberty.com
+Value: v=DMARC1; p=quarantine; rua=mailto:dmarc@plane-liberty.com
 
-PTR (chez Hetzner): IP3_ADDRESS -> cold-outreach-1.com
+PTR (chez Hetzner/Contabo): IP_VPS3_1 -> mail.plane-liberty.com
 ```
 
-## cold-outreach-2.com (Standby - IP4)
+## planevilain.com (VPS3 — IP2)
 
-Meme structure que cold-outreach-1.com avec IP4_ADDRESS.
+```
+Type: A
+Name: mail.planevilain.com
+Value: IP_VPS3_2
 
-## cold-outreach-3.com (Standby - IP5)
+Type: MX
+Name: mail.planevilain.com
+Value: mail.planevilain.com (priority 10)
 
-Meme structure que cold-outreach-1.com avec IP5_ADDRESS.
+Type: TXT (SPF)
+Name: planevilain.com
+Value: v=spf1 ip4:IP_VPS3_2 -all
+
+Type: TXT (DKIM)
+Name: default._domainkey.planevilain.com
+Value: v=DKIM1; k=rsa; p=DKIM_PUBLIC_KEY_HERE
+
+Type: TXT (DMARC)
+Name: _dmarc.planevilain.com
+Value: v=DMARC1; p=none; rua=mailto:dmarc@planevilain.com
+
+PTR (chez Hetzner/Contabo): IP_VPS3_2 -> mail.planevilain.com
+```
+
+---
+
+## Template générique pour nouveaux domaines (VPS4/5/6)
+
+Meme structure que ci-dessus avec les IPs du VPS concerné.
 
 ---
 
@@ -96,19 +120,19 @@ Apres configuration, verifier avec :
 
 ```bash
 # SPF
-dig TXT cold-outreach-1.com
+dig TXT hub-travelers.com
 
 # DKIM
-dig TXT default._domainkey.cold-outreach-1.com
+dig TXT default._domainkey.hub-travelers.com
 
 # DMARC
-dig TXT _dmarc.cold-outreach-1.com
+dig TXT _dmarc.hub-travelers.com
 
 # PTR
-host IP3_ADDRESS
+host IP_VPS2_1
 
 # MX
-dig MX cold-outreach-1.com
+dig MX hub-travelers.com
 ```
 
 Attendre 24-48h pour la propagation complete.

@@ -9,7 +9,7 @@
 
 Architecture **enterprise multi-tenant** complète pour email marketing à froid avec:
 
-- ✅ **2 Tenants isolés** (SOS-Expat, Ulixai)
+- ✅ **2 Tenants isolés** (Client 1, Client 2)
 - ✅ **100 IPs rotatifs** (50 par tenant) avec warmup automatique
 - ✅ **9 langues supportées** (FR, EN, ES, DE, PT, RU, ZH, HI, AR) + fallback anglais
 - ✅ **Support RTL** pour arabe (AR)
@@ -203,7 +203,7 @@ MailWizzClient.create_campaign()
     ↓
 MailWizzClient.send_campaign()
     ↓
-PowerMTA envoie via pool SOS-Expat (weighted rotation)
+PowerMTA envoie via pool Client 1 (weighted rotation)
     ↓
 campaign.status = sending
 ```
@@ -268,7 +268,7 @@ alembic current
 # Seed données
 python scripts/seed_enterprise_data.py
 # → 2 tenants créés
-# → 100 IPs créés (50 SOS-Expat + 50 Ulixai)
+# → 100 IPs créés (50 Client 1 + 50 Client 2)
 # → 100 domaines créés
 # → 2 instances MailWizz créées
 # → 16 tags de base créés
@@ -322,7 +322,7 @@ from app.models import IP
 db = SessionLocal()
 generator = PowerMTAConfigGenerator()
 
-# Fetch IPs for SOS-Expat
+# Fetch IPs for Client 1
 sos_ips = db.query(IP).filter_by(tenant_id=1).all()
 ips_data = [
     {
@@ -335,9 +335,9 @@ ips_data = [
 ]
 
 # Generate config
-config = generator.generate_vmta_pool('sos-expat-pool', ips_data)
+config = generator.generate_vmta_pool('client1-pool', ips_data)
 print(config)
-" > /etc/pmta/vmta-sos-expat.conf
+" > /etc/pmta/vmta-client1.conf
 
 # 4. Reload PowerMTA
 pmta reload
@@ -453,7 +453,7 @@ curl -X POST http://localhost:8000/api/v2/contacts/ingest \
 - **Presentation Layer:** API v2 Endpoints
 
 ### Multi-tenant ✅
-- 2 tenants (SOS-Expat, Ulixai) complètement isolés
+- 2 tenants (Client 1, Client 2) complètement isolés
 - 100 IPs (50 par tenant) avec warmup automatique
 - 100 domaines d'envoi (séparés des domaines de marque)
 

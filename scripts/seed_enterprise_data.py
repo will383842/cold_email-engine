@@ -2,11 +2,11 @@
 """Seed script for enterprise multi-tenant data.
 
 Creates:
-- 2 Tenants (SOS-Expat, Ulixai)
+- 2 Tenants (Client 1, Client 2)
 - 100 IPs (50 per tenant)
 - 100 Domains (1 per IP)
 - 2 MailWizz instances (1 per tenant)
-- Sample tags for SOS-Expat
+- Sample tags for Client 1
 
 Run: python scripts/seed_enterprise_data.py
 """
@@ -25,51 +25,51 @@ from app.models import Domain, IP, MailwizzInstance, Tag, Tenant
 
 
 def seed_tenants(db: Session) -> tuple[Tenant, Tenant]:
-    """Create 2 tenants: SOS-Expat and Ulixai."""
+    """Create 2 tenants: Client 1 and Client 2."""
     print("Creating tenants...")
 
-    # SOS-Expat
-    sos_expat = Tenant(
-        slug="sos-expat",
-        name="SOS Expat",
-        brand_domain="sos-expat.com",
-        sending_domain_base="sos-mail.com",
+    # Client 1
+    client1 = Tenant(
+        slug="client-1",
+        name="Client 1",
+        brand_domain="client1-brand.com",
+        sending_domain_base="client1-mail.com",
         is_active=True,
         created_at=datetime.utcnow(),
     )
 
-    # Ulixai
-    ulixai = Tenant(
-        slug="ulixai",
-        name="Ulixai",
-        brand_domain="ulixai.com",
-        sending_domain_base="ulixai-mail.com",
+    # Client 2
+    client2 = Tenant(
+        slug="client-2",
+        name="Client 2",
+        brand_domain="client2-brand.com",
+        sending_domain_base="client2-mail.com",
         is_active=True,
         created_at=datetime.utcnow(),
     )
 
-    db.add(sos_expat)
-    db.add(ulixai)
+    db.add(client1)
+    db.add(client2)
     db.commit()
-    db.refresh(sos_expat)
-    db.refresh(ulixai)
+    db.refresh(client1)
+    db.refresh(client2)
 
-    print(f"✓ Created tenant: {sos_expat.name} (ID: {sos_expat.id})")
-    print(f"✓ Created tenant: {ulixai.name} (ID: {ulixai.id})")
+    print(f"✓ Created tenant: {client1.name} (ID: {client1.id})")
+    print(f"✓ Created tenant: {client2.name} (ID: {client2.id})")
 
-    return sos_expat, ulixai
+    return client1, client2
 
 
-def seed_ips_and_domains(db: Session, sos_expat: Tenant, ulixai: Tenant) -> None:
+def seed_ips_and_domains(db: Session, client1: Tenant, client2: Tenant) -> None:
     """Create 100 IPs (50 per tenant) and 100 domains (1 per IP)."""
     print("\nCreating IPs and domains...")
 
-    # SOS-Expat: 50 IPs (45.123.10.1-50)
-    print(f"\nCreating 50 IPs for {sos_expat.name}...")
+    # Client 1: 50 IPs (45.123.10.1-50)
+    print(f"\nCreating 50 IPs for {client1.name}...")
     for i in range(1, 51):
         ip_address = f"45.123.10.{i}"
-        hostname = f"mail{i}.sos-mail.com"
-        domain_name = f"mail{i}.sos-mail.com"
+        hostname = f"mail{i}.client1-mail.com"
+        domain_name = f"mail{i}.client1-mail.com"
 
         # Determine status and weight based on pool distribution
         if i <= 40:
@@ -92,9 +92,9 @@ def seed_ips_and_domains(db: Session, sos_expat: Tenant, ulixai: Tenant) -> None
             purpose="cold",
             status=status,
             weight=weight,
-            vmta_name=f"vmta-sos-expat-{i}",
-            pool_name="sos-expat-pool",
-            tenant_id=sos_expat.id,
+            vmta_name=f"vmta-client1-{i}",
+            pool_name="client1-pool",
+            tenant_id=client1.id,
             created_at=datetime.utcnow(),
         )
         db.add(ip)
@@ -106,22 +106,22 @@ def seed_ips_and_domains(db: Session, sos_expat: Tenant, ulixai: Tenant) -> None
             purpose="cold",
             ip_id=ip.id,
             dkim_selector="default",
-            tenant_id=sos_expat.id,
+            tenant_id=client1.id,
             created_at=datetime.utcnow(),
         )
         db.add(domain)
 
         if i % 10 == 0:
-            print(f"  Created {i}/50 IPs for {sos_expat.name}...")
+            print(f"  Created {i}/50 IPs for {client1.name}...")
 
-    print(f"✓ Created 50 IPs + 50 domains for {sos_expat.name}")
+    print(f"✓ Created 50 IPs + 50 domains for {client1.name}")
 
-    # Ulixai: 50 IPs (45.124.20.1-50)
-    print(f"\nCreating 50 IPs for {ulixai.name}...")
+    # Client 2: 50 IPs (45.124.20.1-50)
+    print(f"\nCreating 50 IPs for {client2.name}...")
     for i in range(1, 51):
         ip_address = f"45.124.20.{i}"
-        hostname = f"mail{i}.ulixai-mail.com"
-        domain_name = f"mail{i}.ulixai-mail.com"
+        hostname = f"mail{i}.client2-mail.com"
+        domain_name = f"mail{i}.client2-mail.com"
 
         # Same pool distribution
         if i <= 40:
@@ -141,9 +141,9 @@ def seed_ips_and_domains(db: Session, sos_expat: Tenant, ulixai: Tenant) -> None
             purpose="cold",
             status=status,
             weight=weight,
-            vmta_name=f"vmta-ulixai-{i}",
-            pool_name="ulixai-pool",
-            tenant_id=ulixai.id,
+            vmta_name=f"vmta-client2-{i}",
+            pool_name="client2-pool",
+            tenant_id=client2.id,
             created_at=datetime.utcnow(),
         )
         db.add(ip)
@@ -155,27 +155,27 @@ def seed_ips_and_domains(db: Session, sos_expat: Tenant, ulixai: Tenant) -> None
             purpose="cold",
             ip_id=ip.id,
             dkim_selector="default",
-            tenant_id=ulixai.id,
+            tenant_id=client2.id,
             created_at=datetime.utcnow(),
         )
         db.add(domain)
 
         if i % 10 == 0:
-            print(f"  Created {i}/50 IPs for {ulixai.name}...")
+            print(f"  Created {i}/50 IPs for {client2.name}...")
 
-    print(f"✓ Created 50 IPs + 50 domains for {ulixai.name}")
+    print(f"✓ Created 50 IPs + 50 domains for {client2.name}")
     db.commit()
 
 
-def seed_mailwizz_instances(db: Session, sos_expat: Tenant, ulixai: Tenant) -> None:
+def seed_mailwizz_instances(db: Session, client1: Tenant, client2: Tenant) -> None:
     """Create 2 MailWizz instances (1 per tenant)."""
     print("\nCreating MailWizz instances...")
 
-    # SOS-Expat MailWizz
-    sos_mailwizz = MailwizzInstance(
-        tenant_id=sos_expat.id,
-        name="MailWizz SOS-Expat",
-        base_url="https://mailwizz-sos-expat.example.com",
+    # Client 1 MailWizz
+    client1_mailwizz = MailwizzInstance(
+        tenant_id=client1.id,
+        name="MailWizz Client 1",
+        base_url="https://mailwizz-client1.example.com",
         api_public_key="REPLACE_WITH_REAL_KEY",
         api_private_key="REPLACE_WITH_REAL_KEY",
         default_list_id=1,
@@ -183,11 +183,11 @@ def seed_mailwizz_instances(db: Session, sos_expat: Tenant, ulixai: Tenant) -> N
         created_at=datetime.utcnow(),
     )
 
-    # Ulixai MailWizz
-    ulixai_mailwizz = MailwizzInstance(
-        tenant_id=ulixai.id,
-        name="MailWizz Ulixai",
-        base_url="https://mailwizz-ulixai.example.com",
+    # Client 2 MailWizz
+    client2_mailwizz = MailwizzInstance(
+        tenant_id=client2.id,
+        name="MailWizz Client 2",
+        base_url="https://mailwizz-client2.example.com",
         api_public_key="REPLACE_WITH_REAL_KEY",
         api_private_key="REPLACE_WITH_REAL_KEY",
         default_list_id=1,
@@ -195,17 +195,17 @@ def seed_mailwizz_instances(db: Session, sos_expat: Tenant, ulixai: Tenant) -> N
         created_at=datetime.utcnow(),
     )
 
-    db.add(sos_mailwizz)
-    db.add(ulixai_mailwizz)
+    db.add(client1_mailwizz)
+    db.add(client2_mailwizz)
     db.commit()
 
-    print(f"✓ Created MailWizz instance for {sos_expat.name}")
-    print(f"✓ Created MailWizz instance for {ulixai.name}")
+    print(f"✓ Created MailWizz instance for {client1.name}")
+    print(f"✓ Created MailWizz instance for {client2.name}")
 
 
-def seed_tags(db: Session, sos_expat: Tenant) -> None:
-    """Create sample tags for SOS-Expat."""
-    print("\nCreating sample tags for SOS-Expat...")
+def seed_tags(db: Session, client1: Tenant) -> None:
+    """Create sample tags for Client 1."""
+    print("\nCreating sample tags for Client 1...")
 
     tags_data = [
         # Prestataires
@@ -235,7 +235,7 @@ def seed_tags(db: Session, sos_expat: Tenant) -> None:
     for tag_data in tags_data:
         if tag_data["parent"] is None:
             tag = Tag(
-                tenant_id=sos_expat.id,
+                tenant_id=client1.id,
                 slug=tag_data["slug"],
                 label=tag_data["label"],
                 color=tag_data["color"],
@@ -250,7 +250,7 @@ def seed_tags(db: Session, sos_expat: Tenant) -> None:
         if tag_data["parent"] is not None:
             parent_id = tag_map.get(tag_data["parent"])
             tag = Tag(
-                tenant_id=sos_expat.id,
+                tenant_id=client1.id,
                 slug=tag_data["slug"],
                 label=tag_data["label"],
                 parent_id=parent_id,
@@ -275,26 +275,26 @@ def main():
 
     try:
         # 1. Create tenants
-        sos_expat, ulixai = seed_tenants(db)
+        client1, client2 = seed_tenants(db)
 
         # 2. Create IPs and domains (100 IPs, 100 domains)
-        seed_ips_and_domains(db, sos_expat, ulixai)
+        seed_ips_and_domains(db, client1, client2)
 
         # 3. Create MailWizz instances
-        seed_mailwizz_instances(db, sos_expat, ulixai)
+        seed_mailwizz_instances(db, client1, client2)
 
-        # 4. Create sample tags for SOS-Expat
-        seed_tags(db, sos_expat)
+        # 4. Create sample tags for Client 1
+        seed_tags(db, client1)
 
         print("\n" + "=" * 80)
         print("SEED COMPLETED SUCCESSFULLY!")
         print("=" * 80)
         print("\nSummary:")
-        print("  - 2 Tenants (SOS-Expat, Ulixai)")
+        print("  - 2 Tenants (Client 1, Client 2)")
         print("  - 100 IPs (50 per tenant)")
         print("  - 100 Domains (1 per IP)")
         print("  - 2 MailWizz instances")
-        print("  - 16 sample tags (SOS-Expat only)")
+        print("  - 16 sample tags (Client 1 only)")
         print("\nNext steps:")
         print("  1. Update MailWizz API keys in mailwizz_instances table")
         print("  2. Configure DNS records (SPF, DKIM, DMARC, PTR) for all 100 domains")

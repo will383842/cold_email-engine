@@ -18,7 +18,7 @@ chown -R www-data:www-data /var/www/html/
 
 # SSL
 apt install -y certbot python3-certbot-apache
-certbot --apache -d mail.sos-expat.com
+certbot --apache -d mail.client1-domain.com
 ```
 
 ## Configuration MySQL
@@ -32,7 +32,7 @@ FLUSH PRIVILEGES;
 
 ## Post-installation
 
-1. Acceder https://mail.sos-expat.com/install
+1. Acceder https://mail.client1-domain.com/install
 2. Suivre wizard d'installation
 3. Configurer Delivery Servers (voir ci-dessous)
 
@@ -67,14 +67,14 @@ FLUSH PRIVILEGES;
 
 ## Listes a creer
 
-### Pour SOS-Expat:
+### Pour Client 1:
 1. Avocats Internationaux
 2. Assureurs Expatries
 3. Notaires Internationaux
 4. Medecins Francophones
 5. Contacts Divers
 
-### Pour Ulixai:
+### Pour Client 2:
 1. Blogueurs Voyage
 2. Influenceurs Reseaux Sociaux
 3. Admins Groupes Facebook
@@ -84,5 +84,5 @@ FLUSH PRIVILEGES;
 ## API Keys
 
 Backend > Settings > API keys:
-- Creer cle pour SOS-Expat (note: MAILWIZZ_SOS_EXPAT_API_KEY)
-- Creer cle pour Ulixai (note: MAILWIZZ_ULIXAI_API_KEY)
+- Creer cle pour Client 1 (note: MAILWIZZ_CLIENT1_API_KEY)
+- Creer cle pour Client 2 (note: MAILWIZZ_CLIENT2_API_KEY)

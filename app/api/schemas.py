@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from app.enums import AlertSeverity, BounceType, IPPurpose, IPStatus, WarmupPhase
+from app.enums import AlertSeverity, BounceType, IPPurpose, IPStatus
 
 
 # --- IP ---
@@ -15,6 +15,16 @@ class IPCreate(BaseModel):
     vmta_name: str | None = None
     pool_name: str | None = None
     mailwizz_server_id: int | None = None
+
+    # Champs pour le provisionnement automatique PowerMTA + MailWizz
+    # Si sender_email est fourni, l'API crée automatiquement :
+    #   1. Le virtual-mta PowerMTA sur le bon nœud VPS (via SSH)
+    #   2. Le delivery server MailWizz correspondant (même FROM email)
+    # CRITIQUE : sender_email doit être unique par IP (isolation 1 IP / 1 email)
+    sender_email: str | None = None    # ex: contact@mail.hub-travelers.com
+    from_name: str | None = None       # ex: "Hub Travelers" (affiché dans l'email)
+    dkim_key_path: str | None = None   # Chemin DKIM sur VPS (auto-déduit si None)
+    pmta_node_id: str | None = None    # vps2 | vps3 | vps4 (None = auto-routing)
 
 
 class IPUpdate(BaseModel):
@@ -36,6 +46,8 @@ class IPResponse(BaseModel):
     vmta_name: str | None
     pool_name: str | None
     mailwizz_server_id: int | None
+    sender_email: str | None          # Email expéditeur unique (1 IP = 1 email)
+    pmta_node_id: str | None          # vps2 | vps3 | vps4
     quarantine_until: datetime | None
     status_changed_at: datetime | None
     created_at: datetime | None

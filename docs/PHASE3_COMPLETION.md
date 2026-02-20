@@ -63,8 +63,8 @@ Simple API Key authentication for internal tool:
 
 # Three hardcoded API keys
 VALID_API_KEYS = [
-    "sos-expat-internal-key-2026",
-    "ulixai-internal-key-2026",
+    "client-1-internal-key-2026",
+    "client-2-internal-key-2026",
     "admin-master-key-2026",
 ]
 
@@ -193,17 +193,17 @@ src/
 
 Two completely separate tenants:
 
-1. **SOS-Expat** (tenant_id=1)
-   - Brand domain: sos-expat.com
+1. **Client 1** (tenant_id=1)
+   - Brand domain: client1-domain.com
    - Sending domains: mail1-50.sos-mail.com
    - IPs: 45.123.10.1-50
-   - MailWizz: mail.sos-expat.com
+   - MailWizz: mail.client1-domain.com
 
-2. **Ulixai** (tenant_id=2)
-   - Brand domain: ulixai.com
-   - Sending domains: mail1-50.ulixai-mail.com
+2. **Client 2** (tenant_id=2)
+   - Brand domain: client2-domain.com
+   - Sending domains: mail1-50.client2-mail.com
    - IPs: 45.124.20.1-50
-   - MailWizz: mail.ulixai.com
+   - MailWizz: mail.client2-domain.com
 
 ### Data Flow
 
@@ -329,19 +329,19 @@ CELERY_BROKER_URL=redis://localhost:6379/0
 CELERY_RESULT_BACKEND=redis://localhost:6379/0
 
 # API Keys (internal tool)
-API_KEY_SOS_EXPAT=sos-expat-internal-key-2026
-API_KEY_ULIXAI=ulixai-internal-key-2026
+API_KEY_CLIENT1=client-1-internal-key-2026
+API_KEY_CLIENT2=client-2-internal-key-2026
 API_KEY_ADMIN=admin-master-key-2026
 
 # CORS
 CORS_ORIGINS=http://localhost:3000,https://app.example.com
 
 # MailWizz (per tenant)
-MAILWIZZ_SOS_API_URL=https://mail.sos-expat.com/api
-MAILWIZZ_SOS_API_KEY=your_key
+MAILWIZZ_CLIENT1_API_URL=https://mail.client1-domain.com/api
+MAILWIZZ_CLIENT1_API_KEY=your_key
 
-MAILWIZZ_ULIXAI_API_URL=https://mail.ulixai.com/api
-MAILWIZZ_ULIXAI_API_KEY=your_key
+MAILWIZZ_CLIENT2_API_URL=https://mail.client2-domain.com/api
+MAILWIZZ_CLIENT2_API_KEY=your_key
 ```
 
 ## Testing

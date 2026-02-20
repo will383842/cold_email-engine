@@ -11,18 +11,18 @@
 
 ```
 Type: OPT-IN (consentement)
-  ├─ Newsletters SOS-Expat
-  ├─ Autoresponders Ulixai
+  ├─ Newsletters Client 1
+  ├─ Autoresponders Client 2
   ├─ Campagnes promotionnelles (avec opt-in)
   └─ Séquences bienvenue
 
 Domaines:
-  ├─ sos-expat.com
-  └─ ulixai.com
+  ├─ client1-domain.com
+  └─ client2-domain.com
 
 IPs:
-  ├─ 46.62.168.55 (mail1.ulixai-expat.com)
-  └─ 95.216.179.163 (mail2.ulixai-expat.com)
+  ├─ 46.62.168.55 (mail1.client2-domain.com)
+  └─ 95.216.179.163 (mail2.client2-domain.com)
 
 Volume: 800 emails/jour (opt-in uniquement)
 
@@ -39,8 +39,8 @@ Type: COLD OUTREACH (scraping + prospection)
   └─ Cold email massif (milliers/jour)
 
 Domaines:
-  ├─ sos-mail.com (DIFFÉRENT de sos-expat.com!)
-  └─ ulixai-mail.com (DIFFÉRENT de ulixai.com!)
+  ├─ sos-mail.com (DIFFÉRENT de client1-domain.com!)
+  └─ client2-mail.com (DIFFÉRENT de client2-domain.com!)
 
 IPs:
   ├─ NOUVELLES IPs dédiées (46.225.171.192)
@@ -59,7 +59,7 @@ Risque blacklist: 🔴 ÉLEVÉ (cold = spam pour ISPs)
 
 ```
 1. Tu utilises backup-cold (46.62.168.55) pour:
-   ├─ Newsletters SOS-Expat (opt-in)    ✅ OK
+   ├─ Newsletters Client 1 (opt-in)    ✅ OK
    └─ Cold email scraping (cold outreach) ❌ RISQUE
 
 2. Cold email = volume élevé + pas d'opt-in
@@ -67,12 +67,12 @@ Risque blacklist: 🔴 ÉLEVÉ (cold = spam pour ISPs)
    → IP 46.62.168.55 BLACKLISTÉE
 
 3. Conséquences:
-   ├─ IP blacklistée = newsletters SOS-Expat aussi bloquées
-   ├─ Domaine sos-expat.com réputation ruinée
+   ├─ IP blacklistée = newsletters Client 1 aussi bloquées
+   ├─ Domaine client1-domain.com réputation ruinée
    ├─ Serveur MailWizz entier impacté
-   └─ Clients SOS-Expat ne reçoivent plus rien
+   └─ Clients Client 1 ne reçoivent plus rien
 
-🔴 RÉSULTAT: TOUT le business SOS-Expat détruit!
+🔴 RÉSULTAT: TOUT le business Client 1 détruit!
 ```
 
 ### Solution : SÉPARATION TOTALE
@@ -84,8 +84,8 @@ Risque blacklist: 🔴 ÉLEVÉ (cold = spam pour ISPs)
 │  TYPE: Email Marketing NORMAL (opt-in)      │
 │                                             │
 │  Domaines:                                  │
-│  ├─ sos-expat.com                           │
-│  └─ ulixai.com                              │
+│  ├─ client1-domain.com                      │
+│  └─ client2-domain.com                      │
 │                                             │
 │  IPs:                                       │
 │  ├─ 46.62.168.55 (clean, opt-in)            │
@@ -109,7 +109,7 @@ Risque blacklist: 🔴 ÉLEVÉ (cold = spam pour ISPs)
 │                                             │
 │  Domaines:                                  │
 │  ├─ sos-mail.com (DIFFÉRENT!)               │
-│  └─ ulixai-mail.com (DIFFÉRENT!)            │
+│  └─ client2-mail.com (DIFFÉRENT!)           │
 │                                             │
 │  IPs:                                       │
 │  ├─ NOUVELLES IPs dédiées cold              │
@@ -143,7 +143,7 @@ Risque blacklist: 🔴 ÉLEVÉ (cold = spam pour ISPs)
 | **Sources contacts** | Forms, landing pages, achats clients |
 | **Volume** | 800/jour (modéré) |
 | **Content** | Newsletters, promos, updates |
-| **Domaine** | sos-expat.com, ulixai.com (BRAND DOMAINS) |
+| **Domaine** | client1-domain.com, client2-domain.com (BRAND DOMAINS) |
 | **IPs** | 46.62.168.55, 95.216.179.163 (CLEAN) |
 | **Serveur** | 46.62.168.55 (Helsinki) |
 | **Risque blacklist** | ✅ FAIBLE (5%) |
@@ -158,7 +158,7 @@ Risque blacklist: 🔴 ÉLEVÉ (cold = spam pour ISPs)
 | **Sources contacts** | Scraping (LinkedIn, Apollo, web scraping) |
 | **Volume** | 10,000+/jour (agressif) |
 | **Content** | Cold outreach, prospection, B2B |
-| **Domaine** | sos-mail.com, ulixai-mail.com (SENDING DOMAINS) |
+| **Domaine** | sos-mail.com, client2-mail.com (SENDING DOMAINS) |
 | **IPs** | NOUVELLES IPs dédiées (EXPENDABLE) |
 | **Serveur** | 46.225.171.192 (Nuremberg) |
 | **Risque blacklist** | 🔴 ÉLEVÉ (30-50%) |
@@ -185,11 +185,11 @@ Serveur 1 (backup-cold)    Serveur 2 (email-engine)
 
 ```
 backup-cold:                  email-engine:
-  sos-expat.com (BRAND)         sos-mail.com (SENDING)
-  ulixai.com (BRAND)            ulixai-mail.com (SENDING)
+  client1-domain.com (BRAND)    sos-mail.com (SENDING)
+  client2-domain.com (BRAND)    client2-mail.com (SENDING)
        ↓                               ↓
   Protection maximale           Domaine jetable
-  → Si sos-mail.com blacklisté, sos-expat.com intact
+  → Si sos-mail.com blacklisté, client1-domain.com intact
 ```
 
 ### Isolation Niveau 3 : IPs
@@ -238,7 +238,7 @@ backup-cold:                  email-engine:
    └─ Instance MailWizz
 
 4. ✅ Domaines DIFFÉRENTS:
-   ├─ Brand domains (sos-expat.com) → backup-cold
+   ├─ Brand domains (client1-domain.com) → backup-cold
    └─ Sending domains (sos-mail.com) → email-engine
 
 5. ✅ Monitoring STRICT email-engine:
@@ -254,7 +254,7 @@ backup-cold:                  email-engine:
 1. ❌ JAMAIS utiliser backup-cold pour cold email
    → Blacklist = perte clients réels
 
-2. ❌ JAMAIS utiliser domaine sos-expat.com pour cold
+2. ❌ JAMAIS utiliser domaine client1-domain.com pour cold
    → Réputation brand détruite
 
 3. ❌ JAMAIS utiliser IPs backup-cold (46.62.168.55) pour cold
@@ -356,7 +356,7 @@ Gestion blacklists:
 OBJECTIF: Protéger réputation brand
 TYPE: Email marketing opt-in
 VOLUME: 800/jour (modéré)
-DOMAINES: sos-expat.com, ulixai.com (PRÉCIEUX)
+DOMAINES: client1-domain.com, client2-domain.com (PRÉCIEUX)
 IPS: 46.62.168.55, 95.216.179.163 (CLEAN)
 RISQUE BLACKLIST: 5% (opt-in = safe)
 SI BLACKLIST: 🔴 CATASTROPHIQUE
@@ -369,7 +369,7 @@ PRIORITÉ: 🔴 PROTECTION MAXIMALE
 OBJECTIF: Volume prospection maximum
 TYPE: Cold outreach masse
 VOLUME: 10,000+/jour (agressif)
-DOMAINES: sos-mail.com, ulixai-mail.com (JETABLES)
+DOMAINES: sos-mail.com, client2-mail.com (JETABLES)
 IPS: Pool 30+ IPs (ROTATIVES)
 RISQUE BLACKLIST: 30-50% (cold = spam detection)
 SI BLACKLIST: ✅ ACCEPTABLE (IPs jetables)

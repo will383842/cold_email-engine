@@ -95,7 +95,7 @@ CREATE INDEX idx_api_keys_public ON api_keys(public_key);
 INSERT INTO api_keys (tenant_id, public_key, private_key)
 VALUES
   (1, 'votre_cle_publique_sos_expat', 'votre_cle_privee_sos_expat'),
-  (2, 'votre_cle_publique_ulixai', 'votre_cle_privee_ulixai');
+  (2, 'votre_cle_publique_client2', 'votre_cle_privee_client2');
 ```
 
 #### 3. Modifier le code pour lire depuis PostgreSQL
@@ -178,7 +178,7 @@ docker-compose exec postgres psql -U email_engine -d email_engine
 INSERT INTO api_keys (tenant_id, public_key, private_key)
 VALUES
   (1, 'cle_publique_sos_expat_ici', 'cle_privee_sos_expat_ici'),
-  (2, 'cle_publique_ulixai_ici', 'cle_privee_ulixai_ici');
+  (2, 'cle_publique_client2_ici', 'cle_privee_client2_ici');
 
 -- Vérifier
 SELECT * FROM api_keys;
@@ -228,7 +228,7 @@ class MailWizzRepository:
 ```bash
 # 1. Copier la licence au bon endroit
 mkdir -p powermta
-cp ../sos-expat-project/Outils\ d\'emailing/backup-cold/pmta-license-20260216 powermta/license
+cp ../Outils\ d\'emailing/backup-cold/pmta-license-20260216 powermta/license
 
 # 2. Modifier docker-compose.yml
 # (mount vers /etc/pmta/license)
@@ -267,7 +267,7 @@ nano .env
 cd C:\Users\willi\Documents\Projets\VS_CODE\email-engine
 
 # 1. Copier licence PMTA depuis Système 1
-Copy-Item "..\sos-expat-project\Outils d'emailing\backup-cold\pmta-license-20260216" "powermta\license"
+Copy-Item "..\Outils d'emailing\backup-cold\pmta-license-20260216" "powermta\license"
 
 # 2. Éditer .env avec vos clés MailWizz
 notepad .env

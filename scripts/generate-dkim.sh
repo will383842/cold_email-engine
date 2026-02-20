@@ -10,11 +10,11 @@ DKIM_DIR="/etc/pmta/dkim"
 mkdir -p "$DKIM_DIR"
 
 DOMAINS=(
-    "trans.mail-ulixai.com"
-    "news.sos-expat.com"
-    "cold-outreach-1.com"
-    "cold-outreach-2.com"
-    "cold-outreach-3.com"
+    "hub-travelers.com"
+    "emilia-mullerd.com"
+    "plane-liberty.com"
+    "planevilain.com"
+    # Ajouter ici les nouveaux domaines d'envoi configurés via la console admin
 )
 
 echo "=== Generating DKIM keys ==="

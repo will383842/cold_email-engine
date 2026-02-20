@@ -77,8 +77,8 @@
 │  IP: 89.167.2.10                       │  │  IP: 89.167.3.10                  │
 ├────────────────────────────────────────┤  ├───────────────────────────────────┤
 │                                        │  │                                   │
-│  MailWizz SOS-Expat                    │  │  MailWizz Ulixai                  │
-│  - Domain: mailwizz-sos.com            │  │  - Domain: mailwizz-ulixai.com    │
+│  MailWizz Client 1                     │  │  MailWizz Client 2                │
+│  - Domain: mailwizz-sos.com            │  │  - Domain: mailwizz-client2.com   │
 │  - API REST                            │  │  - API REST                       │
 │  - MySQL Database (subscribers)        │  │  - MySQL Database (subscribers)   │
 │  - Lists Management                    │  │  - Lists Management               │
@@ -129,13 +129,13 @@
 │  │         POOL IPs ULIXAI (50 IPs dédiées)                    │     │
 │  │                                                              │     │
 │  │  Active (warming/active):                                   │     │
-│  │  - 45.124.20.1  → ulixai-mail-1.com  [ACTIVE - Week 6]     │     │
-│  │  - 45.124.20.2  → ulixai-mail-2.com  [ACTIVE - Week 6]     │     │
-│  │  - 45.124.20.3  → ulixai-mail-3.com  [WARMING - Week 4]    │     │
+│  │  - 45.124.20.1  → client2-mail-1.com  [ACTIVE - Week 6]     │     │
+│  │  - 45.124.20.2  → client2-mail-2.com  [ACTIVE - Week 6]     │     │
+│  │  - 45.124.20.3  → client2-mail-3.com  [WARMING - Week 4]    │     │
 │  │  - ... (47 autres IPs)                                      │     │
 │  │                                                              │     │
 │  │  Standby (remplacement):                                    │     │
-│  │  - 45.124.20.50 → ulixai-mail-50.com [STANDBY]             │     │
+│  │  - 45.124.20.50 → client2-mail-50.com [STANDBY]             │     │
 │  └──────────────────────────────────────────────────────────────┘     │
 │                                                                        │
 └────────────────────────────────────────────────────────────────────────┘
@@ -166,8 +166,8 @@
 ```
 
 **Connexions sortantes** :
-- → MailWizz SOS-Expat (89.167.2.10:443) - API REST
-- → MailWizz Ulixai (89.167.3.10:443) - API REST
+- → MailWizz Client 1 (89.167.2.10:443) - API REST
+- → MailWizz Client 2 (89.167.3.10:443) - API REST
 - → PowerMTA (100.1.1.1:25 + API) - SMTP + API
 - → Scraper-Pro (webhook receiver)
 - → Backlink Engine (webhook receiver)
@@ -179,15 +179,15 @@ ALLOW 443/tcp from anywhere  # HTTPS API
 ALLOW 22/tcp from admin_ip    # SSH admin
 
 # Sortantes
-ALLOW 443/tcp to 89.167.2.10  # MailWizz SOS-Expat
-ALLOW 443/tcp to 89.167.3.10  # MailWizz Ulixai
+ALLOW 443/tcp to 89.167.2.10  # MailWizz Client 1
+ALLOW 443/tcp to 89.167.3.10  # MailWizz Client 2
 ALLOW 25/tcp to 100.1.1.1     # PowerMTA SMTP
 ALLOW 443/tcp to 100.1.1.1    # PowerMTA API
 ```
 
-### 2.2 Serveur 2A: MailWizz SOS-Expat
+### 2.2 Serveur 2A: MailWizz Client 1
 
-**Rôle** : Plateforme email marketing SOS-Expat
+**Rôle** : Plateforme email marketing Client 1
 
 **Specs** :
 - VPS: 4 vCPU, 8GB RAM, 200GB SSD
@@ -219,7 +219,7 @@ ALLOW 443/tcp to 100.1.1.1    # PowerMTA API
 ]
 ```
 
-**Listes MailWizz SOS-Expat** :
+**Listes MailWizz Client 1** :
 ```
 #12 - Avocats Internationaux
 #13 - Assureurs Expat
@@ -232,21 +232,21 @@ ALLOW 443/tcp to 100.1.1.1    # PowerMTA API
 #30 - Clients (Vacanciers, Expats, Digital Nomades)
 ```
 
-### 2.3 Serveur 2B: MailWizz Ulixai
+### 2.3 Serveur 2B: MailWizz Client 2
 
-**Rôle** : Plateforme email marketing Ulixai
+**Rôle** : Plateforme email marketing Client 2
 
 **Specs** : Identique à 2A
 - VPS: 4 vCPU, 8GB RAM, 200GB SSD
 - IP: 89.167.3.10
-- Domain: mailwizz-ulixai.com
+- Domain: mailwizz-client2.com
 
-**Listes MailWizz Ulixai** :
+**Listes MailWizz Client 2** :
 ```
 #20 - Blogueurs Voyage
 #21 - Influenceurs Instagram/YouTube
 #22 - Admins Groupes Facebook
-#30 - Clients Ulixai
+#30 - Clients Client 2
 ```
 
 ### 2.4 Serveur 3: PowerMTA + Pool IPs
@@ -257,7 +257,7 @@ ALLOW 443/tcp to 100.1.1.1    # PowerMTA API
 - VDS: 8 vCPU, 16GB RAM, 500GB SSD
 - OS: CentOS 7 / RHEL 8 (PowerMTA requirement)
 - IP Admin: 100.1.1.1
-- IPs Pool: 100 IPs dédiées (50 SOS-Expat + 50 Ulixai)
+- IPs Pool: 100 IPs dédiées (50 Client 1 + 50 Client 2)
 
 **Stack** :
 ```
@@ -283,7 +283,7 @@ ALLOW 443/tcp to 100.1.1.1    # PowerMTA API
 - ✅ Warmup progressif (6 semaines)
 - ✅ Haute disponibilité (standby IPs)
 
-**Pool SOS-Expat** :
+**Pool Client 1** :
 
 | Pool | Nombre | Status | Usage |
 |------|--------|--------|-------|
@@ -292,7 +292,7 @@ ALLOW 443/tcp to 100.1.1.1    # PowerMTA API
 | **Standby** | 3 IPs | STANDBY (ready) | Remplacement si blacklist |
 | **Total** | **50 IPs** | - | - |
 
-**Pool Ulixai** : Identique (50 IPs)
+**Pool Client 2** : Identique (50 IPs)
 
 ### 3.2 Configuration Database (table `ips`)
 
@@ -306,7 +306,7 @@ CREATE TABLE ips (
     hostname VARCHAR(255) NOT NULL,          -- 'sos-mail-1.com'
 
     -- Tenant (NOUVEAU - isolation)
-    tenant VARCHAR(50) NOT NULL,             -- 'sos-expat', 'ulixai'
+    tenant VARCHAR(50) NOT NULL,             -- 'client-1', 'client-2'
 
     -- Purpose
     purpose VARCHAR(20) DEFAULT 'marketing', -- 'marketing', 'transactional'
@@ -347,28 +347,28 @@ CREATE INDEX idx_ips_pool ON ips(pool_name);
 ### 3.3 Seed Data Pool IPs
 
 ```sql
--- Pool SOS-Expat (50 IPs)
+-- Pool Client 1 (50 IPs)
 INSERT INTO ips (address, hostname, tenant, purpose, pool_name, vmta_name, status, weight) VALUES
 -- Active (40 IPs)
-('45.123.10.1', 'sos-mail-1.com', 'sos-expat', 'marketing', 'sos-pool', 'sos-vmta-1', 'active', 100),
-('45.123.10.2', 'sos-mail-2.com', 'sos-expat', 'marketing', 'sos-pool', 'sos-vmta-2', 'active', 100),
-('45.123.10.3', 'sos-mail-3.com', 'sos-expat', 'marketing', 'sos-pool', 'sos-vmta-3', 'active', 100),
+('45.123.10.1', 'sos-mail-1.com', 'client-1', 'marketing', 'client1-pool', 'vmta-client1-1', 'active', 100),
+('45.123.10.2', 'sos-mail-2.com', 'client-1', 'marketing', 'client1-pool', 'vmta-client1-2', 'active', 100),
+('45.123.10.3', 'sos-mail-3.com', 'client-1', 'marketing', 'client1-pool', 'vmta-client1-3', 'active', 100),
 -- ... (37 autres IPs active)
 
 -- Warming (7 IPs)
-('45.123.10.41', 'sos-mail-41.com', 'sos-expat', 'marketing', 'sos-pool', 'sos-vmta-41', 'warming', 50),
-('45.123.10.42', 'sos-mail-42.com', 'sos-expat', 'marketing', 'sos-pool', 'sos-vmta-42', 'warming', 30),
+('45.123.10.41', 'sos-mail-41.com', 'client-1', 'marketing', 'client1-pool', 'vmta-client1-41', 'warming', 50),
+('45.123.10.42', 'sos-mail-42.com', 'client-1', 'marketing', 'client1-pool', 'vmta-client1-42', 'warming', 30),
 -- ... (5 autres IPs warming)
 
 -- Standby (3 IPs)
-('45.123.10.48', 'sos-mail-48.com', 'sos-expat', 'marketing', 'sos-pool', 'sos-vmta-48', 'standby', 0),
-('45.123.10.49', 'sos-mail-49.com', 'sos-expat', 'marketing', 'sos-pool', 'sos-vmta-49', 'standby', 0),
-('45.123.10.50', 'sos-mail-50.com', 'sos-expat', 'marketing', 'sos-pool', 'sos-vmta-50', 'standby', 0);
+('45.123.10.48', 'sos-mail-48.com', 'client-1', 'marketing', 'client1-pool', 'vmta-client1-48', 'standby', 0),
+('45.123.10.49', 'sos-mail-49.com', 'client-1', 'marketing', 'client1-pool', 'vmta-client1-49', 'standby', 0),
+('45.123.10.50', 'sos-mail-50.com', 'client-1', 'marketing', 'client1-pool', 'vmta-client1-50', 'standby', 0);
 
--- Pool Ulixai (50 IPs)
+-- Pool Client 2 (50 IPs)
 INSERT INTO ips (address, hostname, tenant, purpose, pool_name, vmta_name, status, weight) VALUES
-('45.124.20.1', 'ulixai-mail-1.com', 'ulixai', 'marketing', 'ulixai-pool', 'ulixai-vmta-1', 'active', 100),
-('45.124.20.2', 'ulixai-mail-2.com', 'ulixai', 'marketing', 'ulixai-pool', 'ulixai-vmta-2', 'active', 100),
+('45.124.20.1', 'client2-mail-1.com', 'client-2', 'marketing', 'client2-pool', 'vmta-client2-1', 'active', 100),
+('45.124.20.2', 'client2-mail-2.com', 'client-2', 'marketing', 'client2-pool', 'vmta-client2-2', 'active', 100),
 -- ... (48 autres IPs)
 ```
 
@@ -379,12 +379,12 @@ INSERT INTO ips (address, hostname, tenant, purpose, pool_name, vmta_name, statu
 ### 4.1 Stratégie Domaines
 
 **Domaines Marque** (JAMAIS utilisés pour envoi) :
-- sos-expat.com → Site web SOS-Expat
-- ulixai.com → Site web Ulixai
+- client1-domain.com → Site web Client 1
+- client2-domain.com → Site web Client 2
 
 **Domaines Envoi** (cold email) :
 
-**SOS-Expat (50 domaines)** :
+**Client 1 (50 domaines)** :
 ```
 sos-mail.com          → IP 45.123.10.1
 sos-newsletter.com    → IP 45.123.10.2
@@ -392,19 +392,19 @@ sos-info.com          → IP 45.123.10.3
 sos-contact.com       → IP 45.123.10.4
 sos-services.com      → IP 45.123.10.5
 ...
-sos-expat-mail.com
-sos-expat-news.com
-sosexpat-contact.com
+client1-mail.com
+client1-news.com
+client1-contact.com
 ...
 (50 domaines au total, 1 par IP)
 ```
 
-**Ulixai (50 domaines)** :
+**Client 2 (50 domaines)** :
 ```
-ulixai-mail.com       → IP 45.124.20.1
-ulixai-newsletter.com → IP 45.124.20.2
-ulixai-info.com       → IP 45.124.20.3
-ulixai-contact.com    → IP 45.124.20.4
+client2-mail.com      → IP 45.124.20.1
+client2-newsletter.com → IP 45.124.20.2
+client2-info.com      → IP 45.124.20.3
+client2-contact.com   → IP 45.124.20.4
 ...
 (50 domaines au total, 1 par IP)
 ```
@@ -420,7 +420,7 @@ CREATE TABLE domains (
     name VARCHAR(255) UNIQUE NOT NULL,       -- 'sos-mail.com'
 
     -- Tenant (NOUVEAU)
-    tenant VARCHAR(50) NOT NULL,             -- 'sos-expat', 'ulixai'
+    tenant VARCHAR(50) NOT NULL,             -- 'client-1', 'client-2'
 
     -- Purpose
     purpose VARCHAR(20) DEFAULT 'marketing', -- 'marketing', 'transactional'
@@ -456,15 +456,15 @@ CREATE INDEX idx_domains_ip_id ON domains(ip_id);
 # Rotation IP = Rotation domaine automatique
 
 ip_domain_mapping = {
-    # SOS-Expat
+    # Client 1
     '45.123.10.1': 'sos-mail.com',
     '45.123.10.2': 'sos-newsletter.com',
     '45.123.10.3': 'sos-info.com',
     # ...
 
-    # Ulixai
-    '45.124.20.1': 'ulixai-mail.com',
-    '45.124.20.2': 'ulixai-newsletter.com',
+    # Client 2
+    '45.124.20.1': 'client2-mail.com',
+    '45.124.20.2': 'client2-newsletter.com',
     # ...
 }
 ```
@@ -483,11 +483,11 @@ ip_domain_mapping = {
 │  MailWizz Instance:    mailwizz-sos.com (89.167.2.10)          │
 │  PowerMTA Pool:        sos-pool (45.123.10.1-50)               │
 │  Domaines:             sos-mail.com, sos-newsletter.com, etc.  │
-│  Contacts:             tenant_id='sos-expat'                    │
-│  Campaigns:            tenant_id='sos-expat'                    │
-│  Templates:            tenant_id='sos-expat'                    │
+│  Contacts:             tenant_id='client-1'                     │
+│  Campaigns:            tenant_id='client-1'                     │
+│  Templates:            tenant_id='client-1'                     │
 │                                                                 │
-│  AUCUN lien avec Ulixai (IPs, domaines, data complètement     │
+│  AUCUN lien avec Client 2 (IPs, domaines, data complètement   │
 │  séparés)                                                       │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
@@ -496,14 +496,14 @@ ip_domain_mapping = {
 │                       TENANT: ULIXAI                            │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  MailWizz Instance:    mailwizz-ulixai.com (89.167.3.10)       │
-│  PowerMTA Pool:        ulixai-pool (45.124.20.1-50)            │
-│  Domaines:             ulixai-mail.com, ulixai-news.com, etc.  │
-│  Contacts:             tenant_id='ulixai'                       │
-│  Campaigns:            tenant_id='ulixai'                       │
-│  Templates:            tenant_id='ulixai'                       │
+│  MailWizz Instance:    mailwizz-client2.com (89.167.3.10)      │
+│  PowerMTA Pool:        client2-pool (45.124.20.1-50)           │
+│  Domaines:             client2-mail.com, client2-news.com, etc.│
+│  Contacts:             tenant_id='client-2'                     │
+│  Campaigns:            tenant_id='client-2'                     │
+│  Templates:            tenant_id='client-2'                     │
 │                                                                 │
-│  AUCUN lien avec SOS-Expat                                     │
+│  AUCUN lien avec Client 1                                      │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -527,10 +527,10 @@ ip_domain_mapping = {
     domain-key default,sos-newsletter.com,/etc/pmta/dkim/sos-newsletter.com.key
 </virtual-mta>
 
-# ... (48 autres VMTAs SOS-Expat)
+# ... (48 autres VMTAs Client 1)
 
-# Pool SOS-Expat (rotation weighted)
-<virtual-mta-pool sos-pool>
+# Pool Client 1 (rotation weighted)
+<virtual-mta-pool client1-pool>
     virtual-mta sos-vmta-1 weight 100    # Active
     virtual-mta sos-vmta-2 weight 100    # Active
     virtual-mta sos-vmta-3 weight 100    # Active
@@ -544,16 +544,16 @@ ip_domain_mapping = {
 # POOL ULIXAI
 # ─────────────────────────────────────────────────────────
 
-<virtual-mta ulixai-vmta-1>
-    smtp-source-host ulixai-mail.com 45.124.20.1
-    domain-key default,ulixai-mail.com,/etc/pmta/dkim/ulixai-mail.com.key
+<virtual-mta vmta-client2-1>
+    smtp-source-host client2-mail.com 45.124.20.1
+    domain-key default,client2-mail.com,/etc/pmta/dkim/client2-mail.com.key
 </virtual-mta>
 
-# ... (49 autres VMTAs Ulixai)
+# ... (49 autres VMTAs Client 2)
 
-<virtual-mta-pool ulixai-pool>
-    virtual-mta ulixai-vmta-1 weight 100
-    virtual-mta ulixai-vmta-2 weight 100
+<virtual-mta-pool client2-pool>
+    virtual-mta vmta-client2-1 weight 100
+    virtual-mta vmta-client2-2 weight 100
     # ...
 </virtual-mta-pool>
 
@@ -561,18 +561,18 @@ ip_domain_mapping = {
 # ROUTING (MailWizz → PowerMTA pool)
 # ─────────────────────────────────────────────────────────
 
-# MailWizz SOS-Expat (89.167.2.10) → sos-pool
+# MailWizz Client 1 (89.167.2.10) → client1-pool
 <source 89.167.2.10>
     always-allow-relaying yes
     process-x-virtual-mta yes
-    default-virtual-mta-pool sos-pool
+    default-virtual-mta-pool client1-pool
 </source>
 
-# MailWizz Ulixai (89.167.3.10) → ulixai-pool
+# MailWizz Client 2 (89.167.3.10) → client2-pool
 <source 89.167.3.10>
     always-allow-relaying yes
     process-x-virtual-mta yes
-    default-virtual-mta-pool ulixai-pool
+    default-virtual-mta-pool client2-pool
 </source>
 ```
 
@@ -830,7 +830,7 @@ class IPRotationService:
         Sélectionne IP optimale pour campagne.
 
         Args:
-            tenant: 'sos-expat' ou 'ulixai'
+            tenant: 'client-1' ou 'client-2'
             campaign_id: ID campagne
             mode: 'round_robin', 'weighted_random', 'least_used'
 
@@ -1096,8 +1096,8 @@ createdb email_engine
 alembic upgrade head
 
 # 5. Seed data (IPs, domaines, tenants)
-python scripts/seed_data.py --tenant sos-expat
-python scripts/seed_data.py --tenant ulixai
+python scripts/seed_data.py --tenant client-1
+python scripts/seed_data.py --tenant client-2
 
 # 6. Start services
 systemctl start email-engine-api
@@ -1122,7 +1122,7 @@ systemctl start nginx
 # 2. Configure IPs pool
 # /etc/pmta/config (généré par Email Engine)
 
-# 3. Setup DKIM keys (50 domaines SOS-Expat + 50 Ulixai)
+# 3. Setup DKIM keys (50 domaines Client 1 + 50 Client 2)
 for domain in sos-mail-{1..50}.com; do
     openssl genrsa -out /etc/pmta/dkim/${domain}.key 2048
     openssl rsa -in /etc/pmta/dkim/${domain}.key -pubout > /etc/pmta/dkim/${domain}.pub
@@ -1140,12 +1140,12 @@ pmta reload
 
 ✅ **3 Serveurs séparés** :
 - Serveur 1 : Email Engine API (orchestration)
-- Serveur 2A/2B : MailWizz SOS-Expat + Ulixai
+- Serveur 2A/2B : MailWizz Client 1 + Client 2
 - Serveur 3 : PowerMTA + Pool 100 IPs
 
 ✅ **100 IPs dédiées** :
-- 50 IPs SOS-Expat (rotation)
-- 50 IPs Ulixai (rotation)
+- 50 IPs Client 1 (rotation)
+- 50 IPs Client 2 (rotation)
 - Warmup 6 semaines automatisé
 - Failover automatique (standby IPs)
 
@@ -1155,7 +1155,7 @@ pmta reload
 - Validation automatique quotidienne
 
 ✅ **Isolation Multi-Tenant** :
-- SOS-Expat ≠ Ulixai (aucun lien IPs/domaines)
+- Client 1 ≠ Client 2 (aucun lien IPs/domaines)
 - Pools séparés dans PowerMTA
 - Instances MailWizz séparées
 

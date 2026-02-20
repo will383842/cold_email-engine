@@ -1,0 +1,263 @@
+################################################################################
+# POWERMTA CONFIGURATION - BACKUP-COLD REFERENCE
+# Serveur: mail-server (Helsinki)
+# Date: 4 fevrier 2026
+# NOTE: postmaster et host-name sont remplacés par le script install.sh
+################################################################################
+
+postmaster admin@YOUR_DOMAIN
+host-name mail.YOUR_DOMAIN
+
+# SMTP Listeners - IPs HETZNER
+smtp-listener 46.62.168.55:2525
+smtp-listener 95.216.179.163:2525
+
+<source 0/0>
+    log-connections yes
+    log-commands    no       # Desactive en production pour performance
+</source>
+
+sync-msg-create false
+sync-msg-update false
+run-as-root no
+
+log-file /var/log/pmta/log
+<acct-file /var/log/pmta/acct.csv>
+    max-size 50M
+</acct-file>
+
+<acct-file /var/log/pmta/diag.csv>
+    move-interval 1d
+    delete-after never
+    records t
+</acct-file>
+
+spool /var/spool/pmta
+
+# HTTP Management - LOCALHOST UNIQUEMENT
+http-mgmt-port 1983
+http-access 127.0.0.1 admin
+
+# SMTP User - IMPORTANT: Configurer ce bloc avec les credentials MailWizz
+# Remplacer SMTP_USER et SMTP_PASSWORD avec les valeurs réelles
+<smtp-user admin@SMTP_AUTH_DOMAIN>
+    password CHANGE_ME_STRONG_PASSWORD
+    source {pmta-auth}
+</smtp-user>
+
+<source {pmta-auth}>
+    smtp-service yes
+    always-allow-relaying yes
+    require-auth true
+    process-x-virtual-mta yes
+    default-virtual-mta pmta-pool
+    hide-message-source true
+</source>
+
+################################################################################
+# VIRTUAL MTAs - IPs HETZNER
+################################################################################
+
+# Les virtual-mta sont supprimés et régénérés par le script install.sh
+# Voir deploy/vps*/install.sh pour la configuration des virtual-mta
+
+<virtual-mta-pool pmta-pool>
+    virtual-mta pmta-vmta0
+    virtual-mta pmta-vmta1
+</virtual-mta-pool>
+
+################################################################################
+# SOURCES ET ROUTING
+################################################################################
+
+<source 127.0.0.1>
+    always-allow-api-submission yes
+    add-message-id-header yes
+    retain-x-job yes
+    retain-x-virtual-mta yes
+    verp-default yes
+    process-x-envid yes
+    process-x-job yes
+    jobid-header X-Mailer-RecptId
+    process-x-virtual-mta yes
+</source>
+
+# Routing local pour injection MailWizz (sera configuré par install.sh)
+# <domain YOUR_SENDING_DOMAIN>
+#     smtp-hosts [127.0.0.1]:2525
+# </domain>
+
+################################################################################
+# ISP RATE LIMITS
+################################################################################
+
+domain-macro hotmail hotmail.com,msn.com,hotmail.co.uk,hotmail.fr,live.com,hotmail.it,hotmail.de,email.msn.com,email.hotmail.com,live.com,msn.com,webtv.com,webtv.net,outlook.com,outlook.fr
+<domain $hotmail>
+    max-smtp-out 1
+    max-msg-rate 250/h
+</domain>
+
+domain-macro yahoo yahoo.com,yahoo.ca,rocketmail.com,ymail.com,yahoo.com.au,yahoo.com.mx,yahoo.com.br,yahoo.fr,yahoo.co.uk,yahoo.de,yahoo.es,yahoo.it
+<domain $yahoo>
+    max-msg-per-connection 2
+    max-msg-rate 250/h
+</domain>
+
+domain-macro aol aol.com,aim.com,aim.net,netscape.com,netscape.net
+<domain $aol>
+    max-msg-rate 250/h
+</domain>
+
+domain-macro gmail gmail.com,googlemail.com
+<domain $gmail>
+    max-msg-rate 250/h
+</domain>
+
+domain-macro orange orange.fr,wanadoo.fr,voila.fr
+<domain $orange>
+    max-msg-rate 200/h
+</domain>
+
+domain-macro free free.fr,aliceadsl.fr
+<domain $free>
+    max-msg-rate 200/h
+</domain>
+
+domain-macro sfr sfr.fr,neuf.fr,club-internet.fr
+<domain $sfr>
+    max-msg-rate 200/h
+</domain>
+
+<domain *>
+    use-starttls yes
+</domain>
+
+################################################################################
+# DEFAULT DOMAIN SETTINGS
+################################################################################
+
+<domain *>
+    max-smtp-out 2
+    max-msg-per-connection 100
+    max-errors-per-connection 10
+    max-msg-rate 1000/h
+    smtp-greeting-timeout 5m
+    bounce-upon-no-mx yes
+    assume-delivery-upon-data-termination-timeout yes
+    retry-after 10m
+    bounce-after 24h
+    smtp-pattern-list blocking-errors
+    backoff-max-msg-rate 1/m
+    backoff-retry-after 20m
+    backoff-notify ""
+    backoff-to-normal-after-delivery yes
+    backoff-to-normal-after 1h
+    dkim-sign yes
+    ignore-8bitmime true
+    use-starttls yes
+</domain>
+
+################################################################################
+# BACKOFF RULES
+################################################################################
+
+<smtp-pattern-list blocking-errors>
+    # AOL
+    reply /421 .* SERVICE NOT AVAILABLE/ mode=backoff
+    reply /generating high volumes of.* complaints from AOL/ mode=backoff
+    reply /554 .*aol.com/ mode=backoff
+    reply /HVU:B1/ mode=backoff
+    reply /DNS:NR/ mode=backoff
+    reply /RLY:NW/ mode=backoff
+    reply /DYN:T1/ mode=backoff
+
+    # Yahoo
+    reply /421 .* Please try again later/ mode=backoff
+    reply /421 Message temporarily deferred/ mode=backoff
+    reply /VS3-IP5 Excessive unknown recipients/ mode=backoff
+    reply /\[GL01\] Message from/ mode=backoff
+    reply /\[TS01\] Messages from/ mode=backoff
+    reply /\[TS02\] Messages from/ mode=backoff
+    reply /\[TS03\] All messages from/ mode=backoff
+
+    # Hotmail/Outlook
+    reply /exceeded the rate limit/ mode=backoff
+    reply /exceeded the connection limit/ mode=backoff
+    reply /Mail rejected by Windows Live Hotmail for policy reasons/ mode=backoff
+
+    # General
+    reply /too many/ mode=backoff
+    reply /Exceeded allowable connection time/ mode=backoff
+    reply /Connection rate limit exceeded/ mode=backoff
+    reply /refused your connection/ mode=backoff
+    reply /try again later/ mode=backoff
+    reply /try later/ mode=backoff
+    reply /550 RBL/ mode=backoff
+    reply /connection refused/ mode=backoff
+    reply /please see www.spamhaus.org/ mode=backoff
+    reply /Message Rejected/ mode=backoff
+    reply /Service not available/ mode=backoff
+    reply /currently blocked/ mode=backoff
+    reply /locally blacklisted/ mode=backoff
+    reply /not currently accepting mail from your ip/ mode=backoff
+    reply /421.*closing connection/ mode=backoff
+    reply /421.*Lost connection/ mode=backoff
+    reply /421 Connection cannot be established/ mode=backoff
+    reply /550 Access denied/ mode=backoff
+    reply /permanently deferred/ mode=backoff
+    reply /\d+\.\d+\.\d+\.\d+ blocked/ mode=backoff
+    reply /blocked.*spamhaus/ mode=backoff
+    reply /451 Rejected/ mode=backoff
+</smtp-pattern-list>
+
+################################################################################
+# BOUNCE RULES
+################################################################################
+
+<bounce-category-patterns>
+    /spam/ spam-related
+    /junk mail/ spam-related
+    /blacklist/ spam-related
+    /blocked/ spam-related
+    /unsolicited/ spam-related
+    /\bvirus\b/ virus-related
+    /message +content/ content-related
+    /content +rejected/ content-related
+    /quota/ quota-issues
+    /limit exceeded/ quota-issues
+    /mailbox +(is +)?full/ quota-issues
+    /sender ((verify|verification) failed|could not be verified|address rejected|domain must exist)/ invalid-sender
+    /(user|mailbox|recipient|address|account) (has|is)? *(disabled|expired|inactive)/ inactive-mailbox
+    /(No such|bad|invalid|unknown) (user|mailbox|recipient|address|account)/ bad-mailbox
+    /(user|mailbox|recipient|address) +(not found|does not exist|unknown)/ bad-mailbox
+    /no mailbox here/ bad-mailbox
+    /not our customer/ bad-mailbox
+    /\brelay(ing)?/ relaying-issues
+    /domain (retired|bad|invalid|unknown)/ bad-domain
+    /denied/ policy-related
+    /refused/ policy-related
+    /banned/ policy-related
+    /policy/ policy-related
+    /bad sequence/ protocol-errors
+    /syntax error/ protocol-errors
+    /\broute\b/ routing-errors
+    /Recipient address rejected/ invalid-mailbox
+    /Service unavailable/ policy-related
+    /DNSBL/ spam-related
+    /Account Inactive/ invalid-mailbox
+    /^2.\d+.\d+;/ success
+    /^[45]\.1\.[1346];/ bad-mailbox
+    /^[45]\.1\.2/ bad-domain
+    /^[45]\.1\.[78];/ invalid-sender
+    /^[45]\.2\.1;/ inactive-mailbox
+    /^[45]\.2\.2;/ quota-issues
+    /^[45]\.4\.1;/ no-answer-from-host
+    /^[45]\.4\.2;/ bad-connection
+    /^[45]\.5\.\d+;/ protocol-errors
+    /^[45]\.7\.[012];/ policy-related
+    // other
+</bounce-category-patterns>
+
+################################################################################
+# END OF CONFIGURATION
+################################################################################

@@ -19,8 +19,8 @@ def verify_api_key(x_api_key: str = Header(..., description="API Key for interna
     # Simple hardcoded API key for internal tool
     # In production, this would be in env vars and hashed in database
     VALID_API_KEYS = [
-        "sos-expat-internal-key-2026",
-        "ulixai-internal-key-2026",
+        "client1-internal-key-2026",
+        "client2-internal-key-2026",
         "admin-master-key-2026",
     ]
 

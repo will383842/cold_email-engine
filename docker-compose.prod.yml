@@ -1,0 +1,249 @@
+################################################################################
+# EMAIL-ENGINE V2 - PRODUCTION DEPLOYMENT
+# Architecture : 3 VPS PowerMTA (multi-nœuds) + MailWizz MySQL direct
+#
+# Services :
+#   api        — FastAPI + APScheduler (jobs intégrés, pas de Celery séparé)
+#   postgres   — PostgreSQL 15 (base Email-Engine)
+#   redis      — Redis 7 (cache + queue)
+#   prometheus — Métriques
+#   grafana    — Dashboard
+#
+# PowerMTA géré via SSH (VPS2/VPS3/VPS4 Contabo — hors Docker)
+# MailWizz géré via MySQL direct (host.docker.internal)
+################################################################################
+
+version: '3.8'
+
+services:
+  # ═══════════════════════════════════════════════════════════
+  # API FastAPI — Email-Engine avec APScheduler intégré
+  # (warmup, blacklist, rotation, health check — tous en interne)
+  # ═══════════════════════════════════════════════════════════
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: email-engine-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # API
+      API_KEY: ${API_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      ENVIRONMENT: production
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+
+      # Database PostgreSQL
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+      # Redis
+      REDIS_URL: redis://redis:6379/0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+      # MailWizz — MySQL direct (PAS d'API REST)
+      # Container → host.docker.internal → MySQL sur hôte VPS1
+      MAILWIZZ_DB_HOST: host.docker.internal
+      MAILWIZZ_DB_PORT: ${MAILWIZZ_DB_PORT:-3306}
+      MAILWIZZ_DB_USER: ${MAILWIZZ_DB_USER:-mailwizz}
+      MAILWIZZ_DB_PASSWORD: ${MAILWIZZ_DB_PASSWORD}
+      MAILWIZZ_DB_NAME: ${MAILWIZZ_DB_NAME:-mailwizz_v2}
+      MAILWIZZ_FROM_NAME: ${MAILWIZZ_FROM_NAME:-Hub Travelers}
+      MAILWIZZ_DS_MAX_CONN_MESSAGES: ${MAILWIZZ_DS_MAX_CONN_MESSAGES:-50}
+      MAILWIZZ_DS_HOURLY_QUOTA: ${MAILWIZZ_DS_HOURLY_QUOTA:-5}
+
+      # PowerMTA — Multi-nœuds SSH
+      # Clé SSH montée via volume ./secrets
+      PMTA_SSH_USER: ${PMTA_SSH_USER:-root}
+      PMTA_SSH_KEY_PATH: /app/secrets/pmta_ssh_key
+      PMTA_SMTP_PORT: ${PMTA_SMTP_PORT:-2525}
+
+      # VPS2 (Contabo) — hub-travelers.com + emilia-mullerd.com
+      PMTA_VPS2_HOST: ${PMTA_VPS2_HOST}
+      PMTA_VPS2_DOMAINS: ${PMTA_VPS2_DOMAINS:-hub-travelers.com,emilia-mullerd.com}
+
+      # VPS3 (Contabo) — plane-liberty.com + planevilain.com
+      PMTA_VPS3_HOST: ${PMTA_VPS3_HOST}
+      PMTA_VPS3_DOMAINS: ${PMTA_VPS3_DOMAINS:-plane-liberty.com,planevilain.com}
+
+      # VPS4 — Domaines futurs (vide = désactivé)
+      PMTA_VPS4_HOST: ${PMTA_VPS4_HOST:-}
+      PMTA_VPS4_DOMAINS: ${PMTA_VPS4_DOMAINS:-}
+
+      # VPS5 — Domaines futurs (vide = désactivé)
+      PMTA_VPS5_HOST: ${PMTA_VPS5_HOST:-}
+      PMTA_VPS5_DOMAINS: ${PMTA_VPS5_DOMAINS:-}
+
+      # VPS6 — Domaines futurs (vide = désactivé)
+      PMTA_VPS6_HOST: ${PMTA_VPS6_HOST:-}
+      PMTA_VPS6_DOMAINS: ${PMTA_VPS6_DOMAINS:-}
+
+      # Warmup — Ultra-protecteur (70 jours)
+      WARMUP_ENABLED: ${WARMUP_ENABLED:-true}
+      WARMUP_MAX_BOUNCE_RATE: ${WARMUP_MAX_BOUNCE_RATE:-2.0}
+      WARMUP_MAX_SPAM_RATE: ${WARMUP_MAX_SPAM_RATE:-0.03}
+      WARMUP_EMERGENCY_BOUNCE_RATE: ${WARMUP_EMERGENCY_BOUNCE_RATE:-5.0}
+      WARMUP_EMERGENCY_SPAM_RATE: ${WARMUP_EMERGENCY_SPAM_RATE:-0.1}
+      WARMUP_PAUSE_BOUNCE_HOURS: ${WARMUP_PAUSE_BOUNCE_HOURS:-72}
+      WARMUP_PAUSE_SPAM_HOURS: ${WARMUP_PAUSE_SPAM_HOURS:-96}
+
+      # Rotation IPs
+      IP_QUARANTINE_DAYS: ${IP_QUARANTINE_DAYS:-30}
+      IP_REST_DAYS: ${IP_REST_DAYS:-7}
+
+      # Alertes Telegram
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+
+      # Monitoring
+      PROMETHEUS_ENABLED: "true"
+      SENTRY_DSN: ${SENTRY_DSN:-}
+
+    volumes:
+      - ./secrets:/app/secrets:ro        # Clés SSH PowerMTA (chmod 600)
+      - ./logs:/app/logs
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Accès MySQL MailWizz sur l'hôte
+    networks:
+      - email-engine-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ═══════════════════════════════════════════════════════════
+  # PostgreSQL Database
+  # ═══════════════════════════════════════════════════════════
+  postgres:
+    image: postgres:15-alpine
+    container_name: email-engine-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    ports:
+      - "127.0.0.1:5432:5432"    # Exposé uniquement sur localhost
+    networks:
+      - email-engine-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ═══════════════════════════════════════════════════════════
+  # Redis Cache
+  # ═══════════════════════════════════════════════════════════
+  redis:
+    image: redis:7-alpine
+    container_name: email-engine-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "127.0.0.1:6379:6379"    # Exposé uniquement sur localhost
+    networks:
+      - email-engine-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ═══════════════════════════════════════════════════════════
+  # Prometheus (Monitoring)
+  # ═══════════════════════════════════════════════════════════
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: email-engine-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    networks:
+      - email-engine-network
+
+  # ═══════════════════════════════════════════════════════════
+  # Grafana (Dashboard)
+  # ═══════════════════════════════════════════════════════════
+  grafana:
+    image: grafana/grafana:latest
+    container_name: email-engine-grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_SERVER_ROOT_URL=${GRAFANA_ROOT_URL:-http://localhost:3000}
+      - GF_INSTALL_PLUGINS=redis-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - email-engine-network
+
+# ═══════════════════════════════════════════════════════════
+# Networks
+# ═══════════════════════════════════════════════════════════
+networks:
+  email-engine-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ═══════════════════════════════════════════════════════════
+# Volumes (Persistent Data)
+# ═══════════════════════════════════════════════════════════
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local

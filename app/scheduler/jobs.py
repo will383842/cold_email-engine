@@ -122,20 +122,21 @@ async def job_retry_queue() -> None:
 
 
 async def job_sync_warmup_quotas() -> None:
-    """Sync warmup quotas to MailWizz via API (every hour)."""
+    """Sync warmup quotas to MailWizz via MySQL direct (every hour).
+
+    Utilise mailwizz_db (MySQL direct) — PAS d'API MailWizz.
+    Convertit quota journalier → quota horaire (÷16 × 0.80).
+    """
     db = SessionLocal()
     try:
-        from app.enums import WarmupPhase
         from app.models import IP, WarmupPlan
-        from app.services.mailwizz_api_client import MailWizzAPIClient
         from app.services.mailwizz_db import mailwizz_db
 
-        client = MailWizzAPIClient()
-
-        # Get all active warmup plans
+        # Plans actifs : tous sauf complétés et en quarantaine
         plans = (
             db.query(WarmupPlan)
-            .filter(WarmupPlan.phase != WarmupPhase.COMPLETED.value)
+            .filter(WarmupPlan.phase.notin_(["completed", "emergency_stop"]))
+            .filter(WarmupPlan.paused == False)  # noqa: E712
             .all()
         )
 
@@ -145,23 +146,12 @@ async def job_sync_warmup_quotas() -> None:
             if not ip or not ip.mailwizz_server_id:
                 continue
 
-            # Try API first, fallback to MySQL
-            if client._is_configured():
-                success = await client.update_delivery_server_quota(
-                    server_id=ip.mailwizz_server_id,
-                    daily_quota=plan.current_daily_quota,
-                )
-                if success:
-                    synced += 1
-            else:
-                # Fallback to MySQL
-                success = await mailwizz_db.update_quota(
-                    server_id=ip.mailwizz_server_id,
-                    hourly_quota=None,
-                    daily_quota=plan.current_daily_quota,
-                )
-                if success:
-                    synced += 1
+            success = await mailwizz_db.sync_warmup_quota(
+                server_id=ip.mailwizz_server_id,
+                daily_quota=plan.current_daily_quota,
+            )
+            if success:
+                synced += 1
 
         logger.info("job_sync_warmup_quotas_complete", synced=synced, total=len(plans))
     except Exception as exc:

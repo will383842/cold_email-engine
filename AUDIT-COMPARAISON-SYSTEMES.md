@@ -10,7 +10,7 @@
 ### ✅ **backup-cold** = SYSTÈME 1 (Existant)
 - **Stack** : MailWizz + PowerMTA (installation classique)
 - **Serveur** : Hetzner 46.62.168.55
-- **Usage** : Production actuelle pour SOS-Expat + Ulixai
+- **Usage** : Production actuelle pour Client 1 + Client 2
 - **Type** : Monolithe traditionnel
 
 ### 🚀 **email-engine** = SYSTÈME 2 (Nouveau - Automatisé)
@@ -32,7 +32,7 @@
 | **DNS** | ❌ Configuration manuelle | ✅ **AUTO** (SPF/DKIM/DMARC check) |
 | **Quotas** | ❌ Ajustement manuel | ✅ **AUTO** (sync hourly avec MailWizz) |
 | **Monitoring** | ❌ Logs basiques | ✅ Prometheus + Grafana + Alertes Telegram |
-| **Multi-tenant** | ❌ Un seul tenant à la fois | ✅ SOS-Expat + Ulixai isolés |
+| **Multi-tenant** | ❌ Un seul tenant à la fois | ✅ Client 1 + Client 2 isolés |
 | **Scalabilité** | ❌ Vertical seulement | ✅ Horizontal (Celery workers) |
 | **Base de données** | MySQL (MailWizz intégré) | PostgreSQL (séparé, performant) |
 | **API** | API MailWizz basique | **RESTful moderne** (FastAPI) + Auth JWT |
@@ -128,7 +128,7 @@
 ```
 1. API call : POST /api/v2/campaigns
    {
-     "tenant": "sos-expat",
+     "tenant": "client-1",
      "contacts": [...],
      "template_id": "cold_v1"
    }
@@ -259,14 +259,14 @@ Jour 2-365 : email-engine GÈRE TOUT automatiquement
 → 5 MINUTES de downtime au lieu de 5 HEURES
 ```
 
-### Use Case 3 : Multi-tenant (SOS-Expat + Ulixai)
+### Use Case 3 : Multi-tenant (Client 1 + Client 2)
 
 **AVANT (backup-cold seul)** :
 ```
 Problème : MailWizz = 1 seul tenant à la fois
 Solution actuelle : 2 instances MailWizz séparées
-  - mail.sos-expat.com
-  - mail.ulixai.com
+  - mail.client1-domain.com
+  - mail.client2-domain.com
 → Configuration dupliquée
 → Maintenance x2
 ```
@@ -275,19 +275,19 @@ Solution actuelle : 2 instances MailWizz séparées
 ```
 email-engine gère 2 tenants ISOLÉS :
 
-Tenant 1 : SOS-Expat
+Tenant 1 : Client 1
   ├─ IPs dédiées : [1.2.3.4, 1.2.3.5]
   ├─ Sending domain : sos-mail.com
-  ├─ MailWizz API key : MAILWIZZ_SOS_API_KEY
+  ├─ MailWizz API key : MAILWIZZ_CLIENT1_API_KEY
   └─ Quotas indépendants
 
-Tenant 2 : Ulixai
+Tenant 2 : Client 2
   ├─ IPs dédiées : [5.6.7.8, 5.6.7.9]
-  ├─ Sending domain : ulixai-mail.com
-  ├─ MailWizz API key : MAILWIZZ_ULIXAI_API_KEY
+  ├─ Sending domain : client2-mail.com
+  ├─ MailWizz API key : MAILWIZZ_CLIENT2_API_KEY
   └─ Quotas indépendants
 
-→ Isolation totale (SOS ne peut pas voir Ulixai)
+→ Isolation totale (Client 1 ne peut pas voir Client 2)
 → Configuration centralisée
 → Maintenance unique
 ```
@@ -475,7 +475,7 @@ POST /api/v2/ips
 {
   "address": "NOUVELLE_IP",
   "purpose": "marketing",
-  "tenant_id": "sos-expat"
+  "tenant_id": "client-1"
 }
 ```
 

@@ -16,7 +16,7 @@ class MailWizzClient:
         Initialize MailWizz client.
 
         Args:
-            base_url: MailWizz instance URL (e.g., https://mailwizz-sos-expat.example.com)
+            base_url: MailWizz instance URL (e.g., https://mailwizz.sos-holidays.com)
             public_key: API public key
             private_key: API private key
         """

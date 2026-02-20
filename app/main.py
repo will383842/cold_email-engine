@@ -10,6 +10,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
 from app.api.routes import (
+    admin,
     audit,
     auth,
     blacklists,
@@ -27,8 +28,13 @@ from app.logging_config import setup_logging
 from app.models import Base
 from app.scheduler.setup import create_scheduler
 
-# Import API v2 router (Clean Architecture)
-from src.presentation.api.v2 import router as api_v2_router
+# Import API v2 router (Clean Architecture) — optionnel, pas encore déployé
+try:
+    from src.presentation.api.v2 import router as api_v2_router  # type: ignore
+    _v2_available = True
+except ImportError:
+    api_v2_router = None
+    _v2_available = False
 
 setup_logging()
 
@@ -140,11 +146,12 @@ app.include_router(blacklists.router, prefix=API_PREFIX)
 app.include_router(webhooks.router, prefix=API_PREFIX)
 app.include_router(validation.router, prefix=API_PREFIX)
 
-# Admin endpoints (JWT admin role required)
+# Admin endpoints (API key required)
 app.include_router(audit.router, prefix=API_PREFIX)
+app.include_router(admin.router, prefix=API_PREFIX)
 
 # =============================================================================
-# API v2 - Clean Architecture Endpoints
+# API v2 - Clean Architecture Endpoints (optionnel — déployé ultérieurement)
 # =============================================================================
-# New enterprise endpoints with hexagonal architecture
-app.include_router(api_v2_router)
+if _v2_available and api_v2_router is not None:
+    app.include_router(api_v2_router)

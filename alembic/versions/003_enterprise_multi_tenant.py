@@ -35,7 +35,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column("slug", sa.String(50), unique=True, nullable=False, index=True),
         sa.Column("name", sa.String(100), nullable=False),
-        sa.Column("brand_domain", sa.String(255), nullable=False),  # sos-expat.com
+        sa.Column("brand_domain", sa.String(255), nullable=False),  # brand domain (e.g., client-brand.com)
         sa.Column("sending_domain_base", sa.String(255), nullable=False),  # sos-mail.com
         sa.Column("is_active", sa.Boolean, nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime, nullable=False),

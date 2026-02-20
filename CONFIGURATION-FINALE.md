@@ -48,11 +48,11 @@ MAILWIZZ_API_PUBLIC_KEY=VOTRE_CLE_PUBLIQUE_ICI
 # Ligne 56 : Clé privée générale
 MAILWIZZ_API_PRIVATE_KEY=VOTRE_CLE_PRIVEE_ICI
 
-# Ligne 70 : Clé API SOS-Expat
-MAILWIZZ_SOS_API_KEY=VOTRE_CLE_SOS_EXPAT_ICI
+# Ligne 70 : Clé API Client 1
+MAILWIZZ_CLIENT1_API_KEY=VOTRE_CLE_CLIENT1_ICI
 
-# Ligne 75 : Clé API Ulixai
-MAILWIZZ_ULIXAI_API_KEY=VOTRE_CLE_ULIXAI_ICI
+# Ligne 75 : Clé API Client 2
+MAILWIZZ_CLIENT2_API_KEY=VOTRE_CLE_CLIENT2_ICI
 ```
 
 ---
@@ -92,8 +92,8 @@ Copiez ces valeurs dans votre `.env`
 ### Option B : Via l'interface web MailWizz
 
 1. **Se connecter** :
-   - SOS-Expat : https://mail.sos-expat.com/backend
-   - Ulixai : https://mail.ulixai.com/backend
+   - Client 1 : https://mail.client1-domain.com/backend
+   - Client 2 : https://mail.client2-domain.com/backend
 
 2. **Menu** : Settings → API Keys
 
@@ -108,7 +108,7 @@ Copiez ces valeurs dans votre `.env`
 **Extraire depuis la base SQL** :
 
 ```powershell
-cd "C:\Users\willi\Documents\Projets\VS_CODE\sos-expat-project\Outils d'emailing\backup-cold"
+cd "C:\Users\willi\Documents\Projets\VS_CODE\Outils d'emailing\backup-cold"
 
 # Décompresser et chercher les clés
 zcat mailapp-prod-20260216.sql.gz | grep -A 2 "INSERT INTO \`mw_customer_api_key\`"
@@ -128,8 +128,8 @@ notepad .env
 **Chercher et modifier** :
 - Ligne 55 : `MAILWIZZ_API_PUBLIC_KEY=`
 - Ligne 56 : `MAILWIZZ_API_PRIVATE_KEY=`
-- Ligne 70 : `MAILWIZZ_SOS_API_KEY=`
-- Ligne 75 : `MAILWIZZ_ULIXAI_API_KEY=`
+- Ligne 70 : `MAILWIZZ_CLIENT1_API_KEY=`
+- Ligne 75 : `MAILWIZZ_CLIENT2_API_KEY=`
 
 ### 2. Enregistrer et fermer
 

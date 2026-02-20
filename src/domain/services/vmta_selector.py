@@ -25,11 +25,11 @@ class VMTASelector:
             tenant_id: Tenant ID
 
         Returns:
-            Pool name (e.g., "sos-expat-pool", "ulixai-pool")
+            Pool name derived from tenant slug (e.g., "client-1-pool")
 
         Example:
             pool = selector.get_pool_name_for_tenant(tenant_id=1)
-            # Returns: "sos-expat-pool"
+            # Returns: "{tenant.slug}-pool"
         """
         tenant = self.db.query(Tenant).filter_by(id=tenant_id).first()
 
@@ -52,7 +52,7 @@ class VMTASelector:
         Example:
             config = selector.get_vmta_config_for_tenant(tenant_id=1)
             # {
-            #     "pool_name": "sos-expat-pool",
+            #     "pool_name": "client-1-pool",
             #     "total_ips": 5,
             #     "active_ips": 2,
             #     "warming_ips": 3,

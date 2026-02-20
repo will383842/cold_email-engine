@@ -100,12 +100,12 @@ quota_checker.reserve_quota(ip_id, email_count)
 # Sélection automatique pool par tenant
 selector = VMTASelector(db)
 pool_name = selector.get_pool_name_for_tenant(tenant_id=1)
-# Returns: "sos-expat-pool"
+# Returns: "client1-pool"
 
 # Génération config PowerMTA
 config = selector.get_vmta_config_for_tenant(tenant_id=1)
 # {
-#     "pool_name": "sos-expat-pool",
+#     "pool_name": "client1-pool",
 #     "total_ips": 5,
 #     "active_ips": 2,
 #     "warming_ips": 3,
@@ -117,7 +117,7 @@ config = selector.get_vmta_config_for_tenant(tenant_id=1)
 
 #### Bénéfices
 
-- ✅ **Isolation multi-tenant** - SOS-Expat ≠ Ulixai
+- ✅ **Isolation multi-tenant** - Client 1 ≠ Client 2
 - ✅ **Config automatique** - Génération à la volée
 - ✅ **API complète** - Tout accessible via HTTP
 - ✅ **MailWizz ready** - Config delivery server
@@ -291,7 +291,7 @@ sudo pmta status
 ### Étape 3: Configurer MailWizz Delivery Server
 
 ```bash
-# Obtenir config MailWizz pour SOS-Expat
+# Obtenir config MailWizz pour Client 1
 curl http://localhost:8000/api/v2/powermta/mailwizz-delivery-server/1
 
 # Response:
@@ -301,7 +301,7 @@ curl http://localhost:8000/api/v2/powermta/mailwizz-delivery-server/1
   "host": "localhost",
   "port": 25,
   "protocol": "smtp",
-  "from_email": "no-reply@sos-expat.com",
+  "from_email": "no-reply@client1-domain.com",
   "from_name": "SOS Expat",
   ...
 }
@@ -414,7 +414,7 @@ curl -X POST http://localhost:8000/api/v2/campaigns/1/42/send
 
 ### Multi-Tenant ✅
 
-- [x] Isolation complète SOS-Expat / Ulixai
+- [x] Isolation complète Client 1 / Client 2
 - [x] Pools VirtualMTA séparés (NOUVEAU)
 - [x] IPs dédiées par tenant
 - [x] MailWizz instances séparées
